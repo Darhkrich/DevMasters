@@ -1,0 +1,374 @@
+/* src/styles/globals.css */
+
+/* IMPORTANT: Ensure viewport meta tag is in your HTML:
+   <meta name="viewport" content="width=device-width, initial-scale=1"> */
+
+/* Ensure [data-aos] elements are visible before AOS initializes (prevents layout needing refresh) */
+[data-aos] {
+  opacity: 1 !important;
+  transform: none !important;
+  visibility: visible !important;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+}
+
+@media (max-width: 768px) {
+  html {
+    font-size: 14px;
+  }
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+input, textarea, select {
+  font-family: inherit;
+}
+
+/* Accessibility Focus States */
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+/* Utility classes */
+.hidden {
+  display: none !important;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.flex {
+  display: flex;
+}
+
+.items-center {
+  align-items: center;
+}
+
+.justify-between {
+  justify-content: space-between;
+}
+
+.gap-2 {
+  gap: 8px;
+}
+
+.gap-4 {
+  gap: 16px;
+}
+
+.grid {
+  display: grid;
+}
+
+.grid-cols-1 {
+  grid-template-columns: 1fr;
+}
+
+.grid-cols-2 {
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 640px) {
+  .grid-cols-2 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+@media (min-width: 640px) {
+  .container {
+    padding: 0 20px;
+  }
+}
+
+.p-4 {
+  padding: 16px;
+}
+
+.p-8 {
+  padding: 20px;
+}
+
+@media (min-width: 768px) {
+  .p-8 {
+    padding: 32px;
+  }
+}
+
+.py-8 {
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+@media (min-width: 768px) {
+  .py-8 {
+    padding-top: 32px;
+    padding-bottom: 32px;
+  }
+}
+
+.mb-4 {
+  margin-bottom: 16px;
+}
+
+.mb-8 {
+  margin-bottom: 20px;
+}
+
+@media (min-width: 768px) {
+  .mb-8 {
+    margin-bottom: 32px;
+  }
+}
+
+.mt-4 {
+  margin-top: 16px;
+}
+
+.mt-8 {
+  margin-top: 20px;
+}
+
+@media (min-width: 768px) {
+  .mt-8 {
+    margin-top: 32px;
+  }
+}
+
+.sticky {
+  position: sticky;
+}
+
+.top-0 {
+  top: 0;
+}
+
+.h-fit {
+  height: fit-content;
+}
+
+.max-h-500 {
+  max-height: min(500px, 70vh);
+}
+
+.overflow-auto {
+  overflow: auto;
+}
+
+.overflow-hidden {
+  overflow: hidden;
+}
+
+.rounded-lg {
+  border-radius: 0.5rem;
+}
+
+.rounded-xl {
+  border-radius: 0.75rem;
+}
+
+.rounded-2xl {
+  border-radius: 1rem;
+}
+
+.border {
+  border: 1px solid;
+}
+
+.border-gray-700 {
+  border-color: rgba(55, 65, 81, 1);
+}
+
+.backdrop-blur-xl {
+  backdrop-filter: blur(24px);
+}
+
+.text-sm {
+  font-size: 0.875rem;
+}
+
+.text-lg {
+  font-size: 1.125rem;
+}
+
+.text-xl {
+  font-size: clamp(1.125rem, 2.5vw, 1.25rem);
+}
+
+.text-2xl {
+  font-size: clamp(1.25rem, 3vw, 1.5rem);
+}
+
+.text-3xl {
+  font-size: clamp(1.5rem, 4vw, 1.875rem);
+}
+
+.text-4xl {
+  font-size: clamp(1.875rem, 5vw, 2.25rem);
+}
+
+.font-bold {
+  font-weight: 700;
+}
+
+.font-semibold {
+  font-weight: 600;
+}
+
+.text-white {
+  color: white;
+}
+
+.text-gray-400 {
+  color: rgba(156, 163, 175, 1);
+}
+
+.bg-gray-800 {
+  background: rgba(31, 41, 55, 1);
+}
+
+.bg-gray-900 {
+  background: rgba(17, 24, 39, 1);
+}
+
+.bg-blue-600 {
+  background: rgba(37, 99, 235, 1);
+}
+
+.bg-gradient-to-r {
+  background: linear-gradient(to right, var(--tw-gradient-stops));
+}
+
+.from-blue-600 {
+  --tw-gradient-from: #2563eb;
+}
+
+.to-purple-600 {
+  --tw-gradient-to: #7c3aed;
+}
+
+/* Responsive grid utilities */
+@media (min-width: 768px) {
+  .md\:grid-cols-2 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .lg\:grid-cols-2 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .lg\:sticky {
+    position: sticky;
+  }
+  
+  .lg\:top-24 {
+    top: 96px;
+  }
+}
+
+/* Additional responsive utilities for better mobile support */
+@media (max-width: 639px) {
+  .sm\:hidden {
+    display: none !important;
+  }
+  
+  .sm\:block {
+    display: block !important;
+  }
+  
+  .sm\:text-center {
+    text-align: center;
+  }
+}
+
+/* Print styles for better printing experience */
+@media print {
+  .hidden-print {
+    display: none !important;
+  }
+  
+  body {
+    font-size: 12pt;
+  }
+  
+  .container {
+    max-width: 100%;
+    padding: 0;
+  }
+}
+
+/* Reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Dark mode support (if needed in future) */
+@media (prefers-color-scheme: dark) {
+  /* This ensures compatibility if you add light mode later */
+  body {
+    color-scheme: dark;
+  }
+}
+
+/* Touch device optimizations */
+@media (hover: none) and (pointer: coarse) {
+  /* Increase touch target sizes */
+  button,
+  a,
+  input[type="button"],
+  input[type="submit"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  /* Prevent zoom on input focus */
+  input,
+  textarea,
+  select {
+    font-size: 16px; /* Prevents iOS zoom */
+  }
+}

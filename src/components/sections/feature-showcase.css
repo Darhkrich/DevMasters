@@ -1,0 +1,131 @@
+.fs-section {
+  position: relative;
+  padding: 6rem 1.5rem;
+  background-image: url('/newback.jpg');
+  color: #fff;
+  overflow: hidden;
+
+   background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+
+
+
+
+.fs-glow {
+  position: absolute;
+  inset: -40%;
+  background: radial-gradient(circle at top, rgba(59,130,246,0.15), transparent);
+  animation: glowMove 18s linear infinite;
+}
+
+@keyframes glowMove {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(120px); }
+  100% { transform: translateY(0); }
+}
+
+.fs-container {
+  max-width: 1200px;
+  margin: auto;
+  position: relative;
+  z-index: 2;
+}
+
+.fs-header {
+  text-align: center;
+  margin-bottom: 4rem;
+}
+
+.fs-header h2 {
+  font-size: clamp(2rem, 4vw, 2.8rem);
+}
+
+.fs-header p {
+  opacity: 0.85;
+  max-width: 720px;
+  margin: auto;
+  color: white;
+}
+
+.fs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2.2rem;
+  
+}
+
+.fs-card {
+  background: rgba(255,255,255,0.08);
+  backdrop-filter: blur(18px);
+  border-radius: 20px;
+  padding: 2.2rem;
+  transition: transform 0.15s ease, box-shadow 0.3s ease;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+  will-change: transform;
+}
+
+.fs-card:hover {
+  box-shadow: 0 40px 80px rgba(0,0,0,0.5);
+}
+
+.fs-icon {
+  font-size: 2.6rem;
+  margin-bottom: 1rem;
+  color: white;
+}
+
+.fs-card ul {
+  list-style: none;
+  padding: 0;
+  margin-top: 1rem;
+  color: white;
+}
+
+.fs-card li {
+  opacity: 0.85;
+  margin-bottom: 0.45rem;
+   color: white;
+}
+.fs-banner p {
+  color: white;
+}
+.fs-card p {
+  color: white;
+}
+
+.fs-banner {
+  margin-top: 4rem;
+  text-align: center;
+  padding: 2.8rem;
+  border-radius: 20px;
+  background: linear-gradient(135deg, #2563eb, #3b82f6);
+}
+
+/* REVEAL */
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  animation: revealUp 0.8s ease forwards;
+}
+
+@keyframes revealUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ACCESSIBILITY */
+@media (prefers-reduced-motion: reduce) {
+  .fs-card,
+  .reveal,
+  .fs-glow {
+    animation: none;
+    transition: none;
+  }
+}
+
+
