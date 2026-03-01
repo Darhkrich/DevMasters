@@ -121,7 +121,7 @@ export const templatesData = [
     category: ["business"],
     type: "ready",
     previewUrl: "#",
-    image: "img/templates/business_8.png",
+    image: "/car-dealership.png",
     description: "Personal branding for high-ticket consultants. Focus on testimonials and methodology.",
 
     priceNote: "Personal brand",
@@ -137,7 +137,7 @@ export const templatesData = [
     category: ["business"],
     type: "ready",
     previewUrl: "#",
-    image: "img/templates/business_9.png",
+    image: "/car-dealership.png",
     description: "Functional design for transport companies with tracking widgets and fleet details.",
   
     priceNote: "Operational focus",
@@ -153,7 +153,7 @@ export const templatesData = [
     category: ["business"],
     type: "custom",
     previewUrl: "#",
-    image: "img/templates/business_10.png",
+    image: "/car-dealership.png",
     description: "Booking system integration for desks, meeting rooms, and event spaces.",
   
     priceNote: "Booking system",
@@ -171,7 +171,7 @@ export const templatesData = [
     category: ["ecommerce"],
     type: "custom",
     previewUrl: "#",
-    image: "img/templates/ecom_1.png",
+    image: "/car-dealership.png",
     description: "Minimalist fashion store with lookbook grids and Instagram feed integration.",
  
     priceNote: "Shopify ready",
@@ -187,7 +187,7 @@ export const templatesData = [
     category: ["ecommerce"],
     type: "ready",
     previewUrl: "#",
-    image: "img/templates/ecom_2.png",
+    image: "/car-dealership.png",
     description: "High-density product grid with comparison tools and spec sheets.",
   
     priceNote: "Conversion focused",
@@ -203,7 +203,7 @@ export const templatesData = [
     category: ["ecommerce"],
     type: "ready",
     previewUrl: "#",
-    image: "img/templates/ecom_3.png",
+    image: "/car-dealership.png",
     description: "Fresh, green layout for local delivery and farm-to-table services.",
   
     priceNote: "Local delivery",

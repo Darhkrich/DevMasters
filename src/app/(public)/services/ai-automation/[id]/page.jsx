@@ -161,7 +161,7 @@ export default function AIAutomationDetailPage() {
             <AddToQuoteButton 
               item={item} 
               source="templates" 
-              className="wc-btn-ghost wc-btn-customize"
+              className="wc-btn-ghost wc-ai-consult-btn"
             />
               <Link 
                 href="/contact" 
@@ -314,9 +314,6 @@ export default function AIAutomationDetailPage() {
           <h2>Ready to automate your workflows?</h2>
           <p>Start saving time and increasing efficiency with AI automation.</p>
           <div className="wc-ai-final-cta-buttons">
-            <button className="wc-btn-primary wc-ai-final-buy" onClick={handleContact}>
-              <i className="fas fa-rocket"></i> Get Started Now
-            </button>
             <Link 
               href="/contact" 
               className="wc-btn-ghost wc-ai-final-talk"

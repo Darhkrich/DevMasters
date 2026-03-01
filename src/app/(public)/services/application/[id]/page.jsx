@@ -301,15 +301,7 @@ export default function ServiceDetailsPage() {
         </div>
         
         <div className="wc-service-details-pricing wc-fade-in-right">
-          <div className="wc-service-price-display">
-            <span className="wc-service-price-label">Starting at</span>
-            <div className="wc-service-price-amount">
-              ${service.price?.toLocaleString()}
-              {service.priceNote && (
-                <span className="wc-service-price-note">{service.priceNote}</span>
-              )}
-            </div>
-          </div>
+          
           
           <div className="wc-service-actions">
              {/* FIXED: Changed 'service' to 'template' and 'source' to 'templates' */}
@@ -372,107 +364,16 @@ export default function ServiceDetailsPage() {
               
               Schedule Consultation
             </button>
-            <button 
-              className="wc-btn-secondary wc-btn-xlarge"
-              onClick={handleAddToCart}
-            >
-             
-              Purchase Now
-            </button>
+            <AddToQuoteButton 
+              item={service} 
+              source="templates" 
+              className="wc-btn-secondary wc-btn-large"
+            />
           </div>
         </div>
       </section>
 
-      {/* Related Services */}
-      {!isBlueprint && (
-        <section className="wc-related-services wc-fade-in">
-          <h2>Related Services</h2>
-          <div className="wc-related-services-grid">
-            {getServicesByType(service.type || 'web')
-              .filter(s => s.id !== service.id)
-              .slice(0, 3)
-              .map((relatedService, index) => (
-                <Link 
-                  key={relatedService.id} 
-                  href={`/services/application/${relatedService.id}`}
-                  className="wc-related-service-card wc-fade-in-up"
-                  style={{ animationDelay: `${index * 0.1}s` }}
-                >
-                  <div className="wc-related-service-icon">
-                    <i className={relatedService.icon}></i>
-                  </div>
-                  <h4>{relatedService.title}</h4>
-                  <p className="wc-related-service-desc">{relatedService.description}</p>
-                  <div className="wc-related-service-price">
-                    From ${relatedService.price?.toLocaleString()}
-                  </div>
-                </Link>
-              ))}
-          </div>
-        </section>
-      )}
-
-      {/* Booking Modal */}
-      {showBookingModal && (
-        <div className="wc-modal-overlay wc-modal-open">
-          <div className="wc-booking-modal wc-modal-slide-in">
-            <div className="wc-modal-header">
-              <h3>Book a Consultation</h3>
-              <button 
-                onClick={() => setShowBookingModal(false)}
-                className="wc-modal-close"
-              >
-                ×
-              </button>
-            </div>
-            
-            <form onSubmit={handleBookingSubmit} className="wc-booking-form">
-              <div className="wc-form-group">
-                <label>Full Name</label>
-                <input type="text" placeholder="Enter your name" required />
-              </div>
-              
-              <div className="wc-form-group">
-                <label>Email Address</label>
-                <input type="email" placeholder="Enter your email" required />
-              </div>
-              
-              <div className="wc-form-group">
-                <label>Project Type</label>
-                <select>
-                  <option value="">Select project type</option>
-                  <option value="web">Web Application</option>
-                  <option value="mobile">Mobile App</option>
-                  <option value="fullstack">Full Stack</option>
-                  <option value="saas">SaaS Platform</option>
-                </select>
-              </div>
-              
-              <div className="wc-form-group">
-                <label>Preferred Date & Time</label>
-                <input type="datetime-local" required />
-              </div>
-              
-              <div className="wc-form-group">
-                <label>Additional Notes</label>
-                <textarea 
-                  placeholder="Tell us about your project requirements..." 
-                  rows="4"
-                ></textarea>
-              </div>
-              
-              <div className="wc-form-actions">
-                <button type="button" className="wc-btn-ghost" onClick={() => setShowBookingModal(false)}>
-                  Cancel
-                </button>
-                <button type="submit" className="wc-btn-primary">
-                  Book Consultation
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
+ 
     </main>
   );
 }

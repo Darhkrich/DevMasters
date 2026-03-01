@@ -91,12 +91,11 @@ export default function TemplatesPage() {
         </div>
 
         <div className="sp3__wc-services-hero-demo">
-          <div className="sp3__wc-hero-demo-card sp3__wc-templates-hero-card">
-            <div className="sp3__wc-hero-label"> to Contact us if you don't find what You want </div>
+          
             <Link href="/contact">
               <button className="sp3__wc-btn-primary1"> Contact Us</button>
             </Link>
-          </div>
+          
         </div>
       </section>
 

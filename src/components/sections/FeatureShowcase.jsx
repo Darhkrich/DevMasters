@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useRef } from "react";
 import "./feature-showcase.css";
-
+import Link from "next/link"
 export default function FeatureShowcase() {
   const cardsRef = useRef([]);
 
@@ -118,10 +118,14 @@ export default function FeatureShowcase() {
         </div>
 
         {/* CTA */}
+ <Link href={'/services'}>
         <div className="fs-banner reveal">
+   
           <h3> Build Faster. Scale Smarter.</h3>
           <p>Let’s create technology that puts your brand ahead.</p>
+      
         </div>
+          </Link>
       </div>
     </section>
   );

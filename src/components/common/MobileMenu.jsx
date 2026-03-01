@@ -47,7 +47,7 @@ export default function MobileMenu() {
         <nav className="mm-nav">
           <Link href="/" onClick={() => setOpen(false)}>Home</Link>
           <Link href="/services" onClick={() => setOpen(false)}>Services</Link>
-          <Link href="/pricing" onClick={() => setOpen(false)}>Pricing</Link>
+          <Link href="/packages" onClick={() => setOpen(false)}>Packages</Link>
           <Link href="/how-it-work" onClick={() => setOpen(false)}>How It Works</Link>
           <Link href="/contact" onClick={() => setOpen(false)}>Contact</Link>
         </nav>

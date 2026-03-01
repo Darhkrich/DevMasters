@@ -87,41 +87,6 @@ export default function PricingPage() {
       ? window.getComputedStyle(servicesEl).opacity
       : null;
 
-    // Console-based instrumentation for pricing page mount
-    // #region agent log console
-    console.log('[DEBUG H1-H3] pricing CSS/state snapshot', {
-      bodyOpacity,
-      servicesOpacity,
-      activeCategory,
-      websiteType,
-      billingMode,
-    });
-    // #endregion agent log console
-
-    // #region agent log
-    fetch('http://127.0.0.1:7654/ingest/d12143fe-693e-4703-9454-994924290ead', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Debug-Session-Id': '3fb90f',
-      },
-      body: JSON.stringify({
-        sessionId: '3fb90f',
-        runId: 'initial',
-        hypothesisId: 'H1-H3',
-        location: 'app/(public)/pricing/page.jsx:83',
-        message: 'Pricing page mounted - CSS and state snapshot',
-        data: {
-          bodyOpacity,
-          servicesOpacity,
-          activeCategory,
-          websiteType,
-          billingMode,
-        },
-        timestamp: Date.now(),
-      }),
-    }).catch(() => {});
-    // #endregion agent log
   }, []);  
 
   return (
@@ -149,7 +114,7 @@ export default function PricingPage() {
             <i className="fas fa-tags" style={{ fontSize: '0.8rem' }}></i>
             Transparent pricing
           </span>
-          <h1>Pricing that grows with your ideas.</h1>
+          <h1>Packages that grows with your ideas.</h1>
           <p>
             Choose a ready-made package or build your own mix of websites, apps and AI automation. 
             We keep everything simple, clear and scalable.
@@ -256,7 +221,7 @@ export default function PricingPage() {
 
               <div className="sp5__wc-pricing-price">
                 <span className="sp5__wc-price-main">
-                  <span className="sp5__wc-price-currency">$</span>
+                  <span className="sp5__wc-price-currency"> Starting from $ </span>
                   <span className="sp5__wc-price-value">
                     {billingMode === 'monthly' ? pkg.billingMonthly : pkg.billingOneTime}
                   </span>
@@ -304,7 +269,7 @@ export default function PricingPage() {
 
               <div className="sp5__wc-pricing-price">
                 <span className="sp5__wc-price-main">
-                  <span className="sp5__wc-price-currency">$</span>
+                  <span className="sp5__wc-price-currency"> Starting from $</span>
                   <span className="sp5__wc-price-value">
                     {billingMode === 'monthly' ? pkg.billingMonthly : pkg.billingOneTime}
                   </span>
@@ -366,7 +331,7 @@ export default function PricingPage() {
 
               <div className="sp5__wc-pricing-price">
                 <span className="sp5__wc-price-main">
-                  <span className="sp5__wc-price-currency">$</span>
+                  <span className="sp5__wc-price-currency"> Starting from $</span>
                   <span className="sp5__wc-price-value">
                     {billingMode === 'monthly' ? pkg.billingMonthly : pkg.billingOneTime}
                   </span>
@@ -424,7 +389,7 @@ export default function PricingPage() {
 
               <div className="sp5__wc-pricing-price">
                 <span className="sp5__wc-price-main">
-                  <span className="sp5__wc-price-currency">$</span>
+                  <span className="sp5__wc-price-currency"> Starting from $</span>
                   <span className="sp5__wc-price-value">
                     {billingMode === 'monthly' ? pkg.billingMonthly : pkg.billingOneTime}
                   </span>

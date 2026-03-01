@@ -212,6 +212,7 @@ export default function BuilderSection({ onPackageSelect, onDashboardNavigate })
         {/* LEFT COLUMN: Options */}
         <div className="builder-column builder-options">
           <h3>1. What do you need?</h3>
+          <h4> One-time payment for development</h4>
           <p className="builder-hint">
             Pick one or more categories and then customize the options below.
           </p>

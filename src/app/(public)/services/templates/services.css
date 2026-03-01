@@ -365,17 +365,16 @@ button, input {
 
 .sp3__wc-template-thumb {
   width: 100%;
-  height: 197px;
+  height: auto;
   background: #151515;
   position: relative;
-  overflow: hidden;
-  border-bottom: 1px solid rgba(255,255,255,0.05);
+  
   background: radial-gradient(circle at top, #4a90ff, #151728);
 }
 
 .sp3__wc-template-thumb img {
   width: 100%;
-  height: auto;
+    height: auto;
   max-width: 100%;
   position: relative;
   display: block;
@@ -606,11 +605,11 @@ button, input {
   
 .sp3__wc-template-thumb {
   width: 100%;
-  height: 197px;
+  height: auto;
   background: #151515;
   position: relative;
   overflow: hidden;
-  border-bottom: 1px solid rgba(255,255,255,0.05);
+ 
   background: radial-gradient(circle at top, #4a90ff, #151728);
 }
 
@@ -634,11 +633,11 @@ button, input {
   .sp3__wc-templates-controls { top: 0; margin-bottom: 2rem; }
 .sp3__wc-template-thumb {
   width: 100%;
-  height: 197px;
+  height: auto;
   background: #151515;
   position: relative;
   overflow: hidden;
-  border-bottom: 1px solid rgba(255,255,255,0.05);
+
   background: radial-gradient(circle at top, #4a90ff, #151728);
 }
 

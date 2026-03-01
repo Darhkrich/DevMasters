@@ -25,7 +25,7 @@ function ServiceCard({ service }) {
             </li>
           ))}
         </ul>
-        <div className="sp4__service-price">${service.price?.toLocaleString()}</div>
+        
       </div>
       <div className="sp4__service-card-actions">
         <Link href={`/services/application/${service.id}`} className="sp4__wc-btn-secondary">

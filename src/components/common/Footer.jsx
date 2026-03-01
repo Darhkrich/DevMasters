@@ -15,9 +15,12 @@ export default function Footer() {
             </p>
 
             <div className="pf-footer__socials">
-              <a href="#" aria-label="Twitter"><i className="fab fa-twitter"></i></a>
+              <a href="#" aria-label="Twitter"><i className="fab fa-x"></i></a>
               <a href="#" aria-label="LinkedIn"><i className="fab fa-linkedin"></i></a>
               <a href="#" aria-label="GitHub"><i className="fab fa-github"></i></a>
+              <a href="#" aria-label="GitHub"><i className="fab fa-youtube"></i></a>
+              <a href="#" aria-label="GitHub"><i className="fab fa-tiktok"></i></a>
+              <a href="#" aria-label="GitHub"><i className="fab fa-instagram"></i></a>
             </div>
           </div>
 
@@ -27,7 +30,7 @@ export default function Footer() {
             <ul>
               <li><Link href="/">Home</Link></li>
               <li><Link href="/services">Services</Link></li>
-              <li><Link href="/pricing">Packages</Link></li>
+              <li><Link href="/packages">Packages</Link></li>
               <li><Link href="/how-it-works">How It Works</Link></li>
             </ul>
           </div>
@@ -37,7 +40,7 @@ export default function Footer() {
             <h4>Support</h4>
             <ul>
               <li><Link href="/contact">Contact</Link></li>
-              <li><Link href="/help">Help Center</Link></li>
+              <li><Link href="/HelperCenter">Help Center</Link></li>
               <li><Link href="/privacy-policy">Privacy Policy</Link></li>
               <li><Link href="/terms">Terms of Service</Link></li>
             </ul>

@@ -63,7 +63,7 @@ export default function HomePage() {
               <Link href="/services" className="btn btn--primary btn--large">
                 Browse Our Services
               </Link>
-              <Link href="/how-it-works" className="btn btn--secondary btn--large btn--primary">
+              <Link href="/how-it-work" className="btn btn--secondary btn--large btn--primary">
                 How It Works
               </Link>
             </div>
