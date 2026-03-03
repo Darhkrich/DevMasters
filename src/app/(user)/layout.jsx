@@ -8,7 +8,7 @@ import UserLayoutContent from './components/UserLayoutContent';
 import './styles.css';
 // Preload all dashboard page CSS so layout renders correctly on client navigation
 import './dashboard/dashboard.css';
-import './dashboard/dashboardProject/dashboardproject.css';
+import './dashboard/Project/dashboardproject.css';
 
 import './dashboard/UploadFile/upload.css';
 import './dashboard/Settings/setting.css';

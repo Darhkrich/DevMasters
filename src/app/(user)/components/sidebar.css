@@ -1,135 +1,178 @@
-/* Visibility */
-.desktop-only {
-  display: none;
-}
-
-.mobile-only {
-  display: flex;
-}
-
-/* Layout */
+/* Base layout */
 .dashboard-layout {
-  display: flex;
   min-height: 100vh;
-  background: #f8fafc;
-}
-
-/* Desktop Sidebar */
-.dashboard-sidebar {
-  width: 260px;
-  background: #0f172a;
-  color: #fff;
-  padding: 24px;
-}
-
-.sidebar-brand {
-  font-size: 20px;
-  font-weight: 700;
-  margin-bottom: 32px;
-}
-
-/* Nav */
-.sidebar-nav {
   display: flex;
   flex-direction: column;
-  gap: 8px;
 }
 
-.sidebar-link {
-  display: flex;
-  gap: 12px;
-  align-items: center;
-  padding: 10px 14px;
-  border-radius: 8px;
-  color: #cbd5f5;
-  text-decoration: none;
-}
-
-.sidebar-link.active,
-.sidebar-link:hover {
-  background: #1e293b;
-  color: #fff;
-}
-
-/* Mobile Header */
+/* Mobile header (hidden on desktop) */
 .mobile-header {
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  background-color: #1e1e2f;
+  color: white;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.hamburger {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.5rem;
+  cursor: pointer;
+  margin-right: 1rem;
+  display: flex;
+  align-items: center;
+}
+
+.mobile-logo {
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+/* Desktop sidebar */
+.desktop-sidebar {
+  width: 260px;
+  background-color: #1e1e2f;
+  color: white;
+  height: 100vh;
   position: fixed;
   top: 0;
   left: 0;
-  right: 0;
-  height: 56px;
-  background: #fff;
-  border-bottom: 1px solid #e5e7eb;
-  padding: 0 16px;
-  align-items: center;
-  gap: 12px;
-  z-index: 50;
+  overflow-y: auto;
+  transition: transform 0.3s ease;
+  display: none; /* hidden by default, shown on desktop */
 }
 
-.hamburger-btn {
-  background: none;
-  border: none;
-  font-size: 22px;
+.sidebar-header {
+  padding: 1.5rem;
+  font-size: 1.5rem;
+  font-weight: bold;
+  border-bottom: 1px solid #2d2d44;
 }
 
-.mobile-brand {
-  font-weight: 700;
+.sidebar-nav {
+  padding: 1rem 0;
 }
 
-/* Mobile Sidebar */
-.mobile-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.4);
-  z-index: 80;
-}
-
-.mobile-sidebar {
+/* Mobile drawer */
+.mobile-drawer {
   position: fixed;
   top: 0;
   left: 0;
   width: 260px;
   height: 100vh;
-  background: #0f172a;
-  color: #fff;
-  padding: 24px;
-  z-index: 100;
-  animation: slideIn 0.25s ease;
+  background-color: #1e1e2f;
+  color: white;
+  z-index: 1000;
+  transform: translateX(-100%);
+  transition: transform 0.3s ease;
+  overflow-y: auto;
 }
 
-.mobile-sidebar-header {
+.mobile-drawer.open {
+  transform: translateX(0);
+}
+
+.drawer-header {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 24px;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid #2d2d44;
+  font-size: 1.2rem;
+  font-weight: bold;
 }
 
-/* Content */
-.dashboard-content {
+.close-btn {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 2rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.drawer-nav {
+  padding: 1rem 0;
+}
+
+.drawer-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+}
+
+/* Common nav link styles (used in both sidebars and drawer) */
+.nav-link {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 1.5rem;
+  color: #b0b0c0;
+  text-decoration: none;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.nav-link:hover {
+  background-color: #2d2d44;
+  color: white;
+}
+
+.nav-link.active {
+  background-color: #3a3a55;
+  color: white;
+  border-left: 4px solid #6c5ce7;
+}
+
+.nav-link .icon {
+  margin-right: 1rem;
+  font-size: 1.2rem;
+  display: inline-flex;
+  align-items: center;
+}
+
+/* Main content area */
+.main-content {
   flex: 1;
-  padding: 80px 20px 20px;
+  padding: 1.5rem;
+  background-color: #f5f5fa;
+  min-height: 100vh;
 }
 
-/* Desktop */
-@media (min-width: 1024px) {
-  .desktop-only {
-    display: block;
+/* Desktop styles (≥ 768px) */
+@media (min-width: 768px) {
+  .mobile-header {
+    display: none; /* hide mobile header on desktop */
   }
 
-  .mobile-only {
-    display: none;
+  .desktop-sidebar {
+    display: block; /* show desktop sidebar */
   }
 
-  .dashboard-content {
-    padding: 32px;
+  .main-content {
+    margin-left: 260px; /* offset for fixed sidebar */
+    padding: 2rem;
+  }
+
+  .mobile-drawer,
+  .drawer-overlay {
+    display: none; /* ensure mobile drawer is hidden on desktop */
   }
 }
 
-/* Animation */
-@keyframes slideIn {
-  from {
-    transform: translateX(-100%);
+/* Tablet adjustments (optional) */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .desktop-sidebar {
+    width: 220px;
   }
-  to {
-    transform: translateX(0);
+  .main-content {
+    margin-left: 220px;
   }
 }

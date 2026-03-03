@@ -5,10 +5,10 @@ import './how-it-work.css';
 
 const FILTERS = [
   'All',
-  'Templates',
+  'Websites',
   'Applications',
   'AI Automation',
-  'Pricing',
+  'Packages',
 ];
 
 export default function HowItWorksPage() {
@@ -47,37 +47,57 @@ export default function HowItWorksPage() {
       {/* CONTENT */}
       <section className="how-sections">
 
-        {isVisible('Templates') && (
+      {isVisible('Websites') && (
           <div className="how-card">
             <div className="icon"></div>
-            <h2>Website Templates</h2>
-            <p>
-              Premium, customizable templates built for speed,
-              scalability, and real businesses.
-            </p>
+            <h2>For Ready-made Websites</h2>
+           
             <ul>
-              <li>Modern & responsive design</li>
-              <li>SEO & performance optimized</li>
-              <li>Easy customization</li>
-              <li>One-time purchase</li>
+              <li>Choose from Over 30+ industry-specific ready-made website templates
+              </li>
+              <li>Go to the packages section and choose plan that suits your needs</li>
+              <li>Go to the Checkout/Qoute page, fill in the required details and submit the form</li>
+              <li>A Staff member will contact you for additional information and assist you with any form of help</li>
+                <li>For Ready-made websites it usally takes less than 24 hours to setup</li>
+                 <li>We also build websites from scratch just contact us for what you need</li>
             </ul>
             <button className="primary-btn">Browse Templates</button>
           </div>
         )}
 
+
+        {isVisible('Websites') && (
+          <div className="how-card">
+            <div className="icon"></div>
+            <h2>For Customizable Website</h2>
+        
+            <ul>
+              <li>Choose from our Customizable website templates
+              </li>
+                <li>Go to the packages section and choose from avialiable plans or build your plan that suits your needs</li>
+                <li>Go to the Checkout/Qoute page, fill in the required details and submit the form</li>
+              <li>A Staff member will contact you for additional information and assist you with any form of help</li>
+                <li>For Customize websites readyness depends on complexity and customization needs</li>
+                <li>We also build websites from scratch just contact us for what you need</li>
+         
+            </ul>
+            <button className="primary-btn">Browse Templates</button>
+          </div>
+        )}
+
+      
+
         {isVisible('Applications') && (
           <div className="how-card">
             <div className="icon"></div>
             <h2>Applications</h2>
-            <p>
-              Fully built web applications ready to deploy
-              or customize for your business.
-            </p>
+           
             <ul>
-              <li>Admin dashboards</li>
-              <li>Client portals</li>
-              <li>Secure architecture</li>
-              <li>Scalable backend</li>
+              <li>For Applications checkout our appplication category to see if what you whant is in our list</li>
+              <li></li>
+              <li>Go through our application plan package which you can choose from or build your own plan</li>
+              <li>Create an account and get access to your dashboard</li>
+
             </ul>
             <button className="primary-btn">Explore Apps</button>
           </div>
@@ -92,29 +112,33 @@ export default function HowItWorksPage() {
               and increases efficiency.
             </p>
             <ul>
-              <li>AI workflows</li>
-              <li>Chatbots & assistants</li>
-              <li>Smart integrations</li>
-              <li>Custom AI logic</li>
+              <li>Choose from our available AI automation solutions or tell us what you need</li>
+              <li>visit the packages section to see available AI automation packages</li>
+              
+              
             </ul>
             <button className="primary-btn">View AI Solutions</button>
           </div>
         )}
 
-        {isVisible('Pricing') && (
+        {isVisible('Packages') && (
           <div className="how-card pricing">
             <div className="icon"></div>
-            <h2>Pricing</h2>
+            <h2>Packages</h2>
             <p>
-              Transparent pricing that scales with your needs.
+              Transparent packages that scales with your needs.
             </p>
             <ul>
-              <li>Templates: pay once</li>
-              <li>Apps: flexible pricing</li>
-              <li>AI: custom plans</li>
+              <li>See our available packages</li>
+              <li>choose from our available packages or customize your own</li>
+              <li> flexible pricing</li>
+            <li>only pay for what you need</li>
+            <li>Only One-time payment or Monthly-payment</li>
+            <li>For customize packages, we have a dedicated teams to assist you</li>
+            
               <li>No hidden fees</li>
             </ul>
-            <button className="secondary-btn">View Pricing</button>
+            <button className="secondary-btn">View Packages</button>
           </div>
         )}
 
