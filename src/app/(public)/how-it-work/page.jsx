@@ -1,5 +1,5 @@
 'use client';
-
+import Link from 'next/link';
 import { useState } from 'react';
 import './how-it-work.css';
 
@@ -61,7 +61,9 @@ export default function HowItWorksPage() {
                 <li>For Ready-made websites it usally takes less than 24 hours to setup</li>
                  <li>We also build websites from scratch just contact us for what you need</li>
             </ul>
+                 <Link href="/services/templates">
             <button className="primary-btn">Browse Templates</button>
+            </Link>
           </div>
         )}
 
@@ -81,7 +83,9 @@ export default function HowItWorksPage() {
                 <li>We also build websites from scratch just contact us for what you need</li>
          
             </ul>
+            <Link href="/services/templates">
             <button className="primary-btn">Browse Templates</button>
+            </Link>
           </div>
         )}
 
@@ -99,7 +103,9 @@ export default function HowItWorksPage() {
               <li>Create an account and get access to your dashboard</li>
 
             </ul>
+                 <Link href="/services/application">
             <button className="primary-btn">Explore Apps</button>
+            </Link>
           </div>
         )}
 
@@ -117,7 +123,9 @@ export default function HowItWorksPage() {
               
               
             </ul>
-            <button className="primary-btn">View AI Solutions</button>
+            <Link href="/services/ai-automation">
+              <button className="primary-btn">View AI Solutions</button>
+            </Link>
           </div>
         )}
 
@@ -138,7 +146,9 @@ export default function HowItWorksPage() {
             
               <li>No hidden fees</li>
             </ul>
+                 <Link href="packages">
             <button className="secondary-btn">View Packages</button>
+            </Link>
           </div>
         )}
 

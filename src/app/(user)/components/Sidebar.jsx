@@ -1,107 +1,53 @@
-import { useState, useEffect } from 'react';
+'use client';
+
 import Link from 'next/link';
-import { usePathname } from 'next/navigation'; // ✅ App Router hook
-;
-import './sidebar.css';
+import { usePathname } from 'next/navigation';
+import { 
+  FaHome, FaProjectDiagram, FaBox, FaEnvelope, 
+  FaUpload, FaHeadset, FaCog, FaUser 
+} from 'react-icons/fa';
 
 const navItems = [
-  { name: 'Overview', path: '/dashboard', },
-  { name: 'Project', path: '/dashboard/Project', },
-  { name: 'Package', path: '/dashboard/package',},
-  { name: 'Messages', path: '/dashboard/Messages', },
-  { name: 'FileUpload', path: '/dashboard/UploadFile', },
-  { name: 'Support', path: '/dashboard/Support', },
-  { name: 'Settings', path: '/dashboard/Settings', },
-  { name: 'Profile', path: '/dashboard/Profile', },
+  { name: 'Overview', path: '/dashboard', icon: <FaHome /> },
+  { name: 'Project', path: '/dashboard/Project', icon: <FaProjectDiagram /> },
+  { name: 'Package', path: '/dashboard/Project-progress', icon: <FaBox /> },
+  { name: 'Messages', path: '/dashboard/Messages', icon: <FaEnvelope /> },
+  { name: 'FileUpload', path: '/dashboard/UploadFile', icon: <FaUpload /> },
+  { name: 'Support', path: '/dashboard/Support', icon: <FaHeadset /> },
+  { name: 'Settings', path: '/dashboard/Settings', icon: <FaCog /> },
+
 ];
 
-export default function DashboardLayout({ children }) {
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const pathname = usePathname(); // ✅ get current path
-
-  // Close mobile menu when route changes
-  useEffect(() => {
-    setIsMobileMenuOpen(false);
-  }, [pathname]); // ✅ dependency on pathname
-
-  // Prevent scrolling when mobile menu is open
-  useEffect(() => {
-    if (isMobileMenuOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'unset';
-    }
-  }, [isMobileMenuOpen]);
+export default function DesktopSidebar() {
+  const pathname = usePathname();
 
   return (
-    <div className="dashboard-layout">
-      {/* Mobile header with hamburger */}
-      <header className="mobile-header">
-        <button 
-          className="hamburger" 
-          onClick={() => setIsMobileMenuOpen(true)}
-          aria-label="Open menu"
-        >
-     
-        </button>
-        <div className="mobile-logo">Dashboard</div>
-      </header>
+    <>
+    
+    <aside className="desktop-sidebar">
 
-      {/* Desktop sidebar (always visible) */}
-      <aside className="desktop-sidebar">
-        <div className="sidebar-header">Dashboard</div>
-        <nav className="sidebar-nav">
-          {navItems.map((item) => (
-            <Link
-              key={item.path}
-              href={item.path}
-              className={`nav-link ${pathname === item.path ? 'active' : ''}`} // ✅ active class using pathname
-            >
-              <span className="icon">{item.icon}</span>
-              <span className="label">{item.name}</span>
-            </Link>
-          ))}
-        </nav>
-      </aside>
-
-      {/* Mobile drawer */}
-      <div className={`mobile-drawer ${isMobileMenuOpen ? 'open' : ''}`}>
-        <div className="drawer-header">
-          <span>Dashboard</span>
-          <button 
-            className="close-btn" 
-            onClick={() => setIsMobileMenuOpen(false)}
-            aria-label="Close menu"
-          >
-            ×
-          </button>
+<div className="returns">
+        <Link href="/" className="aa-logo">
+          DevMasters
+        </Link>
         </div>
-        <nav className="drawer-nav">
-          {navItems.map((item) => (
-            <Link
-              key={item.path}
-              href={item.path}
-              className={`nav-link ${pathname === item.path ? 'active' : ''}`}
-            >
-              <span className="icon">{item.icon}</span>
-              <span className="label">{item.name}</span>
-            </Link>
-          ))}
-        </nav>
-      </div>
 
-      {/* Overlay when mobile drawer is open */}
-      {isMobileMenuOpen && (
-        <div 
-          className="drawer-overlay" 
-          onClick={() => setIsMobileMenuOpen(false)}
-        />
-      )}
+      <div className="sidebar-header">Dashboard</div>
+      <nav className="sidebar-nav">
+        {navItems.map((item) => (
+          <Link
+            key={item.path}
+            href={item.path}
+            className={`nav-link ${pathname === item.path ? 'active' : ''}`}
+          >
+            <span className="icon">{item.icon}</span>
+            <span className="label">{item.name}</span>
+          </Link>
+        ))}
+      </nav>
+    </aside>
 
-      {/* Main content area */}
-      <main className="main-content">
-        {children}
-      </main>
-    </div>
+      
+        </>
   );
 }

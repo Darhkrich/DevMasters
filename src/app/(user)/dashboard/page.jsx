@@ -1,130 +1,187 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
-import { getDashboard } from "@/lib/dashboardStore";
-import "./dashboard.css";
+import { useState, useEffect } from 'react';
+import Image from 'next/image';
+import Link from 'next/link';
+import styles from './Overview.module.css';
 
-export default function DashboardOverview() {
-  const [dashboard, setDashboard] = useState(null);
+// Mock data – replace with real API calls
+const mockClient = {
+  name: 'Alex Johnson',
+  plan: 'Professional',
+  nextBilling: '2025-05-15',
+  credits: 150,
+  activeProjects: 3,
+};
 
-  useEffect(() => {
-    setDashboard(getDashboard());
-  }, []);
+const mockServices = [
+  {
+    id: 1,
+    type: 'Website Template',
+    name: 'Modern Business Pro',
+    status: 'active',
+    image: '/templates/business.jpg',
+    purchasedOn: '2025-02-10',
+  },
+  {
+    id: 2,
+    type: 'AI Automation',
+    name: 'LeadGen Bot',
+    status: 'active',
+    image: '/automations/leadgen.jpg',
+    purchasedOn: '2025-03-22',
+  },
+  {
+    id: 3,
+    type: 'Application',
+    name: 'Custom CRM',
+    status: 'in-progress',
+    image: '/apps/crm.jpg',
+    purchasedOn: '2025-04-01',
+  },
+];
 
-  if (!dashboard) {
-    return <div className="dashboard-loading">Loading dashboard...</div>;
-  }
+const mockRecentActivity = [
+  { id: 1, action: 'Package upgraded to Professional', date: '2025-04-10' },
+  { id: 2, action: 'New template purchased: Modern Business Pro', date: '2025-04-09' },
+  { id: 3, action: 'Support ticket #1234 resolved', date: '2025-04-08' },
+];
 
-  const { templates, aiAutomation, mobileApps, pricingPlans } = dashboard.items;
+const mockMessages = [
+  { id: 1, from: 'Support Team', subject: 'Your AI bot is ready', date: '2025-04-11', unread: true },
+  { id: 2, from: 'Billing', subject: 'Invoice for April', date: '2025-04-05', unread: false },
+];
+
+export default function OverviewPage() {
+  const [client, setClient] = useState(mockClient);
+  const [services, setServices] = useState(mockServices);
+  const [activity, setActivity] = useState(mockRecentActivity);
+  const [messages, setMessages] = useState(mockMessages);
 
   return (
-    <main className="dashboard">
+    <div className={styles.overview}>
       {/* Header */}
-      <header className="dashboard-header">
-        <h1>Dashboard Overview</h1>
-        <p>Your selected services and ongoing projects</p>
-      </header>
+      <div className={styles.header}>
+        <h1 className={styles.greeting}>Welcome back, {client.name}!</h1>
+        <p className={styles.date}>{new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
+      </div>
 
-      {/* Summary Stats */}
-      <section className="dashboard-stats">
-        <Stat title="Templates" value={templates.length} />
-        <Stat title="AI Automation" value={aiAutomation.length} />
-        <Stat title="Mobile Apps" value={mobileApps.length} />
-        <Stat title="Pricing Plans" value={pricingPlans.length} />
-      </section>
+      {/* Key Metrics */}
+      <div className={styles.metricsGrid}>
+        <div className={styles.metricCard}>
+          <span className={styles.metricLabel}>Active Projects</span>
+          <span className={styles.metricValue}>{client.activeProjects}</span>
+        </div>
+        <div className={styles.metricCard}>
+          <span className={styles.metricLabel}>Credits Remaining</span>
+          <span className={styles.metricValue}>{client.credits}</span>
+        </div>
+        <div className={styles.metricCard}>
+          <span className={styles.metricLabel}>Current Plan</span>
+          <span className={styles.metricValue}>{client.plan}</span>
+        </div>
+        <div className={styles.metricCard}>
+          <span className={styles.metricLabel}>Next Billing</span>
+          <span className={styles.metricValue}>{new Date(client.nextBilling).toLocaleDateString()}</span>
+        </div>
+      </div>
 
-      {/* Templates */}
-      <DashboardSection
-        title="Website Templates"
-        items={templates}
-        empty="No templates added yet."
-        render={(item) => (
-          <ItemCard
-            title={item.name}
-            subtitle={item.price}
-            image={item.image}
-          />
-        )}
-      />
-
-      {/* AI Automation */}
-      <DashboardSection
-        title="AI Automation Services"
-        items={aiAutomation}
-        empty="No AI automation selected."
-        render={(item) => (
-          <ItemCard
-            title={item.name}
-            subtitle="AI Service"
-          />
-        )}
-      />
-
-      {/* Mobile Apps */}
-      <DashboardSection
-        title="Mobile App Development"
-        items={mobileApps}
-        empty="No mobile app projects yet."
-        render={(item) => (
-          <ItemCard
-            title={item.name}
-            subtitle="Mobile Application"
-          />
-        )}
-      />
-
-      {/* Pricing Plans */}
-      <DashboardSection
-        title="Subscription Plans"
-        items={pricingPlans}
-        empty="No active pricing plan."
-        render={(item) => (
-          <ItemCard
-            title={item.name}
-            subtitle={`${item.price}/month`}
-          />
-        )}
-      />
-    </main>
-  );
-}
-
-/* ---------- Small UI Components ---------- */
-
-function Stat({ title, value }) {
-  return (
-    <div className="stat-card">
-      <h3>{title}</h3>
-      <span>{value}</span>
-    </div>
-  );
-}
-
-function DashboardSection({ title, items, empty, render }) {
-  return (
-    <section className="dashboard-section">
-      <h2>{title}</h2>
-
-      {items.length === 0 ? (
-        <p className="empty-state">{empty}</p>
-      ) : (
-        <div className="items-grid">
-          {items.map((item, index) => (
-            <div key={index}>{render(item)}</div>
+      {/* Current Services / Products */}
+      <section className={styles.section}>
+        <div className={styles.sectionHeader}>
+          <h2 className={styles.sectionTitle}>Your Services & Products</h2>
+          <Link href="/dashboard/project" className={styles.viewAllLink}>View All →</Link>
+        </div>
+        <div className={styles.servicesGrid}>
+          {services.map(service => (
+            <div key={service.id} className={styles.serviceCard}>
+              <div className={styles.serviceImage}>
+                <Image
+                  src={service.image}
+                  alt={service.name}
+                  width={80}
+                  height={80}
+                  className={styles.image}
+                />
+              </div>
+              <div className={styles.serviceInfo}>
+                <span className={styles.serviceType}>{service.type}</span>
+                <h3 className={styles.serviceName}>{service.name}</h3>
+                <span className={`${styles.serviceStatus} ${styles[service.status]}`}>
+                  {service.status}
+                </span>
+              </div>
+            </div>
           ))}
         </div>
-      )}
-    </section>
-  );
-}
+      </section>
 
-function ItemCard({ title, subtitle, image }) {
-  return (
-    <div className="item-card">
-      {image && <img src={image} alt={title} />}
-      <div className="item-content">
-        <h4>{title}</h4>
-        <p className="price">{subtitle}</p>
+      {/* Package Plan Details */}
+      <section className={styles.section}>
+        <div className={styles.sectionHeader}>
+          <h2 className={styles.sectionTitle}>Your Package: {client.plan}</h2>
+          <Link href="/dashboard/package" className={styles.viewAllLink}>Manage →</Link>
+        </div>
+        <div className={styles.packageCard}>
+          <div className={styles.packageFeatures}>
+            <ul className={styles.featureList}>
+              <li>✔ 5 Website Templates</li>
+              <li>✔ 3 AI Automation Templates</li>
+              <li>✔ 1 Custom Application Request</li>
+              <li>✔ Priority Support</li>
+              <li>✔ 200 Credits/month</li>
+            </ul>
+          </div>
+          <div className={styles.packageProgress}>
+            <div className={styles.progressItem}>
+              <span>Templates Used: 2/5</span>
+              <div className={styles.progressBar}><div style={{ width: '40%' }}></div></div>
+            </div>
+            <div className={styles.progressItem}>
+              <span>Automations Used: 1/3</span>
+              <div className={styles.progressBar}><div style={{ width: '33%' }}></div></div>
+            </div>
+            <div className={styles.progressItem}>
+              <span>Credits Used: 50/200</span>
+              <div className={styles.progressBar}><div style={{ width: '25%' }}></div></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Recent Activity & Messages (Two-column) */}
+      <div className={styles.twoColumn}>
+        {/* Recent Activity */}
+        <section className={styles.section}>
+          <h2 className={styles.sectionTitle}>Recent Activity</h2>
+          <ul className={styles.activityList}>
+            {activity.map(item => (
+              <li key={item.id} className={styles.activityItem}>
+                <span className={styles.activityAction}>{item.action}</span>
+                <span className={styles.activityDate}>{new Date(item.date).toLocaleDateString()}</span>
+              </li>
+            ))}
+          </ul>
+        </section>
+
+        {/* Recent Messages */}
+        <section className={styles.section}>
+          <div className={styles.sectionHeader}>
+            <h2 className={styles.sectionTitle}>Messages</h2>
+            <Link href="/dashboard/messages" className={styles.viewAllLink}>View All →</Link>
+          </div>
+          <ul className={styles.messageList}>
+            {messages.map(msg => (
+              <li key={msg.id} className={`${styles.messageItem} ${msg.unread ? styles.unread : ''}`}>
+                <div className={styles.messageHeader}>
+                  <span className={styles.messageFrom}>{msg.from}</span>
+                  <span className={styles.messageDate}>{new Date(msg.date).toLocaleDateString()}</span>
+                </div>
+                <p className={styles.messageSubject}>{msg.subject}</p>
+              </li>
+            ))}
+          </ul>
+        </section>
       </div>
     </div>
   );
