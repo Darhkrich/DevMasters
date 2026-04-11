@@ -1,36 +1,43 @@
-/* src/styles/globals.css */
+/* =====================================
+   GLOBAL STYLES — TOKEN-DRIVEN & MOBILE-FIRST
+   (Uses :root variables from main CSS file)
+===================================== */
 
-/* IMPORTANT: Ensure viewport meta tag is in your HTML:
-   <meta name="viewport" content="width=device-width, initial-scale=1"> */
-
-/* Ensure [data-aos] elements are visible before AOS initializes (prevents layout needing refresh) */
+/* =========================
+   AOS OVERRIDE (PREVENTS FOUC)
+========================= */
 [data-aos] {
   opacity: 1 !important;
   transform: none !important;
   visibility: visible !important;
 }
 
-* {
+/* =========================
+   RESET & BASE (MOBILE-FIRST)
+========================= */
+*,
+*::before,
+*::after {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
 html {
-  font-size: 16px;
-}
-
-@media (max-width: 768px) {
-  html {
-    font-size: 14px;
-  }
+  font-size: 14px; /* mobile base */
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   min-height: 100vh;
+  background: var(--bg-main);
+  color: var(--text-main);
+  line-height: 1.5;
+  transition: background 0.3s ease, color 0.2s ease;
 }
 
 a {
@@ -47,253 +54,432 @@ input,
 textarea,
 select {
   font-family: inherit;
+  font-size: 16px; /* prevents iOS zoom */
 }
 
-/* Accessibility Focus States */
+/* =========================
+   FOCUS STATES (ACCESSIBILITY)
+========================= */
 button:focus-visible,
 a:focus-visible,
 input:focus-visible,
 textarea:focus-visible,
 select:focus-visible {
-  outline: 2px solid #3b82f6;
+  outline: 2px solid var(--primary);
   outline-offset: 2px;
 }
 
-/* Utility classes */
+/* =========================
+   UTILITY CLASSES (MOBILE-FIRST)
+========================= */
+
+/* Display */
 .hidden {
   display: none !important;
 }
-
-.text-center {
-  text-align: center;
+.block {
+  display: block;
 }
-
+.inline-block {
+  display: inline-block;
+}
 .flex {
   display: flex;
 }
-
-.items-center {
-  align-items: center;
-}
-
-.justify-between {
-  justify-content: space-between;
-}
-
-.gap-2 {
-  gap: 8px;
-}
-
-.gap-4 {
-  gap: 16px;
-}
-
 .grid {
   display: grid;
 }
 
+/* Flex utilities */
+.items-center {
+  align-items: center;
+}
+.justify-between {
+  justify-content: space-between;
+}
+.justify-center {
+  justify-content: center;
+}
+.flex-col {
+  flex-direction: column;
+}
+.flex-wrap {
+  flex-wrap: wrap;
+}
+
+/* Gap */
+.gap-1 {
+  gap: 0.25rem;
+}
+.gap-2 {
+  gap: 0.5rem;
+}
+.gap-4 {
+  gap: 1rem;
+}
+.gap-6 {
+  gap: 1.5rem;
+}
+.gap-8 {
+  gap: 2rem;
+}
+
+/* Grid (mobile-first: 1 column) */
 .grid-cols-1 {
   grid-template-columns: 1fr;
 }
-
 .grid-cols-2 {
   grid-template-columns: 1fr;
 }
-
-@media (min-width: 640px) {
-  .grid-cols-2 {
-    grid-template-columns: repeat(2, 1fr);
-  }
+.grid-cols-3 {
+  grid-template-columns: 1fr;
+}
+.grid-cols-4 {
+  grid-template-columns: 1fr;
 }
 
+/* Text alignment */
+.text-center {
+  text-align: center;
+}
+.text-left {
+  text-align: left;
+}
+.text-right {
+  text-align: right;
+}
+
+/* Container */
 .container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 16px;
+  padding: 0 1rem;
 }
 
-@media (min-width: 640px) {
-  .container {
-    padding: 0 20px;
-  }
+/* Padding */
+.p-2 {
+  padding: 0.5rem;
 }
-
 .p-4 {
-  padding: 16px;
+  padding: 1rem;
 }
-
+.p-6 {
+  padding: 1.5rem;
+}
 .p-8 {
-  padding: 20px;
+  padding: 1.5rem;
 }
-
-@media (min-width: 768px) {
-  .p-8 {
-    padding: 32px;
-  }
+.px-4 {
+  padding-left: 1rem;
+  padding-right: 1rem;
 }
-
+.py-4 {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
 .py-8 {
-  padding-top: 20px;
-  padding-bottom: 20px;
+  padding-top: 1.5rem;
+  padding-bottom: 1.5rem;
 }
 
-@media (min-width: 768px) {
-  .py-8 {
-    padding-top: 32px;
-    padding-bottom: 32px;
-  }
+/* Margin */
+.m-0 {
+  margin: 0;
 }
-
+.mb-2 {
+  margin-bottom: 0.5rem;
+}
 .mb-4 {
-  margin-bottom: 16px;
+  margin-bottom: 1rem;
 }
-
 .mb-8 {
-  margin-bottom: 20px;
+  margin-bottom: 1.5rem;
 }
-
-@media (min-width: 768px) {
-  .mb-8 {
-    margin-bottom: 32px;
-  }
+.mt-2 {
+  margin-top: 0.5rem;
 }
-
 .mt-4 {
-  margin-top: 16px;
+  margin-top: 1rem;
 }
-
 .mt-8 {
-  margin-top: 20px;
+  margin-top: 1.5rem;
+}
+.mx-auto {
+  margin-left: auto;
+  margin-right: auto;
 }
 
-@media (min-width: 768px) {
-  .mt-8 {
-    margin-top: 32px;
-  }
-}
-
+/* Positioning */
 .sticky {
   position: sticky;
 }
-
+.relative {
+  position: relative;
+}
+.absolute {
+  position: absolute;
+}
+.fixed {
+  position: fixed;
+}
 .top-0 {
   top: 0;
 }
+.z-10 {
+  z-index: 10;
+}
+.z-50 {
+  z-index: 50;
+}
 
+/* Sizing */
+.w-full {
+  width: 100%;
+}
+.h-full {
+  height: 100%;
+}
 .h-fit {
   height: fit-content;
 }
-
 .max-h-500 {
   max-height: min(500px, 70vh);
 }
 
+/* Overflow */
 .overflow-auto {
   overflow: auto;
 }
-
 .overflow-hidden {
   overflow: hidden;
 }
 
+/* Border radius */
+.rounded {
+  border-radius: 0.375rem;
+}
 .rounded-lg {
   border-radius: 0.5rem;
 }
-
 .rounded-xl {
   border-radius: 0.75rem;
 }
-
 .rounded-2xl {
   border-radius: 1rem;
 }
+.rounded-full {
+  border-radius: 9999px;
+}
 
+/* Borders */
 .border {
-  border: 1px solid;
+  border: 1px solid var(--glass-border);
+}
+.border-t {
+  border-top: 1px solid var(--glass-border);
+}
+.border-b {
+  border-bottom: 1px solid var(--glass-border);
 }
 
-.border-gray-700 {
-  border-color: rgba(55, 65, 81, 1);
+/* Backdrop */
+.backdrop-blur-sm {
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
 }
-
 .backdrop-blur-xl {
   backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
 }
 
+/* Typography */
+.text-xs {
+  font-size: 0.75rem;
+}
 .text-sm {
   font-size: 0.875rem;
 }
-
+.text-base {
+  font-size: 1rem;
+}
 .text-lg {
   font-size: 1.125rem;
 }
-
 .text-xl {
   font-size: clamp(1.125rem, 2.5vw, 1.25rem);
 }
-
 .text-2xl {
   font-size: clamp(1.25rem, 3vw, 1.5rem);
 }
-
 .text-3xl {
   font-size: clamp(1.5rem, 4vw, 1.875rem);
 }
-
 .text-4xl {
   font-size: clamp(1.875rem, 5vw, 2.25rem);
 }
+.text-5xl {
+  font-size: clamp(2.25rem, 6vw, 3rem);
+}
 
+.font-light {
+  font-weight: 300;
+}
+.font-normal {
+  font-weight: 400;
+}
+.font-medium {
+  font-weight: 500;
+}
+.font-semibold {
+  font-weight: 600;
+}
 .font-bold {
   font-weight: 700;
 }
 
-.font-semibold {
-  font-weight: 600;
+.leading-tight {
+  line-height: 1.2;
+}
+.leading-normal {
+  line-height: 1.5;
 }
 
+/* Colors (use CSS variables) */
 .text-white {
   color: white;
 }
-
-.text-gray-400 {
-  color: rgba(156, 163, 175, 1);
+.text-main {
+  color: var(--text-main);
+}
+.text-muted {
+  color: var(--text-muted);
+}
+.text-primary {
+  color: var(--primary);
 }
 
-.bg-gray-800 {
-  background: rgba(31, 41, 55, 1);
+.bg-transparent {
+  background: transparent;
+}
+.bg-glass {
+  background: var(--glass-bg);
+}
+.bg-primary {
+  background: var(--primary);
 }
 
-.bg-gray-900 {
-  background: rgba(17, 24, 39, 1);
-}
-
-.bg-blue-600 {
-  background: rgba(37, 99, 235, 1);
-}
-
+/* Gradients */
 .bg-gradient-to-r {
   background: linear-gradient(to right, var(--tw-gradient-stops));
 }
-
-.from-blue-600 {
-  --tw-gradient-from: #2563eb;
+.from-primary {
+  --tw-gradient-from: var(--primary);
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, transparent);
+}
+.to-secondary {
+  --tw-gradient-to: var(--secondary);
 }
 
-.to-purple-600 {
-  --tw-gradient-to: #7c3aed;
-}
+/* =========================
+   RESPONSIVE BREAKPOINTS (MOBILE-FIRST)
+   min-width overrides for larger screens
+========================= */
 
-/* Responsive grid utilities */
-@media (min-width: 768px) {
-  .md\:grid-cols-2 {
+/* sm: ≥640px */
+@media (min-width: 640px) {
+  html {
+    font-size: 15px;
+  }
+
+  .container {
+    padding: 0 1.25rem;
+  }
+
+  .grid-cols-2 {
     grid-template-columns: repeat(2, 1fr);
+  }
+
+  .p-8 {
+    padding: 2rem;
+  }
+
+  .py-8 {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+  }
+
+  .mb-8 {
+    margin-bottom: 2rem;
+  }
+
+  .mt-8 {
+    margin-top: 2rem;
+  }
+
+  .sm\:block {
+    display: block;
+  }
+
+  .sm\:hidden {
+    display: none;
+  }
+
+  .sm\:flex-row {
+    flex-direction: row;
+  }
+
+  .sm\:text-left {
+    text-align: left;
   }
 }
 
+/* md: ≥768px */
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+
+  .grid-cols-3 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .md\:grid-cols-2 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .md\:grid-cols-3 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .md\:sticky {
+    position: sticky;
+  }
+
+  .md\:block {
+    display: block;
+  }
+}
+
+/* lg: ≥1024px */
 @media (min-width: 1024px) {
+  .grid-cols-3 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .grid-cols-4 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
   .lg\:grid-cols-2 {
     grid-template-columns: repeat(2, 1fr);
+  }
+
+  .lg\:grid-cols-3 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .lg\:grid-cols-4 {
+    grid-template-columns: repeat(4, 1fr);
   }
 
   .lg\:sticky {
@@ -301,26 +487,61 @@ select:focus-visible {
   }
 
   .lg\:top-24 {
-    top: 96px;
+    top: 6rem;
   }
 }
 
-/* Additional responsive utilities for better mobile support */
-@media (max-width: 639px) {
-  .sm\:hidden {
-    display: none !important;
-  }
-
-  .sm\:block {
-    display: block !important;
-  }
-
-  .sm\:text-center {
-    text-align: center;
+/* xl: ≥1280px */
+@media (min-width: 1280px) {
+  .grid-cols-4 {
+    grid-template-columns: repeat(4, 1fr);
   }
 }
 
-/* Print styles for better printing experience */
+/* =========================
+   LIGHT MODE OVERRIDES
+   (Applied when .light-mode class is present)
+========================= */
+.light-mode {
+  color-scheme: light;
+}
+
+.light-mode body {
+  background: var(--bg-main);
+  color: var(--text-main);
+}
+
+.light-mode .border {
+  border-color: var(--glass-border);
+}
+
+.light-mode .bg-glass {
+  background: rgba(255, 255, 255, 0.7);
+}
+
+/* =========================
+   TOUCH DEVICE OPTIMIZATIONS
+========================= */
+@media (hover: none) and (pointer: coarse) {
+  button,
+  a,
+  [role="button"],
+  input[type="button"],
+  input[type="submit"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  input,
+  textarea,
+  select {
+    font-size: 16px; /* prevents iOS zoom */
+  }
+}
+
+/* =========================
+   PRINT STYLES
+========================= */
 @media print {
   .hidden-print {
     display: none !important;
@@ -328,17 +549,24 @@ select:focus-visible {
 
   body {
     font-size: 12pt;
+    background: white;
+    color: black;
   }
 
   .container {
     max-width: 100%;
     padding: 0;
   }
+
+  a {
+    text-decoration: underline;
+  }
 }
 
-/* Reduced motion preferences */
+/* =========================
+   REDUCED MOTION
+========================= */
 @media (prefers-reduced-motion: reduce) {
-
   *,
   *::before,
   *::after {
@@ -349,32 +577,26 @@ select:focus-visible {
   }
 }
 
-/* Dark mode support (if needed in future) */
+/* =========================
+   DARK MODE DEFAULT (system preference)
+========================= */
 @media (prefers-color-scheme: dark) {
-
-  /* This ensures compatibility if you add light mode later */
-  body {
+  :root {
     color-scheme: dark;
   }
 }
 
-/* Touch device optimizations */
-@media (hover: none) and (pointer: coarse) {
-
-  /* Increase touch target sizes */
-  button,
-  a,
-  input[type="button"],
-  input[type="submit"] {
-    min-height: 44px;
-    min-width: 44px;
+/* =========================
+   LEGACY BROWSER FALLBACKS
+========================= */
+@supports not (backdrop-filter: blur(1px)) {
+  .backdrop-blur-sm,
+  .backdrop-blur-xl {
+    background: rgba(0, 0, 0, 0.8);
   }
 
-  /* Prevent zoom on input focus */
-  input,
-  textarea,
-  select {
-    font-size: 16px;
-    /* Prevents iOS zoom */
+  .light-mode .backdrop-blur-sm,
+  .light-mode .backdrop-blur-xl {
+    background: rgba(255, 255, 255, 0.9);
   }
 }

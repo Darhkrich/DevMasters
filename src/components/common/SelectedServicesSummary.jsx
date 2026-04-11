@@ -120,20 +120,7 @@ export default function SelectedServicesSummary() {
           ))}
       </div>
 
-      <div className="wc-summary-footer">
-        <div className="wc-summary-total">
-          <span>Estimated total</span>
-          <strong>${Number(total || 0).toLocaleString()}</strong>
-        </div>
-        <div className="wc-summary-actions">
-          <Link href="/Checkout" className="wc-summary-button wc-summary-button-primary">
-            Continue
-          </Link>
-          <Link href="/packages" className="wc-summary-button wc-summary-button-secondary">
-            Edit
-          </Link>
-        </div>
-      </div>
+     
     </div>
   );
 }

@@ -1,0 +1,288 @@
+/* =====================================
+   MOBILE MENU — PROFESSIONAL SAAS AGENCY STYLE
+   Mobile-first, dark/light mode ready
+===================================== */
+
+/* =========================
+   DESIGN TOKENS (DARK MODE DEFAULT)
+   Inherits from :root defined in navbar.css
+   Add fallbacks for standalone use
+========================= */
+:root {
+  --mobile-menu-bg: rgba(18, 22, 36, 0.98);
+  --mobile-menu-border: rgba(255, 255, 255, 0.06);
+  --mobile-menu-text: #f1f5f9;
+  --mobile-menu-text-muted: #94a3b8;
+  --mobile-menu-hover: #3b82f6;
+  --mobile-menu-gradient: linear-gradient(135deg, #3b82f6, #8b5cf6);
+  --mobile-menu-overlay: rgba(0, 0, 0, 0.7);
+  --mobile-menu-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  --mobile-menu-blur: saturate(180%) blur(20px);
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.light-mode {
+  --mobile-menu-bg: rgba(255, 255, 255, 0.98);
+  --mobile-menu-border: rgba(0, 0, 0, 0.06);
+  --mobile-menu-text: #0f172a;
+  --mobile-menu-text-muted: #475569;
+  --mobile-menu-hover: #2563eb;
+  --mobile-menu-overlay: rgba(0, 0, 0, 0.3);
+  --mobile-menu-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+  --mobile-menu-blur: saturate(180%) blur(20px);
+}
+
+/* =========================
+   MOBILE MENU — VISIBLE ONLY ON MOBILE/TABLET
+========================= */
+.mobile-menu {
+  display: block;
+}
+
+@media (min-width: 1024px) {
+  .mobile-menu {
+    display: none;
+  }
+}
+
+/* =========================
+   TOP BAR (ALWAYS VISIBLE)
+========================= */
+.mobile-menu__topbar {
+  position: sticky;
+  top: 0;
+  z-index: 1001;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1.25rem;
+  background: var(--mobile-menu-bg);
+  backdrop-filter: var(--mobile-menu-blur);
+  -webkit-backdrop-filter: var(--mobile-menu-blur);
+  border-bottom: 1px solid var(--mobile-menu-border);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: var(--transition);
+}
+
+.mobile-menu__logo {
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  background: var(--mobile-menu-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-decoration: none;
+}
+
+.mobile-menu__cart-indicator {
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+  margin-right: 1rem;
+  padding: 0.4rem 0.75rem;
+  background: rgba(59, 130, 246, 0.1);
+  border: 1px solid rgba(59, 130, 246, 0.3);
+  border-radius: 40px;
+  font-size: 0.85rem;
+  color: var(--mobile-menu-text);
+  text-decoration: none;
+  transition: var(--transition);
+}
+
+.mobile-menu__cart-indicator:hover {
+  background: rgba(59, 130, 246, 0.2);
+  border-color: var(--mobile-menu-hover);
+}
+
+/* Hamburger Toggle */
+.mobile-menu__toggle {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 28px;
+  height: 22px;
+  padding: 0;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.mobile-menu__toggle span {
+  display: block;
+  width: 100%;
+  height: 2.5px;
+  background: var(--mobile-menu-text);
+  border-radius: 4px;
+  transition: var(--transition);
+}
+
+.mobile-menu__toggle.active span:nth-child(1) {
+  transform: translateY(10px) rotate(45deg);
+}
+
+.mobile-menu__toggle.active span:nth-child(2) {
+  opacity: 0;
+}
+
+.mobile-menu__toggle.active span:nth-child(3) {
+  transform: translateY(-10px) rotate(-45deg);
+}
+
+/* =========================
+   OVERLAY
+========================= */
+.mobile-menu__overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: var(--mobile-menu-overlay);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.mobile-menu__overlay.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* =========================
+   SLIDE PANEL
+========================= */
+.mobile-menu__panel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 1002;
+  width: 85%;
+  max-width: 360px;
+  height: 100vh;
+  background: var(--mobile-menu-bg);
+  backdrop-filter: var(--mobile-menu-blur);
+  -webkit-backdrop-filter: var(--mobile-menu-blur);
+  border-left: 1px solid var(--mobile-menu-border);
+  box-shadow: var(--mobile-menu-shadow);
+  transform: translateX(100%);
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem 1.25rem;
+  overflow-y: auto;
+}
+
+.mobile-menu__panel.open {
+  transform: translateX(0);
+}
+
+/* =========================
+   NAVIGATION LINKS
+========================= */
+.mobile-menu__nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 2rem;
+}
+
+.mobile-menu__nav a {
+  display: block;
+  padding: 0.875rem 1.25rem;
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: var(--mobile-menu-text);
+  text-decoration: none;
+  border-radius: 12px;
+  transition: var(--transition);
+}
+
+.mobile-menu__nav a:hover,
+.mobile-menu__nav a:active {
+  background: rgba(59, 130, 246, 0.1);
+  color: var(--mobile-menu-hover);
+  transform: translateX(4px);
+}
+
+/* =========================
+   ACTION BUTTONS
+========================= */
+.mobile-menu__actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: auto;
+  padding-top: 2rem;
+  border-top: 1px solid var(--mobile-menu-border);
+}
+
+.mobile-menu__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.875rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  text-decoration: none;
+  border-radius: 40px;
+  transition: var(--transition);
+  cursor: pointer;
+  border: none;
+  text-align: center;
+}
+
+.mobile-menu__btn--ghost {
+  background: transparent;
+  color: var(--mobile-menu-text);
+  border: 1px solid var(--mobile-menu-border);
+}
+
+.mobile-menu__btn--ghost:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: var(--mobile-menu-hover);
+  color: var(--mobile-menu-hover);
+  transform: translateY(-1px);
+}
+
+.mobile-menu__btn--primary {
+  background: var(--mobile-menu-gradient);
+  color: white;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+.mobile-menu__btn--primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(59, 130, 246, 0.4);
+}
+
+.mobile-menu__btn--primary:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+}
+
+/* =========================
+   RESPONSIVE FINE-TUNING
+========================= */
+@media (min-width: 640px) {
+  .mobile-menu__panel {
+    max-width: 380px;
+  }
+}
+
+/* =========================
+   ACCESSIBILITY
+========================= */
+@media (prefers-reduced-motion: reduce) {
+  .mobile-menu,
+  .mobile-menu * {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+.mobile-menu__toggle:focus-visible,
+.mobile-menu__nav a:focus-visible,
+.mobile-menu__btn:focus-visible {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}

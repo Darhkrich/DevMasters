@@ -1,12 +1,4 @@
-/* services-page-ios.css
-   Standalone iOS-style layout for the Services page
-   - No dependencies on other stylesheets
-   - Works with the "wc-" classes + .service cards
-*/
 
-/* ========== RESET / BASE ========== */
-
-*,
 *::before,
 *::after {
   box-sizing: border-box;

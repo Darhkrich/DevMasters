@@ -1278,3 +1278,205 @@
 .group:hover .group-hover\:translate-x-1 {
   transform: translateX(0.25rem);
 }
+
+/* ===== LIGHT MODE (ADDED) ===== */
+.light-mode .checkout-page,
+.light-mode .success-page {
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  color: #0f172a;
+}
+
+.light-mode .checkout-title {
+  background: linear-gradient(to right, #0f172a, #475569);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.light-mode .checkout-subtitle,
+.light-mode .stat-label,
+.light-mode .stat-subvalue,
+.light-mode .step-label.inactive,
+.light-mode .service-description,
+.light-mode .service-feature,
+.light-mode .service-details-toggle,
+.light-mode .quote-form-subtitle,
+.light-mode .form-hint,
+.light-mode .submit-info,
+.light-mode .success-message,
+.light-mode .quote-reference-label,
+.light-mode .success-step .step-content p,
+.light-mode .radio-description,
+.light-mode .checkbox-subtext {
+  color: #475569;
+}
+
+.light-mode .stat-card,
+.light-mode .cart-summary,
+.light-mode .quote-form,
+.light-mode .success-card,
+.light-mode .submit-section,
+.light-mode .progress-bar {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(12px);
+  border-color: rgba(0, 0, 0, 0.08);
+}
+
+.light-mode .stat-value,
+.light-mode .cart-summary-title,
+.light-mode .service-title,
+.light-mode .quote-form-title,
+.light-mode .form-section-title,
+.light-mode .success-title,
+.light-mode .success-step .step-content h4,
+.light-mode .step-label.active {
+  color: #0f172a;
+}
+
+.light-mode .cart-items-count {
+  background: rgba(59, 130, 246, 0.1);
+  color: #2563eb;
+}
+
+.light-mode .category-tab {
+  background: #e2e8f0;
+  color: #334155;
+}
+
+.light-mode .category-tab:hover {
+  background: #cbd5e1;
+}
+
+.light-mode .category-tab.active {
+  background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+  color: white;
+}
+
+.light-mode .service-card {
+  background: rgba(255, 255, 255, 0.5);
+  border-color: #cbd5e1;
+}
+
+.light-mode .service-category {
+  background: #e2e8f0;
+  color: #334155;
+}
+
+.light-mode .service-footer {
+  border-top-color: #cbd5e1;
+}
+
+.light-mode .service-price {
+  color: #2563eb;
+}
+
+.light-mode .form-input,
+.light-mode .form-textarea,
+.light-mode .form-select {
+  background: white;
+  border-color: #cbd5e1;
+  color: #0f172a;
+}
+
+.light-mode .form-input:focus,
+.light-mode .form-textarea:focus,
+.light-mode .form-select:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+}
+
+.light-mode .radio-option {
+  background: rgba(255, 255, 255, 0.5);
+  border-color: #cbd5e1;
+}
+
+.light-mode .radio-option.selected {
+  background: rgba(59, 130, 246, 0.05);
+  border-color: #3b82f6;
+}
+
+.light-mode .radio-label,
+.light-mode .checkbox-text,
+.light-mode .form-label {
+  color: #1e293b;
+}
+
+.light-mode .terms-checkbox {
+  background: rgba(0, 0, 0, 0.02);
+  border-color: #cbd5e1;
+}
+
+.light-mode .submit-button,
+.light-mode .browse-services-btn,
+.light-mode .success-btn.primary {
+  background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+  color: white;
+}
+
+.light-mode .success-btn.secondary {
+  background: #e2e8f0;
+  color: #0f172a;
+  border-color: #cbd5e1;
+}
+
+.light-mode .success-btn.secondary:hover {
+  background: #cbd5e1;
+}
+
+.light-mode .quote-reference {
+  background: rgba(0, 0, 0, 0.02);
+  border-color: #cbd5e1;
+}
+
+.light-mode .quote-reference-value {
+  color: #10b981;
+}
+
+.light-mode .success-step .step-number {
+  background: rgba(59, 130, 246, 0.1);
+  color: #2563eb;
+}
+
+.light-mode .submit-error {
+  background: rgba(239, 68, 68, 0.05);
+  border-color: rgba(239, 68, 68, 0.3);
+}
+
+.light-mode .remove-service-btn {
+  color: #64748b;
+}
+
+.light-mode .remove-service-btn:hover {
+  color: #ef4444;
+}
+
+.light-mode .step-number.inactive,
+.light-mode .step-number.upcoming {
+  background: #e2e8f0;
+  border-color: #cbd5e1;
+  color: #64748b;
+}
+
+.light-mode .step-connector {
+  background: #cbd5e1;
+}
+
+.light-mode .progress-bar {
+  border-bottom-color: #cbd5e1;
+}
+
+.light-mode .empty-cart-title {
+  color: #0f172a;
+}
+
+.light-mode .empty-cart-message {
+  color: #475569;
+}
+
+/* Preserve focus outlines */
+.light-mode .category-tab:focus-visible,
+.light-mode .service-details-toggle:focus-visible,
+.light-mode .submit-button:focus-visible,
+.light-mode .browse-services-btn:focus-visible {
+  outline-color: #3b82f6;
+}
