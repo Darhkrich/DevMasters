@@ -4,6 +4,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { register } from '@/lib/boemApi';
 import './register.css';
 
 export default function RegisterPage() {
@@ -128,63 +129,26 @@ export default function RegisterPage() {
     setLoading(true);
 
     try {
-      // Simulate API call (will be replaced with Django API)
-      const response = await simulateAPICall('/api/register', {
-        firstName: formData.firstName,
-        lastName: formData.lastName,
-        company: formData.company || null,
+      const response = await register({
+        first_name: formData.firstName,
+        last_name: formData.lastName,
         email: formData.email,
-        password: formData.password,
-        newsletter: formData.newsletter
+        password: formData.password
       });
 
-      if (response.success) {
-        setSuccess('Account created successfully! Redirecting to login...');
-        
-        // Store user data (optional, depends on your flow)
-        if (response.user) {
-          localStorage.setItem('user', JSON.stringify(response.user));
-        }
-        
-        // Redirect to login page after 2 seconds
+      if (response.message) {
+        setSuccess(response.message);
         setTimeout(() => {
           router.push('/login');
         }, 2000);
       } else {
-        setErrors({ general: response.message || 'Registration failed. Please try again.' });
+        setErrors({ general: 'Registration failed. Please try again.' });
       }
     } catch (error) {
-      setErrors({ general: 'An error occurred. Please try again.' });
+      setErrors({ general: error.message || 'An error occurred. Please try again.' });
     } finally {
       setLoading(false);
     }
-  };
-
-  // Mock API call function
-  const simulateAPICall = (url, data) => {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        // Simulate email already exists error
-        if (data.email === 'demo@client.com') {
-          resolve({
-            success: false,
-            message: 'Email already registered'
-          });
-        } else {
-          resolve({
-            success: true,
-            user: {
-              id: 'user-' + Date.now(),
-              email: data.email,
-              name: `${data.firstName} ${data.lastName}`,
-              company: data.company,
-              role: 'user'
-            },
-            token: 'register-token-' + Date.now()
-          });
-        }
-      }, 1500);
-    });
   };
 
   // Get strength text and color
@@ -239,7 +203,7 @@ export default function RegisterPage() {
                   value={formData.firstName}
                   onChange={handleChange}
                   required
-                  placeholder="John"
+                  placeholder="Emma"
                   disabled={loading}
                   className={errors.firstName ? 'input-error' : ''}
                 />

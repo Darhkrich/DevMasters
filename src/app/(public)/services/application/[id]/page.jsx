@@ -3,10 +3,15 @@
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
-import { getServicesByType, getServicesByCategory } from "@/data/app-services";
-import AddToQuoteButton from '@/components/common/AddToQuoteButton';
+import AddToQuoteButton from "@/components/common/AddToQuoteButton";
+import { fetchAppService } from "@/lib/boemApi";
+import { getServicesByCategory, getServicesByType } from "@/data/app-services";
 import "./styles.css";
 
+function getFallbackService(id) {
+  const allServices = getServicesByType("all");
+  return allServices.find((service) => service.id === id) || getServicesByCategory("blueprint").find((service) => service.id === id) || null;
+}
 
 export default function ServiceDetailsPage() {
   const params = useParams();
@@ -17,111 +22,92 @@ export default function ServiceDetailsPage() {
   const [selectedFeatureIndex, setSelectedFeatureIndex] = useState(0);
   const [showBookingModal, setShowBookingModal] = useState(false);
   const [fadeIn, setFadeIn] = useState(false);
+  const [dataError, setDataError] = useState("");
 
   useEffect(() => {
-    const fetchServiceDetails = () => {
-      setLoading(true);
-      
-      // Search in all services first
-      const allServices = getServicesByType("all");
-      const foundService = allServices.find(s => s.id === params.id);
-      
-      // If not found in services, search in blueprints
-      if (!foundService) {
-        const blueprints = getServicesByCategory('blueprint');
-        const foundBlueprint = blueprints.find(b => b.id === params.id);
-        setService(foundBlueprint || null);
-      } else {
-        setService(foundService);
+    let isMounted = true;
+
+    const loadServiceDetails = async () => {
+      try {
+        const result = await fetchAppService(params.id);
+        if (!isMounted) {
+          return;
+        }
+
+        setService(result);
+        setDataError("");
+      } catch (error) {
+        if (!isMounted) {
+          return;
+        }
+
+        setService(getFallbackService(params.id));
+        setDataError("Live service details could not be loaded, so DevMasters is showing local content.");
+      } finally {
+        if (isMounted) {
+          setLoading(false);
+          window.setTimeout(() => setFadeIn(true), 100);
+        }
       }
-      
-      setLoading(false);
-      // Trigger fade-in animation
-      setTimeout(() => setFadeIn(true), 100);
     };
-    
-    fetchServiceDetails();
+
+    loadServiceDetails();
+    return () => {
+      isMounted = false;
+    };
   }, [params.id]);
 
-  const handleAddToCart = () => {
-    // Add to cart functionality
-    console.log("Added to cart:", service);
-    // Show success notification
-    alert(`${service.title} added to cart!`);
-  };
-
-  const handleBookingSubmit = (e) => {
-    e.preventDefault();
-    // Handle booking submission
-    alert("Consultation booked successfully! We'll contact you shortly.");
-    setShowBookingModal(false);
-  };
-
   const renderTabContent = () => {
-    const isBlueprint = service?.category === 'blueprint';
+    const isBlueprint = service?.category === "blueprint";
     const features = service?.features || [];
-    
-    switch(activeTab) {
-      case 'overview':
+
+    switch (activeTab) {
+      case "overview":
         return (
           <div className="wc-service-tab-content wc-tab-animate">
             <div className="wc-service-overview">
               <div className="wc-service-overview-main">
                 <h2>Service Overview</h2>
                 <p>{service.longDescription || service.description}</p>
-                
-                {service.deliverables && (
-                  <div className="wc-service-deliverables">
-                    <h3>What's Included</h3>
-                    <ul className="wc-service-deliverables-list">
-                      {service.deliverables.map((item, index) => (
-                        <li key={index} className="wc-fade-in-up" style={{ animationDelay: `${index * 0.1}s` }}>
-                         
-                          {item}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
+                {dataError && <p>{dataError}</p>}
               </div>
-              
+
               <div className="wc-service-overview-sidebar">
                 <div className="wc-service-tech-stack">
-                  <h3>Technology Stack</h3>
+                  <h3>Delivery Highlights</h3>
                   <div className="wc-tech-stack-items">
-                    {(service.techStack || ['React', 'Next.js', 'TypeScript', 'Tailwind CSS']).map((tech, index) => (
+                    {(service.meta || []).map((metaItem, index) => (
                       <span key={index} className="wc-tech-stack-item wc-fade-in" style={{ animationDelay: `${index * 0.05}s` }}>
-                        {tech}
+                        {metaItem.text}
                       </span>
                     ))}
                   </div>
                 </div>
-                
+
                 <div className="wc-service-timeline">
-                  <h3>
-              
-                    Estimated Timeline
-                  </h3>
-                  <p>{service.timeline || '4-8 weeks'}</p>
+                  <h3>Estimated Timeline</h3>
+                  <p>{service.timeline || "4-8 weeks"}</p>
                 </div>
               </div>
             </div>
           </div>
         );
 
-      case 'features':
+      case "features":
         return (
           <div className="wc-service-tab-content wc-tab-animate">
             <div className="wc-service-features">
               <h2>Features & Capabilities</h2>
-              
+
               {isBlueprint ? (
                 <div className="wc-blueprint-features">
                   <div className="wc-blueprint-features-list">
                     {features.map((feature, index) => (
-                      <div 
+                      <div
                         key={index}
-                        className={`wc-blueprint-feature-item wc-fade-in-up ${selectedFeatureIndex === index ? 'wc-blueprint-feature-item--active' : ''}`}
+                        className={`wc-blueprint-feature-item wc-fade-in-up ${
+                          selectedFeatureIndex === index ? "wc-blueprint-feature-item--active" : ""
+                        }`}
                         style={{ animationDelay: `${index * 0.1}s` }}
                         onClick={() => setSelectedFeatureIndex(index)}
                       >
@@ -129,28 +115,23 @@ export default function ServiceDetailsPage() {
                           <span className="wc-blueprint-feature-number">0{index + 1}</span>
                           <h4>{feature.title || feature}</h4>
                         </div>
-                        <p>{feature.description || 'Comes with this blueprint'}</p>
+                        <p>{feature.description || "Included in this blueprint package."}</p>
                       </div>
                     ))}
                   </div>
-                  
+
                   <div className="wc-blueprint-feature-preview">
                     <div className="wc-feature-preview-card">
                       <h3>Feature Preview</h3>
                       <p>{features[selectedFeatureIndex]?.description || features[selectedFeatureIndex]}</p>
-                      <div className="wc-feature-preview-image">
-                        <div className="wc-feature-image-placeholder">
-                         
-                        </div>
-                      </div>
                     </div>
                   </div>
                 </div>
               ) : (
                 <div className="wc-service-features-grid">
                   {features.map((feature, index) => (
-                    <div 
-                      key={index} 
+                    <div
+                      key={index}
                       className="wc-service-feature-card wc-fade-in-up"
                       style={{ animationDelay: `${index * 0.1}s` }}
                     >
@@ -158,7 +139,7 @@ export default function ServiceDetailsPage() {
                         {feature.icon && <i className={feature.icon}></i>}
                       </div>
                       <h4>{feature.title || feature}</h4>
-                      <p>{feature.description || 'Standard feature included'}</p>
+                      <p>{feature.description || "Standard feature included"}</p>
                     </div>
                   ))}
                 </div>
@@ -167,25 +148,21 @@ export default function ServiceDetailsPage() {
           </div>
         );
 
-      case 'delivery':
+      case "delivery":
         return (
           <div className="wc-service-tab-content wc-tab-animate">
             <div className="wc-service-delivery">
               <h2>Development Process</h2>
-              
+
               <div className="wc-service-process">
                 {[
-                  { step: 1, title: 'Discovery & Planning', desc: 'We understand your requirements and create a detailed project plan.' },
-                  { step: 2, title: 'Design & Prototyping', desc: 'Wireframes and prototypes to visualize the final product.' },
-                  { step: 3, title: 'Development', desc: 'Agile development with regular updates and demos.' },
-                  { step: 4, title: 'Testing & Quality Assurance', desc: 'Comprehensive testing across devices and browsers.' },
-                  { step: 5, title: 'Deployment & Launch', desc: 'Smooth deployment with post-launch support.' }
+                  { step: 1, title: "Discovery & Planning", desc: "We understand your requirements and create a detailed project plan." },
+                  { step: 2, title: "Design & Prototyping", desc: "Wireframes and prototypes to visualize the final product." },
+                  { step: 3, title: "Development", desc: "Agile development with regular updates and demos." },
+                  { step: 4, title: "Testing & Quality Assurance", desc: "Comprehensive testing across devices and browsers." },
+                  { step: 5, title: "Deployment & Launch", desc: "Smooth deployment with post-launch support." },
                 ].map((process, index) => (
-                  <div 
-                    key={process.step} 
-                    className="wc-process-step wc-fade-in-left"
-                    style={{ animationDelay: `${index * 0.1}s` }}
-                  >
+                  <div key={process.step} className="wc-process-step wc-fade-in-left" style={{ animationDelay: `${index * 0.1}s` }}>
                     <div className="wc-process-step-number">{process.step}</div>
                     <div className="wc-process-step-content">
                       <h4>{process.title}</h4>
@@ -198,24 +175,20 @@ export default function ServiceDetailsPage() {
           </div>
         );
 
-      case 'faq':
+      case "faq":
         return (
           <div className="wc-service-tab-content wc-tab-animate">
             <div className="wc-service-faq">
               <h2>Frequently Asked Questions</h2>
-              
+
               <div className="wc-faq-list">
                 {[
-                  { q: 'Can I customize this service?', a: 'Yes, all our services are customizable to fit your specific needs.' },
-                  { q: 'What support is included?', a: 'We provide 6 months of technical support and maintenance.' },
-                  { q: 'Do you offer payment plans?', a: 'Yes, we offer flexible payment options for larger projects.' },
-                  { q: 'What is your revision policy?', a: 'We include up to 3 rounds of revisions in our standard package.' }
+                  { q: "Can I customize this service?", a: "Yes, all our services are customizable to fit your specific needs." },
+                  { q: "What support is included?", a: "We provide post-launch support and handover guidance on every DevMasters project." },
+                  { q: "Do you offer payment plans?", a: "Yes, we can structure staged delivery and payment milestones for larger projects." },
+                  { q: "What is your revision policy?", a: "Revision scope depends on the package, but every project includes a review cycle." },
                 ].map((faq, index) => (
-                  <div 
-                    key={index} 
-                    className="wc-faq-item wc-fade-in-up"
-                    style={{ animationDelay: `${index * 0.1}s` }}
-                  >
+                  <div key={index} className="wc-faq-item wc-fade-in-up" style={{ animationDelay: `${index * 0.1}s` }}>
                     <h4>{faq.q}</h4>
                     <p>{faq.a}</p>
                   </div>
@@ -243,27 +216,21 @@ export default function ServiceDetailsPage() {
     return (
       <div className="wc-not-found">
         <h2>Service Not Found</h2>
-        <p>The service you're looking for doesn't exist or has been moved.</p>
+        <p>The service you&apos;re looking for doesn&apos;t exist or has been moved.</p>
         <Link href="/services/application" className="wc-btn-primary">
-         
           Back to Services
         </Link>
       </div>
     );
   }
 
-  const isBlueprint = service.category === 'blueprint';
+  const isBlueprint = service.category === "blueprint";
   const metaItems = service.meta || [];
 
   return (
-    <main className={`wc-service-details-page ${fadeIn ? 'wc-page-loaded' : ''}`}>
-      {/* Navigation */}
+    <main className={`wc-service-details-page ${fadeIn ? "wc-page-loaded" : ""}`}>
       <nav className="wc-service-details-nav wc-fade-in-down">
-        <button 
-          onClick={() => router.back()} 
-          className="wc-btn-ghost"
-        >
-          
+        <button onClick={() => router.back()} className="wc-btn-ghost">
           Back to Services
         </button>
         <div className="wc-service-breadcrumb">
@@ -275,21 +242,18 @@ export default function ServiceDetailsPage() {
         </div>
       </nav>
 
-      {/* Hero Section */}
       <section className="wc-service-details-hero wc-fade-in-up">
         <div className="wc-service-details-hero-content">
           <div className="wc-service-badge">
-            <span className={`wc-service-tag ${service.tag === 'Popular' ? 'wc-service-tag--accent' : ''}`}>
-              {service.tag || (isBlueprint ? 'Blueprint' : 'Service')}
+            <span className={`wc-service-tag ${service.tag === "Popular" ? "wc-service-tag--accent" : ""}`}>
+              {service.tag || (isBlueprint ? "Blueprint" : "Service")}
             </span>
-            <span className="wc-service-type">
-              {service.type || (isBlueprint ? 'Template' : 'Custom')}
-            </span>
+            <span className="wc-service-type">{isBlueprint ? "Blueprint" : "Custom service"}</span>
           </div>
-          
+
           <h1 className="wc-service-details-title">{service.title}</h1>
           <p className="wc-service-details-subtitle">{service.description}</p>
-          
+
           <div className="wc-service-details-meta">
             {metaItems.map((item, index) => (
               <div key={index} className="wc-service-meta-item wc-fade-in" style={{ animationDelay: `${index * 0.1}s` }}>
@@ -299,44 +263,27 @@ export default function ServiceDetailsPage() {
             ))}
           </div>
         </div>
-        
-        <div className="wc-service-details-pricing wc-fade-in-right">
-          
-          
-          <div className="wc-service-actions">
-             {/* FIXED: Changed 'service' to 'template' and 'source' to 'templates' */}
-            <AddToQuoteButton 
-              item={service} 
-              source="templates" 
-              className="wc-btn-secondary wc-btn-large"
-            />
-          
-            <button 
-              className="wc-btn-secondary wc-btn-large"
-             
-            >
-                <Link href={'/contact'}>
-              Book Free Consultation
-              </Link>
-            </button>
-          
 
-            
+        <div className="wc-service-details-pricing wc-fade-in-right">
+          <div className="wc-service-actions">
+            <AddToQuoteButton item={service} source="appServices" className="wc-btn-secondary wc-btn-large" />
+
+            <button className="wc-btn-secondary wc-btn-large">
+              <Link href={"/contact"}>Book Free Consultation</Link>
+            </button>
           </div>
-          
+
           <div className="wc-service-guarantee">
-           
-            <span>30-day money-back guarantee • Premium support included</span>
+            <span>Premium support included • Final scope confirmed after review</span>
           </div>
         </div>
       </section>
 
-      {/* Tabs Navigation */}
       <div className="wc-service-details-tabs wc-fade-in">
-        {['overview', 'features', 'delivery', 'faq'].map((tab, index) => (
+        {["overview", "features", "delivery", "faq"].map((tab, index) => (
           <button
             key={tab}
-            className={`wc-service-tab ${activeTab === tab ? 'wc-service-tab--active' : ''}`}
+            className={`wc-service-tab ${activeTab === tab ? "wc-service-tab--active" : ""}`}
             onClick={() => setActiveTab(tab)}
             style={{ animationDelay: `${index * 0.05}s` }}
           >
@@ -345,35 +292,33 @@ export default function ServiceDetailsPage() {
         ))}
       </div>
 
-      {/* Tabs Content */}
-      <div className="wc-service-details-content">
-        {renderTabContent()}
-      </div>
+      <div className="wc-service-details-content">{renderTabContent()}</div>
 
-      {/* CTA Section */}
       <section className="wc-service-details-cta wc-fade-in-up">
         <div className="wc-service-cta-content">
           <h2>Ready to Get Started?</h2>
-          <p>Book a free 30-minute consultation to discuss your project requirements</p>
-          
+          <p>Book a free consultation to discuss your project requirements.</p>
+
           <div className="wc-cta-actions">
-            <button 
-              className="wc-btn-primary wc-btn-xlarge wc-pulse-on-hover"
-              onClick={() => setShowBookingModal(true)}
-            >
-              
+            <button className="wc-btn-primary wc-btn-xlarge wc-pulse-on-hover" onClick={() => setShowBookingModal(true)}>
               Schedule Consultation
             </button>
-            <AddToQuoteButton 
-              item={service} 
-              source="templates" 
-              className="wc-btn-secondary wc-btn-large"
-            />
+            <AddToQuoteButton item={service} source="appServices" className="wc-btn-secondary wc-btn-large" />
           </div>
         </div>
       </section>
 
- 
+      {showBookingModal && (
+        <div className="wc-service-faq">
+          <div className="wc-faq-item">
+            <h4>Consultation Request</h4>
+            <p>Use the contact page or checkout flow and we’ll follow up with a project conversation.</p>
+            <button className="wc-btn-primary" onClick={() => router.push("/contact")}>
+              Go to Contact Page
+            </button>
+          </div>
+        </div>
+      )}
     </main>
   );
 }

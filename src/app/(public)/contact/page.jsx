@@ -1,12 +1,14 @@
 "use client";
 
 import { useState } from "react";
+import { createInquiry } from "@/lib/boemApi";
 import "./contact.css";
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
+    phone: "",      // <-- added phone field
     company: "",
     package: "",
     budget: "",
@@ -26,10 +28,11 @@ export default function ContactPage() {
     if (!formData.name) newErrors.name = "Name is required";
     if (!formData.email) newErrors.email = "Email is required";
     if (!formData.message) newErrors.message = "Message is required";
+    // Phone is optional; you can add validation if needed
     return newErrors;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const validationErrors = validate();
 
@@ -41,19 +44,40 @@ export default function ContactPage() {
     setErrors({});
     setLoading(true);
 
-    // Simulate API request
-    setTimeout(() => {
+    try {
+      await createInquiry({
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone,               // <-- include phone
+        company: formData.company,
+        subject: formData.package ? `${formData.package} inquiry` : "General inquiry",
+        service_category: formData.package || "General inquiry",
+        budget: formData.budget || "To be discussed",
+        message: formData.message,
+        project_details: formData.message,
+        metadata: {
+          source: "contact-page",
+        },
+      });
+
       setLoading(false);
       setShowModal(true);
       setFormData({
         name: "",
         email: "",
+        phone: "",           // reset phone
         company: "",
         package: "",
         budget: "",
         message: "",
       });
-    }, 1500);
+    } catch (error) {
+      console.error(error);
+      setLoading(false);
+      setErrors({
+        submit: error.message || "We couldn't send your message right now.",
+      });
+    }
   };
 
   return (
@@ -62,11 +86,11 @@ export default function ContactPage() {
       <section className="contact-hero">
         <div className="containers">
           <div className="the">
-          <h2>Let’s Get You On The Internet And Boast Your Business Together</h2>
-          <p>
-            Have questions? We’re here to help. Get in touch with our team for
-            expert guidance.
-          </p>
+            <h2>Let’s Get You On The Internet And Boost Your Business Together</h2>
+            <p>
+              Have questions? We’re here to help. Get in touch with our team for
+              expert guidance.
+            </p>
           </div>
         </div>
       </section>
@@ -95,7 +119,6 @@ export default function ContactPage() {
             </div>
 
             <div className="contact-card">
-              
               <h3>Call Us</h3>
               <p>Speak directly with our experts</p>
               <a href="tel:+15551234567" className="contact-link">
@@ -138,6 +161,18 @@ export default function ContactPage() {
                   {errors.email && (
                     <span className="error-message">{errors.email}</span>
                   )}
+                </div>
+
+                {/* New phone field */}
+                <div className="form-group">
+                  <label>Phone Number</label>
+                  <input
+                    name="phone"
+                    type="tel"
+                    value={formData.phone}
+                    onChange={handleChange}
+                    placeholder="+1 (555) 123-4567"
+                  />
                 </div>
 
                 <div className="form-group">
@@ -195,6 +230,11 @@ export default function ContactPage() {
                 <button className="btn btn-primary btn-full" type="submit">
                   {loading ? "Sending..." : "Send Message"}
                 </button>
+                {errors.submit && (
+                  <span className="error-message" style={{ marginTop: "0.75rem", display: "block" }}>
+                    {errors.submit}
+                  </span>
+                )}
               </form>
             </div>
 
@@ -203,7 +243,6 @@ export default function ContactPage() {
               <h2>Get in Touch</h2>
 
               <div className="info-item">
-                
                 <div>
                   <h4>Our Office</h4>
                   <p>123 Web Design Street<br />San Francisco, CA</p>
@@ -211,7 +250,6 @@ export default function ContactPage() {
               </div>
 
               <div className="info-item">
-               
                 <div>
                   <h4>Phone</h4>
                   <p>+1 (555) 123-4567</p>
@@ -233,7 +271,6 @@ export default function ContactPage() {
       {showModal && (
         <div className="modal">
           <div className="modal-content">
-           
             <h3>Message Sent Successfully!</h3>
             <p>We’ll get back to you within 24 hours.</p>
             <button

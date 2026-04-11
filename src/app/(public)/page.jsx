@@ -1,3 +1,4 @@
+import Image from "next/image";
 import TemplatesShowcase from "@/components/sections/Templatesshowcase";
 import '@/styles/public.css';
 import Link from "next/link"
@@ -90,26 +91,32 @@ export default function HomePage() {
           {/* HERO VISUAL */}
           <div className="hero__visual">
   <div className="mockup-stack">
-    <img
+    <Image
       src="/desktopnew.png"
       alt="Desktop Preview"
       className="mockup mockup--desktop"
+      width={1200}
+      height={820}
+      priority
     />
     <div className="mockup mockup--tablet" >
       <div>
-    <img
-      src="/ai2.jpg"
+    <Image
+      src="/download.jpg"
       alt="Tablet Preview"
      className="one"
+     width={720}
+     height={900}
     />
     </div></div>
     <div className="mockup mockup--mobile">
       <div >
-    <img
-      src="/ai2.jpg"
+    <Image
+      src="/m1.jpg"
       alt="Mobile Preview"
       className="come"
-      
+      width={480}
+      height={960}
     />
     </div>
 </div>

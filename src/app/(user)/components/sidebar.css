@@ -54,7 +54,9 @@ body {
   left: 0;
   overflow-y: auto;
   transition: transform 0.3s ease;
-  display: none; /* Hidden on small screens */
+  display: none;
+  display: flex;
+  flex-direction: column;
 }
 
 .sidebar-header {
@@ -66,6 +68,9 @@ body {
 
 .sidebar-nav {
   padding: 1rem 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 /* Mobile drawer */
@@ -149,7 +154,7 @@ body {
 }
 
 /* Main content area - no margin on mobile/tablet */
-.main-content {
+.user-main-content {
   flex: 1;
   padding: 1.5rem;
   min-height: 100vh;
@@ -169,7 +174,7 @@ body {
   }
 
   /* Adjust main content to leave space for sidebar */
-  .main-content {
+  .user-main-content {
     margin-left: 260px;
     width: calc(100% - 260px);
     padding: 2rem;
@@ -185,7 +190,7 @@ body {
 /* Optional: tablet adjustments (if you want a different breakpoint) */
 @media (min-width: 768px) and (max-width: 1023px) {
   /* On tablets, keep mobile behavior but you can adjust padding if needed */
-  .main-content {
+  .user-main-content {
     padding: 1.5rem;
   }
 }
@@ -330,7 +335,7 @@ body {
 }
 
 /* Main content area */
-.main-content {
+.user-main-content {
   flex: 1;
   padding: 1.5rem;
   min-height: 100vh;
@@ -350,7 +355,7 @@ body {
   }
 
   /* Adjust main content to leave space for sidebar */
-  .main-content {
+  .user-main-content {
     margin-left: 260px;
     width: calc(100% - 260px);
     padding: 2rem;
@@ -384,4 +389,18 @@ body {
   margin-bottom: 20px;
   margin-top: 10px;
  
+}
+
+/* ===== SIDEBAR FOOTER (Theme Toggle) ===== */
+.sidebar-footer {
+  margin-top: auto;
+  padding: 16px 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+[data-theme="light"] .sidebar-footer {
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
 }

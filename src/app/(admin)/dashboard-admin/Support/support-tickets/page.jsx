@@ -1,446 +1,362 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import Link from 'next/link';
+import {
+  fetchSupportTicket,
+  fetchSupportTickets,
+  getStoredUser,
+  replyToSupportTicket,
+  updateSupportTicket,
+} from '@/lib/boemApi';
 import './styles.css';
 
-const SupportTicketsDashboard = () => {
-  const [tickets, setTickets] = useState([
-    {
-      id: 1,
-      ticketId: 'TKT-1024',
-      subject: 'Website Down - Error 500',
-      client: 'Sarah Smith',
-      priority: 'critical',
-      status: 'open',
-      assignedTo: 'Unassigned',
-      lastUpdate: '25 min ago',
-      type: 'Technical',
-      urgent: true
-    },
-    {
-      id: 2,
-      ticketId: 'TKT-1021',
-      subject: 'Payment Gateway Issues',
-      client: 'Mike Johnson',
-      priority: 'high',
-      status: 'in-progress',
-      assignedTo: 'Alex Support',
-      lastUpdate: '1 hour ago',
-      type: 'Technical'
-    },
-    {
-      id: 3,
-      ticketId: 'TKT-1015',
-      subject: 'Mobile Display Problems',
-      client: 'Emily Davis',
-      priority: 'medium',
-      status: 'waiting',
-      assignedTo: 'Alex Support',
-      lastUpdate: '2 hours ago',
-      type: 'Technical'
-    },
-    {
-      id: 4,
-      ticketId: 'TKT-1012',
-      subject: 'Billing Query - Invoice #102',
-      client: 'Robert Brown',
-      priority: 'medium',
-      status: 'open',
-      assignedTo: 'Unassigned',
-      lastUpdate: '3 hours ago',
-      type: 'Billing'
-    },
-    {
-      id: 5,
-      ticketId: 'TKT-1008',
-      subject: 'Feature Request: Dark Mode',
-      client: 'Jennifer Wilson',
-      priority: 'low',
-      status: 'in-progress',
-      assignedTo: 'Development Team',
-      lastUpdate: '1 day ago',
-      type: 'Feature Request'
-    },
-    {
-      id: 6,
-      ticketId: 'TKT-1005',
-      subject: 'General Support Inquiry',
-      client: 'David Miller',
-      priority: 'low',
-      status: 'resolved',
-      assignedTo: 'Alex Support',
-      lastUpdate: '2 days ago',
-      type: 'General'
-    }
-  ]);
+function formatDateTime(value) {
+  if (!value) {
+    return '';
+  }
 
-  const [filters, setFilters] = useState({
-    status: 'All Status',
-    priority: 'All Priorities',
-    type: 'All Types',
-    view: 'All Tickets'
+  return new Date(value).toLocaleString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+    hour: 'numeric',
+    minute: '2-digit',
   });
+}
 
+function toLabel(value) {
+  return value
+    ?.replace(/[-_]/g, ' ')
+    .replace(/\b\w/g, (letter) => letter.toUpperCase()) || '';
+}
+
+function buildDisplayName(user) {
+  if (!user) {
+    return 'DevMasters Support';
+  }
+
+  const fullName = [user.first_name, user.last_name].filter(Boolean).join(' ').trim();
+  return fullName || user.name || user.email || 'DevMasters Support';
+}
+
+export default function SupportTicketsDashboard() {
+  const storedUser = getStoredUser();
+  const senderName = buildDisplayName(storedUser);
+
+  const [tickets, setTickets] = useState([]);
+  const [selectedTicketId, setSelectedTicketId] = useState(null);
+  const [selectedTicket, setSelectedTicket] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedTickets, setSelectedTickets] = useState([]);
+  const [statusFilter, setStatusFilter] = useState('all');
+  const [priorityFilter, setPriorityFilter] = useState('all');
+  const [categoryFilter, setCategoryFilter] = useState('all');
+  const [loading, setLoading] = useState(true);
+  const [detailLoading, setDetailLoading] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [replying, setReplying] = useState(false);
+  const [replyBody, setReplyBody] = useState('');
+  const [error, setError] = useState('');
 
-  const handleFilterChange = (filterType, value) => {
-    setFilters(prev => ({
-      ...prev,
-      [filterType]: value
-    }));
+  const filteredTickets = useMemo(() => {
+    const query = searchQuery.trim().toLowerCase();
+
+    return tickets.filter((ticket) => {
+      const matchesStatus = statusFilter === 'all' || ticket.status === statusFilter;
+      const matchesPriority = priorityFilter === 'all' || ticket.priority === priorityFilter;
+      const matchesCategory = categoryFilter === 'all' || ticket.category === categoryFilter;
+      const matchesSearch =
+        !query ||
+        [
+          ticket.subject,
+          ticket.client_name,
+          ticket.client_email,
+          ticket.guest_name,
+          ticket.guest_email,
+        ]
+          .filter(Boolean)
+          .some((value) => value.toLowerCase().includes(query));
+
+      return matchesStatus && matchesPriority && matchesCategory && matchesSearch;
+    });
+  }, [categoryFilter, priorityFilter, searchQuery, statusFilter, tickets]);
+
+  const loadTickets = async (preferredTicketId = null) => {
+    const payload = await fetchSupportTickets();
+    const results = payload.results || [];
+    setTickets(results);
+
+    const nextTicketId =
+      preferredTicketId ||
+      (results.some((ticket) => ticket.id === selectedTicketId) ? selectedTicketId : results[0]?.id);
+
+    if (nextTicketId) {
+      setSelectedTicketId(nextTicketId);
+    } else {
+      setSelectedTicketId(null);
+      setSelectedTicket(null);
+    }
   };
 
-  const handleViewChange = (view) => {
-    setFilters(prev => ({
-      ...prev,
-      view
-    }));
+  useEffect(() => {
+    let isMounted = true;
+
+    const initialize = async () => {
+      try {
+        const payload = await fetchSupportTickets();
+        if (!isMounted) {
+          return;
+        }
+
+        const results = payload.results || [];
+        setTickets(results);
+        setSelectedTicketId(results[0]?.id || null);
+      } catch (requestError) {
+        if (isMounted) {
+          setError(requestError.message || 'Unable to load support tickets.');
+        }
+      } finally {
+        if (isMounted) {
+          setLoading(false);
+        }
+      }
+    };
+
+    initialize();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!selectedTicketId) {
+      return undefined;
+    }
+
+    let isMounted = true;
+
+    const loadDetail = async () => {
+      setDetailLoading(true);
+      try {
+        const payload = await fetchSupportTicket(selectedTicketId);
+        if (isMounted) {
+          setSelectedTicket(payload);
+        }
+      } catch (requestError) {
+        if (isMounted) {
+          setError(requestError.message || 'Unable to load the selected ticket.');
+        }
+      } finally {
+        if (isMounted) {
+          setDetailLoading(false);
+        }
+      }
+    };
+
+    loadDetail();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [selectedTicketId]);
+
+  const handleStatusChange = async (ticketId, status) => {
+    setSaving(true);
+    setError('');
+
+    try {
+      await updateSupportTicket(ticketId, { status });
+      await loadTickets(ticketId);
+      const payload = await fetchSupportTicket(ticketId);
+      setSelectedTicket(payload);
+    } catch (requestError) {
+      setError(requestError.message || 'Unable to update the ticket status.');
+    } finally {
+      setSaving(false);
+    }
   };
 
-  const handleSearch = (e) => {
-    setSearchQuery(e.target.value);
-  };
-
-  const handleNewTicket = () => {
-    alert('Creating new ticket...');
-    // In real app, open ticket creation modal
-  };
-
-  const handleExport = () => {
-    alert('Exporting tickets...');
-    // In real app, trigger CSV/Excel export
-  };
-
-  const handleBulkActions = () => {
-    if (selectedTickets.length === 0) {
-      alert('Please select tickets first');
+  const handleSendReply = async () => {
+    const body = replyBody.trim();
+    if (!body || !selectedTicketId) {
       return;
     }
-    alert(`Performing bulk action on ${selectedTickets.length} tickets...`);
-    // In real app, open bulk actions menu
-  };
 
-  const handleTakeTicket = (ticketId) => {
-    const updatedTickets = tickets.map(ticket => 
-      ticket.ticketId === ticketId 
-        ? { ...ticket, assignedTo: 'Alex Support', status: 'in-progress' }
-        : ticket
-    );
-    setTickets(updatedTickets);
-    alert(`You have taken ticket ${ticketId}`);
-  };
+    setReplying(true);
+    setError('');
 
-  const handleMessageTicket = (ticketId) => {
-    const ticket = tickets.find(t => t.ticketId === ticketId);
-    alert(`Starting chat for ticket ${ticketId} with ${ticket.client}`);
-    // In real app, open chat interface
-  };
-
-  const handleRemindTicket = (ticketId) => {
-    alert(`Reminder sent for ticket ${ticketId}`);
-    // In real app, send reminder notification
-  };
-
-  const handleViewTicket = (ticketId) => {
-    alert(`Viewing details for ticket ${ticketId}`);
-    // In real app, navigate to ticket detail page
-  };
-
-  const handleTicketSelect = (ticketId) => {
-    setSelectedTickets(prev => {
-      if (prev.includes(ticketId)) {
-        return prev.filter(id => id !== ticketId);
-      } else {
-        return [...prev, ticketId];
-      }
-    });
-  };
-
-  const handleSelectAll = () => {
-    if (selectedTickets.length === filteredTickets.length) {
-      setSelectedTickets([]);
-    } else {
-      setSelectedTickets(filteredTickets.map(t => t.ticketId));
-    }
-  };
-
-  const filteredTickets = tickets.filter(ticket => {
-    // Search filter
-    const matchesSearch = searchQuery === '' || 
-      ticket.subject.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      ticket.client.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      ticket.ticketId.toLowerCase().includes(searchQuery.toLowerCase());
-    
-    // Status filter
-    const matchesStatus = filters.status === 'All Status' || 
-      ticket.status === filters.status.toLowerCase().replace(' ', '-');
-    
-    // Priority filter
-    const matchesPriority = filters.priority === 'All Priorities' || 
-      ticket.priority === filters.priority.toLowerCase();
-    
-    // Type filter
-    const matchesType = filters.type === 'All Types' || 
-      ticket.type === filters.type;
-    
-    // View filter
-    let matchesView = true;
-    if (filters.view === 'My Tickets') {
-      matchesView = ticket.assignedTo === 'Alex Support';
-    } else if (filters.view === 'Unassigned') {
-      matchesView = ticket.assignedTo === 'Unassigned';
-    }
-
-    return matchesSearch && matchesStatus && matchesPriority && matchesType && matchesView;
-  });
-
-  const getPriorityColor = (priority) => {
-    switch(priority) {
-      case 'critical': return '#ef4444';
-      case 'high': return '#f59e0b';
-      case 'medium': return '#3b82f6';
-      case 'low': return '#10b981';
-      default: return '#6b7280';
-    }
-  };
-
-  const getStatusColor = (status) => {
-    switch(status) {
-      case 'open': return '#ef4444';
-      case 'in-progress': return '#3b82f6';
-      case 'waiting': return '#f59e0b';
-      case 'resolved': return '#10b981';
-      case 'closed': return '#6b7280';
-      default: return '#6b7280';
+    try {
+      await replyToSupportTicket(selectedTicketId, {
+        sender_name: senderName,
+        sender_role: 'admin',
+        body,
+      });
+      setReplyBody('');
+      await loadTickets(selectedTicketId);
+      const payload = await fetchSupportTicket(selectedTicketId);
+      setSelectedTicket(payload);
+    } catch (requestError) {
+      setError(requestError.message || 'Unable to reply to this ticket.');
+    } finally {
+      setReplying(false);
     }
   };
 
   return (
     <div className="admin-container">
-      <main className="main-content">
-        <header className="dashboard-header">
-          <div className="header-left">
+      <main className="admin-main-content">
+        <header className="admin-dashboard-header">
+          <div className="admin-header-left">
             <h1>Support Tickets</h1>
-            <p className="welcome-text">Manage and resolve client support tickets</p>
+            <p className="admin-welcome-text">Work through live support requests.</p>
           </div>
-          <div className="header-right">
-            <div className="search-bar">
-              <input 
-                type="text" 
-                placeholder="Search tickets..." 
-                value={searchQuery}
-                onChange={handleSearch}
-              />
-              <button>🔍</button>
-            </div>
-            <button className="primary-btn" onClick={handleNewTicket}>
-              + New Ticket
-            </button>
+          <div className="admin-header-right">
+            <Link href="/dashboard-admin/Support" className="primary-btn">
+              Back to Support
+            </Link>
           </div>
         </header>
 
-        {/* Ticket Filters */}
+        {error ? <div className="auth-error-message">{error}</div> : null}
+
         <div className="filters-bar">
           <div className="filter-group">
-            <label>Status:</label>
-            <select 
-              value={filters.status}
-              onChange={(e) => handleFilterChange('status', e.target.value)}
-            >
-              <option>All Status</option>
-              <option>Open</option>
-              <option>In Progress</option>
-              <option>Waiting Client</option>
-              <option>Resolved</option>
-              <option>Closed</option>
+            <label htmlFor="ticketSearch">Search</label>
+            <input
+              id="ticketSearch"
+              type="text"
+              placeholder="Search subject or client"
+              value={searchQuery}
+              onChange={(event) => setSearchQuery(event.target.value)}
+            />
+          </div>
+          <div className="filter-group">
+            <label htmlFor="statusFilter">Status</label>
+            <select id="statusFilter" value={statusFilter} onChange={(event) => setStatusFilter(event.target.value)}>
+              <option value="all">All</option>
+              <option value="open">Open</option>
+              <option value="in-progress">In Progress</option>
+              <option value="resolved">Resolved</option>
+              <option value="closed">Closed</option>
             </select>
           </div>
           <div className="filter-group">
-            <label>Priority:</label>
-            <select 
-              value={filters.priority}
-              onChange={(e) => handleFilterChange('priority', e.target.value)}
-            >
-              <option>All Priorities</option>
-              <option>Critical</option>
-              <option>High</option>
-              <option>Medium</option>
-              <option>Low</option>
+            <label htmlFor="priorityFilter">Priority</label>
+            <select id="priorityFilter" value={priorityFilter} onChange={(event) => setPriorityFilter(event.target.value)}>
+              <option value="all">All</option>
+              <option value="low">Low</option>
+              <option value="normal">Normal</option>
+              <option value="urgent">Urgent</option>
             </select>
           </div>
           <div className="filter-group">
-            <label>Type:</label>
-            <select 
-              value={filters.type}
-              onChange={(e) => handleFilterChange('type', e.target.value)}
-            >
-              <option>All Types</option>
-              <option>Technical</option>
-              <option>Billing</option>
-              <option>General</option>
-              <option>Feature Request</option>
+            <label htmlFor="categoryFilter">Category</label>
+            <select id="categoryFilter" value={categoryFilter} onChange={(event) => setCategoryFilter(event.target.value)}>
+              <option value="all">All</option>
+              <option value="general">General</option>
+              <option value="technical">Technical</option>
+              <option value="billing">Billing</option>
+              <option value="project">Project</option>
+              <option value="feedback">Feedback</option>
             </select>
           </div>
-          <button 
-            className={`filter-btn ${filters.view === 'All Tickets' ? 'active' : ''}`}
-            onClick={() => handleViewChange('All Tickets')}
-          >
-            All Tickets
-          </button>
-          <button 
-            className={`filter-btn ${filters.view === 'My Tickets' ? 'active' : ''}`}
-            onClick={() => handleViewChange('My Tickets')}
-          >
-            My Tickets
-          </button>
-          <button 
-            className={`filter-btn ${filters.view === 'Unassigned' ? 'active' : ''}`}
-            onClick={() => handleViewChange('Unassigned')}
-          >
-            Unassigned
-          </button>
         </div>
 
-        {/* Tickets Table */}
-        <div className="content-card">
-          <div className="card-header">
-            <h2>
-              Support Tickets 
-              <span className="ticket-count"> ({filteredTickets.length})</span>
-            </h2>
-            <div className="header-actions">
-              <button className="export-btn" onClick={handleExport}>
-                Export
-              </button>
-              <button className="bulk-action-btn" onClick={handleBulkActions}>
-                Bulk Actions
-              </button>
+        <div className="admin-content-grid">
+          <section className="admin-content-card">
+            <div className="admin-card-header">
+              <h2>Ticket Queue ({filteredTickets.length})</h2>
             </div>
-          </div>
-          
-          <div className="table-container">
-            <table className="data-table">
-              <thead>
-                <tr>
-                  <th>
-                    <input 
-                      type="checkbox" 
-                      checked={selectedTickets.length === filteredTickets.length && filteredTickets.length > 0}
-                      onChange={handleSelectAll}
+            <div className="tickets-list">
+              {loading ? <p>Loading tickets...</p> : null}
+              {!loading && filteredTickets.length === 0 ? <p>No tickets match the current filters.</p> : null}
+              {filteredTickets.map((ticket) => (
+                <button
+                  key={ticket.id}
+                  type="button"
+                  className={`ticket-item assigned ${ticket.id === selectedTicketId ? 'active-ticket' : ''}`}
+                  onClick={() => setSelectedTicketId(ticket.id)}
+                >
+                  <div className="ticket-header">
+                    <h3>{ticket.subject}</h3>
+                    <span className={`ticket-status ${ticket.status}`}>{toLabel(ticket.status)}</span>
+                  </div>
+                  <div className="ticket-details">
+                    <p>{ticket.client_name || ticket.guest_name || ticket.client_email || ticket.guest_email}</p>
+                    <div className="ticket-meta">
+                      <span>{toLabel(ticket.priority)} priority</span>
+                      <span>{toLabel(ticket.category)}</span>
+                    </div>
+                  </div>
+                </button>
+              ))}
+            </div>
+          </section>
+
+          <section className="admin-content-card">
+            <div className="admin-card-header">
+              <h2>Ticket Details</h2>
+              {selectedTicket ? (
+                <select
+                  value={selectedTicket.status}
+                  onChange={(event) => handleStatusChange(selectedTicket.id, event.target.value)}
+                  disabled={saving}
+                >
+                  <option value="open">Open</option>
+                  <option value="in-progress">In Progress</option>
+                  <option value="resolved">Resolved</option>
+                  <option value="closed">Closed</option>
+                </select>
+              ) : null}
+            </div>
+            <div className="admin-card-body">
+              {detailLoading ? <p>Loading details...</p> : null}
+              {!detailLoading && !selectedTicket ? <p>Select a ticket to review it.</p> : null}
+              {selectedTicket ? (
+                <>
+                  <div className="ticket-details">
+                    <p><strong>Subject:</strong> {selectedTicket.subject}</p>
+                    <p><strong>Client:</strong> {selectedTicket.client_name || selectedTicket.guest_name || selectedTicket.guest_email}</p>
+                    <p><strong>Email:</strong> {selectedTicket.guest_email || selectedTicket.client_email || 'N/A'}</p>
+                    <p><strong>Category:</strong> {toLabel(selectedTicket.category)}</p>
+                    <p><strong>Priority:</strong> {toLabel(selectedTicket.priority)}</p>
+                    <p><strong>Created:</strong> {formatDateTime(selectedTicket.created_at)}</p>
+                    <p>{selectedTicket.description}</p>
+                  </div>
+
+                  <div className="client-messages">
+                    {(selectedTicket.replies || []).map((reply) => (
+                      <div key={reply.id} className="message-item">
+                        <div className="message-sender">
+                          <strong>{reply.sender_name}</strong>
+                          <span className="message-time">{formatDateTime(reply.created_at)}</span>
+                        </div>
+                        <p className="message-preview">{reply.body}</p>
+                      </div>
+                    ))}
+                    {selectedTicket.replies?.length === 0 ? <p>No replies yet.</p> : null}
+                  </div>
+
+                  <div className="form-group">
+                    <label htmlFor="adminReply">Reply</label>
+                    <textarea
+                      id="adminReply"
+                      rows="4"
+                      value={replyBody}
+                      onChange={(event) => setReplyBody(event.target.value)}
+                      placeholder="Write your support response..."
                     />
-                  </th>
-                  <th>Ticket ID</th>
-                  <th>Subject</th>
-                  <th>Client</th>
-                  <th>Type</th>
-                  <th>Priority</th>
-                  <th>Status</th>
-                  <th>Assigned To</th>
-                  <th>Last Update</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredTickets.map(ticket => (
-                  <tr key={ticket.id} className={ticket.urgent ? 'urgent-ticket' : ''}>
-                    <td>
-                      <input 
-                        type="checkbox" 
-                        checked={selectedTickets.includes(ticket.ticketId)}
-                        onChange={() => handleTicketSelect(ticket.ticketId)}
-                      />
-                    </td>
-                    <td>{ticket.ticketId}</td>
-                    <td>
-                      <div className="ticket-subject">
-                        {ticket.subject}
-                        {ticket.urgent && <span className="urgent-badge">URGENT</span>}
-                      </div>
-                    </td>
-                    <td>{ticket.client}</td>
-                    <td>
-                      <span className="type-badge" style={{ backgroundColor: getPriorityColor(ticket.type) + '20' }}>
-                        {ticket.type}
-                      </span>
-                    </td>
-                    <td>
-                      <span 
-                        className="priority-badge" 
-                        style={{ 
-                          backgroundColor: getPriorityColor(ticket.priority) + '20',
-                          color: getPriorityColor(ticket.priority),
-                          borderColor: getPriorityColor(ticket.priority) + '40'
-                        }}
-                      >
-                        {ticket.priority.charAt(0).toUpperCase() + ticket.priority.slice(1)}
-                      </span>
-                    </td>
-                    <td>
-                      <span 
-                        className="status-badge"
-                        style={{ 
-                          backgroundColor: getStatusColor(ticket.status) + '20',
-                          color: getStatusColor(ticket.status),
-                          borderColor: getStatusColor(ticket.status) + '40'
-                        }}
-                      >
-                        {ticket.status === 'in-progress' ? 'In Progress' : 
-                         ticket.status === 'waiting' ? 'Waiting Client' :
-                         ticket.status.charAt(0).toUpperCase() + ticket.status.slice(1)}
-                      </span>
-                    </td>
-                    <td>
-                      <span className={`assigned-to ${ticket.assignedTo === 'Unassigned' ? 'unassigned' : ''}`}>
-                        {ticket.assignedTo}
-                      </span>
-                    </td>
-                    <td>{ticket.lastUpdate}</td>
-                    <td>
-                      <div className="action-buttons">
-                        {ticket.assignedTo === 'Unassigned' && (
-                          <button 
-                            className="icon-btn take-btn"
-                            title="Take Ticket"
-                            onClick={() => handleTakeTicket(ticket.ticketId)}
-                          >
-                            ✓
-                          </button>
-                        )}
-                        {ticket.status === 'waiting' && (
-                          <button 
-                            className="icon-btn remind-btn"
-                            title="Send Reminder"
-                            onClick={() => handleRemindTicket(ticket.ticketId)}
-                          >
-                            ↻
-                          </button>
-                        )}
-                        <button 
-                          className="icon-btn message-btn"
-                          title="Message Client"
-                          onClick={() => handleMessageTicket(ticket.ticketId)}
-                        >
-                          💬
-                        </button>
-                        <button 
-                          className="icon-btn view-btn"
-                          title="View Ticket"
-                          onClick={() => handleViewTicket(ticket.ticketId)}
-                        >
-                          👁
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                  </div>
+                  <button className="primary-btn" onClick={handleSendReply} disabled={replying || !replyBody.trim()}>
+                    {replying ? 'Sending...' : 'Send Reply'}
+                  </button>
+                </>
+              ) : null}
+            </div>
+          </section>
         </div>
       </main>
     </div>
   );
-};
-
-export default SupportTicketsDashboard;
+}

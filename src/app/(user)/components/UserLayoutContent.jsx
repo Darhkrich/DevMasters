@@ -8,7 +8,7 @@ import { usePathname } from 'next/navigation';
 export default function UserLayoutContent({ children }) {
   const pathname = usePathname();
   return (
-    <div className="main-content" key={pathname}>
+    <div className="user-main-content" key={pathname}>
       {children}
     </div>
   );

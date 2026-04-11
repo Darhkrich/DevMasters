@@ -23,7 +23,7 @@ export default function QuoteForm({ onSubmit, isSubmitting, autoFillData }) {
 
   const validateForm = () => {
     const newErrors = {};
-    const requiredFields = ['fullName', 'email', 'phone', 'serviceCategory', 'budgetRange', 'timeline', 'description'];
+    const requiredFields = ['fullName', 'email', 'phone', 'serviceCategory', 'budgetRange', 'timeline', 'description', 'urgency'];
     
     requiredFields.forEach(field => {
       if (!formData[field] || formData[field].trim() === '') {
@@ -108,9 +108,9 @@ export default function QuoteForm({ onSubmit, isSubmitting, autoFillData }) {
           </h3>
           <div className="form-grid">
             {[
-              { name: 'fullName', label: 'Full Name *', type: 'text', placeholder: 'John Smith', required: true },
-              { name: 'email', label: 'Email Address *', type: 'email', placeholder: 'john@company.com', required: true },
-              { name: 'phone', label: 'Phone Number *', type: 'tel', placeholder: '+1 (555) 123-4567', required: true },
+              { name: 'fullName', label: 'Full Name *', type: 'text', placeholder: 'Emma Smith', required: true },
+              { name: 'email', label: 'Email Address *', type: 'email', placeholder: 'sky@company.com', required: true },
+              { name: 'phone', label: 'Phone Number *', type: 'tel', placeholder: '+1 (233) 123-4567', required: true },
               { name: 'company', label: 'Company Name', type: 'text', placeholder: 'Your Company Inc.', required: false },
             ].map(field => (
               <div key={field.name} className="form-group">
@@ -150,7 +150,7 @@ export default function QuoteForm({ onSubmit, isSubmitting, autoFillData }) {
                 name="serviceCategory"
                 value={formData.serviceCategory || autoFillData.serviceCategory || ''}
                 onChange={handleChange}
-                className="form-select"
+                className={`form-select ${errors.serviceCategory ? 'error' : ''}`}
               >
                 <option value="">Select a category</option>
                 <option value="AI Automation">AI Automation</option>
@@ -166,6 +166,12 @@ export default function QuoteForm({ onSubmit, isSubmitting, autoFillData }) {
                   Auto-detected from your cart
                 </div>
               )}
+              {errors.serviceCategory && (
+                <div className="form-error">
+                  <i className="fas fa-exclamation-circle mr-1"></i>
+                  {errors.serviceCategory}
+                </div>
+              )}
             </div>
 
             {/* Budget Range */}
@@ -175,7 +181,7 @@ export default function QuoteForm({ onSubmit, isSubmitting, autoFillData }) {
                 name="budgetRange"
                 value={formData.budgetRange || ''}
                 onChange={handleChange}
-                className="form-select"
+                className={`form-select ${errors.budgetRange ? 'error' : ''}`}
               >
                 <option value="">Select budget range</option>
                 {budgetOptions.map(option => (
@@ -184,6 +190,12 @@ export default function QuoteForm({ onSubmit, isSubmitting, autoFillData }) {
                   </option>
                 ))}
               </select>
+              {errors.budgetRange && (
+                <div className="form-error">
+                  <i className="fas fa-exclamation-circle mr-1"></i>
+                  {errors.budgetRange}
+                </div>
+              )}
             </div>
 
             {/* Timeline */}
@@ -193,7 +205,7 @@ export default function QuoteForm({ onSubmit, isSubmitting, autoFillData }) {
                 name="timeline"
                 value={formData.timeline || autoFillData.suggestedTimeline || ''}
                 onChange={handleChange}
-                className="form-select"
+                className={`form-select ${errors.timeline ? 'error' : ''}`}
               >
                 <option value="">Select timeline</option>
                 {timelineOptions.map(option => (
@@ -206,6 +218,12 @@ export default function QuoteForm({ onSubmit, isSubmitting, autoFillData }) {
                 <div className="form-hint">
                   <i className="fas fa-clock mr-1"></i>
                   Suggested based on your selections
+                </div>
+              )}
+              {errors.timeline && (
+                <div className="form-error">
+                  <i className="fas fa-exclamation-circle mr-1"></i>
+                  {errors.timeline}
                 </div>
               )}
             </div>
@@ -291,6 +309,12 @@ export default function QuoteForm({ onSubmit, isSubmitting, autoFillData }) {
                   </label>
                 ))}
               </div>
+              {errors.urgency && (
+                <div className="form-error">
+                  <i className="fas fa-exclamation-circle mr-1"></i>
+                  {errors.urgency}
+                </div>
+              )}
             </div>
           </div>
         </div>

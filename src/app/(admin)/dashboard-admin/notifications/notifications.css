@@ -1,0 +1,272 @@
+/* =========================================================
+   ADMIN NOTIFICATIONS PAGE – PREFIXED CLASSES (an-*)
+   ADAPTED FOR SIDEBAR INTEGRATION
+   ========================================================= */
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", "Roboto", "Segoe UI", sans-serif;
+    background: var(--an-bg-main);
+    color: var(--an-text-primary);
+    transition: background 0.3s ease, color 0.3s ease;
+}
+
+:root {
+    /* Light Mode Variables */
+    --an-bg-main: #f8f9fc;
+    --an-bg-surface: #ffffff;
+    --an-bg-soft: #f3f4f7;
+    --an-bg-lighter: #eef0f5;
+    --an-border: #e1e4eb;
+    
+    --an-accent: #0066ff;
+    --an-accent-light: #e6f0ff;
+    --an-accent-dark: #0052cc;
+    
+    --an-text-primary: #0f1419;
+    --an-text-secondary: #5f6d7b;
+    --an-text-tertiary: #8b95a5;
+    
+    --an-unread-bg: rgba(0, 102, 255, 0.05);
+    --an-unread-border: #0066ff;
+    
+    --an-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+    --an-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
+    --an-shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
+    
+    --an-radius-md: 8px;
+    --an-radius-lg: 12px;
+}
+
+[data-theme="dark"],
+.dark-mode {
+    /* Dark Mode Variables */
+    --an-bg-main: #0d1117;
+    --an-bg-surface: #1a202c;
+    --an-bg-soft: #2d3748;
+    --an-bg-lighter: #374151;
+    --an-border: #3f4a5c;
+    
+    --an-accent: #3b82f6;
+    --an-accent-light: #1e3a8a;
+    --an-accent-dark: #2563eb;
+    
+    --an-text-primary: #f1f5f9;
+    --an-text-secondary: #cbd5e1;
+    --an-text-tertiary: #94a3b8;
+    
+    --an-unread-bg: rgba(59, 130, 246, 0.1);
+    --an-unread-border: #3b82f6;
+    
+    --an-shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.15);
+    --an-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.2);
+    --an-shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+/* ========================================
+   MAIN LAYOUT – SIDEBAR SPACE
+   ======================================== */
+
+.an-container {
+    flex: 1;
+    background: var(--an-bg-main);
+    min-height: 100vh;
+}
+
+.an-main-content {
+    margin-left: 260px; /* match sidebar width */
+    padding: 20px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+/* ========================================
+   HEADER
+   ======================================== */
+
+.an-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--an-border);
+}
+
+.an-header h1 {
+    margin: 0;
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: var(--an-text-primary);
+}
+
+.an-btn-outline {
+    padding: 8px 16px;
+    background: transparent;
+    border: 1px solid var(--an-border);
+    border-radius: var(--an-radius-md);
+    color: var(--an-text-secondary);
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.an-btn-outline:hover {
+    border-color: var(--an-accent);
+    color: var(--an-accent);
+    background: var(--an-bg-soft);
+}
+
+/* ========================================
+   ERROR MESSAGE
+   ======================================== */
+
+.an-error {
+    background: rgba(239, 68, 68, 0.1);
+    border-left: 3px solid #ef4444;
+    padding: 12px 16px;
+    border-radius: var(--an-radius-md);
+    color: #ef4444;
+    font-size: 0.85rem;
+}
+
+/* ========================================
+   NOTIFICATIONS LIST
+   ======================================== */
+
+.an-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.an-card {
+    background: var(--an-bg-surface);
+    border: 1px solid var(--an-border);
+    border-radius: var(--an-radius-lg);
+    transition: all 0.2s;
+    cursor: pointer;
+}
+
+.an-card:hover {
+    border-color: var(--an-accent);
+    box-shadow: var(--an-shadow-md);
+}
+
+.an-card.unread {
+    background: var(--an-unread-bg);
+    border-left: 3px solid var(--an-unread-border);
+}
+
+.an-link {
+    display: block;
+    padding: 16px;
+    text-decoration: none;
+    color: inherit;
+}
+
+.an-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.an-card-header strong {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--an-text-primary);
+}
+
+.an-time {
+    font-size: 0.7rem;
+    color: var(--an-text-tertiary);
+}
+
+.an-message {
+    margin: 0;
+    font-size: 0.85rem;
+    color: var(--an-text-secondary);
+    line-height: 1.4;
+}
+
+/* ========================================
+   LOADING / EMPTY STATES
+   ======================================== */
+
+.an-state,
+.an-empty {
+    text-align: center;
+    padding: 48px;
+    background: var(--an-bg-surface);
+    border: 1px solid var(--an-border);
+    border-radius: var(--an-radius-lg);
+    color: var(--an-text-secondary);
+}
+
+.an-empty {
+    padding: 32px;
+}
+
+/* ========================================
+   RESPONSIVE
+   ======================================== */
+
+@media (max-width: 1024px) {
+    .an-main-content {
+        margin-left: 0;
+        padding: 16px;
+        gap: 20px;
+    }
+}
+
+@media (max-width: 768px) {
+    .an-main-content {
+        padding: 12px;
+        gap: 16px;
+    }
+
+    .an-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .an-header h1 {
+        font-size: 1.4rem;
+    }
+
+    .an-btn-outline {
+        align-self: flex-start;
+    }
+
+    .an-card-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .an-link {
+        padding: 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    .an-main-content {
+        padding: 10px;
+    }
+}

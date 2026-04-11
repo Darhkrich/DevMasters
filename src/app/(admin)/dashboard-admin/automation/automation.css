@@ -1,0 +1,378 @@
+/* =========================================================
+   ADMIN AUTOMATIONS PAGE – PREFIXED CLASSES (aa-*)
+   ADAPTED FOR SIDEBAR INTEGRATION
+   ========================================================= */
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", "Roboto", "Segoe UI", sans-serif;
+    background: var(--aa-bg-main);
+    color: var(--aa-text-primary);
+    transition: background 0.3s ease, color 0.3s ease;
+}
+
+:root {
+    /* Light Mode Variables */
+    --aa-bg-main: #f8f9fc;
+    --aa-bg-surface: #ffffff;
+    --aa-bg-soft: #f3f4f7;
+    --aa-bg-lighter: #eef0f5;
+    --aa-border: #e1e4eb;
+    
+    --aa-accent: #0066ff;
+    --aa-accent-light: #e6f0ff;
+    --aa-accent-dark: #0052cc;
+    
+    --aa-text-primary: #0f1419;
+    --aa-text-secondary: #5f6d7b;
+    --aa-text-tertiary: #8b95a5;
+    
+    --aa-danger: #ef4444;
+    --aa-danger-dark: #dc2626;
+    
+    --aa-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+    --aa-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
+    --aa-shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
+    
+    --aa-radius-md: 8px;
+    --aa-radius-lg: 12px;
+}
+
+[data-theme="dark"],
+.dark-mode {
+    /* Dark Mode Variables */
+    --aa-bg-main: #0d1117;
+    --aa-bg-surface: #1a202c;
+    --aa-bg-soft: #2d3748;
+    --aa-bg-lighter: #374151;
+    --aa-border: #3f4a5c;
+    
+    --aa-accent: #3b82f6;
+    --aa-accent-light: #1e3a8a;
+    --aa-accent-dark: #2563eb;
+    
+    --aa-text-primary: #f1f5f9;
+    --aa-text-secondary: #cbd5e1;
+    --aa-text-tertiary: #94a3b8;
+    
+    --aa-danger: #f87171;
+    --aa-danger-dark: #ef4444;
+    
+    --aa-shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.15);
+    --aa-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.2);
+    --aa-shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+/* ========================================
+   MAIN LAYOUT – SIDEBAR SPACE
+   ======================================== */
+
+.aa-container {
+    flex: 1;
+    background: var(--aa-bg-main);
+    min-height: 100vh;
+}
+
+.aa-main-content {
+    margin-left: 260px; /* match sidebar width */
+    padding: 20px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+/* ========================================
+   HEADER
+   ======================================== */
+
+.aa-header {
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--aa-border);
+}
+
+.aa-header h1 {
+    margin: 0;
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: var(--aa-text-primary);
+}
+
+/* ========================================
+   TABS
+   ======================================== */
+
+.aa-tabs {
+    display: flex;
+    gap: 8px;
+    border-bottom: 1px solid var(--aa-border);
+    padding-bottom: 8px;
+}
+
+.aa-tab {
+    padding: 8px 16px;
+    background: transparent;
+    border: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--aa-text-secondary);
+    cursor: pointer;
+    transition: all 0.2s;
+    border-radius: var(--aa-radius-md);
+}
+
+.aa-tab:hover {
+    color: var(--aa-accent);
+    background: var(--aa-bg-soft);
+}
+
+.aa-tab-active {
+    color: var(--aa-accent);
+    background: var(--aa-accent-light);
+}
+
+/* ========================================
+   CARDS
+   ======================================== */
+
+.aa-card {
+    background: var(--aa-bg-surface);
+    border: 1px solid var(--aa-border);
+    border-radius: var(--aa-radius-lg);
+    overflow: hidden;
+    box-shadow: var(--aa-shadow-sm);
+    padding: 20px;
+}
+
+.aa-card h3 {
+    margin: 0 0 16px 0;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--aa-text-primary);
+}
+
+.aa-card-item {
+    background: var(--aa-bg-surface);
+    border: 1px solid var(--aa-border);
+    border-radius: var(--aa-radius-lg);
+    padding: 16px;
+    transition: all 0.2s;
+    box-shadow: var(--aa-shadow-sm);
+}
+
+.aa-card-item:hover {
+    border-color: var(--aa-accent);
+    box-shadow: var(--aa-shadow-md);
+}
+
+/* ========================================
+   FORMS
+   ======================================== */
+
+.aa-form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+.aa-form-grid input,
+.aa-form-grid textarea,
+.aa-form-grid select {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid var(--aa-border);
+    border-radius: var(--aa-radius-md);
+    background: var(--aa-bg-lighter);
+    color: var(--aa-text-primary);
+    font-size: 0.85rem;
+    font-family: inherit;
+    outline: none;
+}
+
+.aa-form-grid input:focus,
+.aa-form-grid textarea:focus,
+.aa-form-grid select:focus {
+    border-color: var(--aa-accent);
+}
+
+.aa-form-grid textarea {
+    resize: vertical;
+    min-height: 60px;
+}
+
+.aa-form-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+}
+
+/* ========================================
+   BUTTONS
+   ======================================== */
+
+.aa-btn-primary,
+.aa-btn-secondary,
+.aa-btn-outline,
+.aa-btn-danger {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    border-radius: var(--aa-radius-md);
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: none;
+}
+
+.aa-btn-primary {
+    background: var(--aa-accent);
+    color: white;
+}
+
+.aa-btn-primary:hover {
+    background: var(--aa-accent-dark);
+}
+
+.aa-btn-secondary {
+    background: var(--aa-bg-soft);
+    color: var(--aa-text-primary);
+    border: 1px solid var(--aa-border);
+}
+
+.aa-btn-secondary:hover {
+    background: var(--aa-bg-lighter);
+    border-color: var(--aa-accent);
+    color: var(--aa-accent);
+}
+
+.aa-btn-outline {
+    background: transparent;
+    border: 1px solid var(--aa-border);
+    color: var(--aa-text-secondary);
+}
+
+.aa-btn-outline:hover {
+    border-color: var(--aa-accent);
+    color: var(--aa-accent);
+    background: var(--aa-bg-soft);
+}
+
+.aa-btn-danger {
+    background: rgba(239, 68, 68, 0.1);
+    color: var(--aa-danger);
+    border: 1px solid rgba(239, 68, 68, 0.25);
+}
+
+.aa-btn-danger:hover {
+    background: rgba(239, 68, 68, 0.2);
+    border-color: var(--aa-danger);
+}
+
+/* ========================================
+   LIST
+   ======================================== */
+
+.aa-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.aa-card-item {
+    background: var(--aa-bg-surface);
+    border: 1px solid var(--aa-border);
+    border-radius: var(--aa-radius-lg);
+    padding: 16px;
+    transition: all 0.2s;
+}
+
+.aa-card-item:hover {
+    border-color: var(--aa-accent);
+    box-shadow: var(--aa-shadow-md);
+}
+
+.aa-card-item > div:first-child {
+    margin-bottom: 6px;
+}
+
+.aa-card-item > div:first-child strong {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--aa-text-primary);
+}
+
+.aa-card-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 12px;
+}
+
+/* ========================================
+   EMPTY STATE
+   ======================================== */
+
+.aa-empty {
+    text-align: center;
+    padding: 32px;
+    background: var(--aa-bg-surface);
+    border: 1px solid var(--aa-border);
+    border-radius: var(--aa-radius-lg);
+    color: var(--aa-text-secondary);
+}
+
+/* ========================================
+   RESPONSIVE
+   ======================================== */
+
+@media (max-width: 1024px) {
+    .aa-main-content {
+        margin-left: 0;
+        padding: 16px;
+        gap: 20px;
+    }
+}
+
+@media (max-width: 768px) {
+    .aa-main-content {
+        padding: 12px;
+        gap: 16px;
+    }
+
+    .aa-header h1 {
+        font-size: 1.4rem;
+    }
+
+    .aa-form-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .aa-form-actions {
+        flex-direction: column;
+    }
+
+    .aa-form-actions button {
+        width: 100%;
+    }
+
+    .aa-card-actions {
+        flex-direction: column;
+    }
+
+    .aa-card-actions button {
+        width: 100%;
+    }
+}

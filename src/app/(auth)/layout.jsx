@@ -1,7 +1,5 @@
 import TiltScriptLoader from '@/components/common/TiltscriptLoader'
 import '@/styles/public.css'
-import Navbar from '@/components/common/Navbar'
-import Footer from '@/components/common/Footer'
 
 // This should be at the top level of your layout.js
 export const viewport = {
@@ -15,16 +13,11 @@ export const viewport = {
 export default function PublicLayout({ children }) {
   return (
     <>
-      <Navbar />
-       <link
+      <link
         rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"  />
-        <link 
-         rel="icon" 
-         type="image/x-icon" href="assets/favicon/favicon.ico" />
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      />
       <main>{children}</main>
-      <TiltScriptLoader />
-      <Footer />
     </>
   )
 }

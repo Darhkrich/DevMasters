@@ -596,17 +596,8 @@ button {
   flex-shrink: 0;
 }
 
-.sp1__wc-demo-window-body {
-  padding: 0.75rem;
-  min-height: 18.75rem;
-  /* Remove background-image or ensure it exists */
-  background: radial-gradient(circle at top left, #4a90ff, #151728);
-}
 
 
-.sp1__wc-demo-window-body--plain {
-  background: rgba(7, 8, 16, 0.93);
-}
 
 /* Demo content blocks */
 .sp1__wc-demo-hero {
@@ -673,6 +664,7 @@ button {
   border-radius: 1.25rem;
   border: 1px solid var(--wc-border-light);
   background: rgba(255, 255, 255, 0.03);
+  margin-left: 20px;
 }
 
 .sp1__wc-demo-phone-notch {
@@ -823,63 +815,6 @@ button {
   }
 }
 
-/* ========== LIGHT MODE OPTION ========== */
-
-body.sp1__wc-light {
-  background: #f5f6fa;
-  color: #05050b;
-}
-
-body.sp1__wc-light .sp1__wc-services-page::before {
-  background: linear-gradient(
-    to bottom,
-    rgba(255, 255, 255, 0.85),
-    rgba(245, 246, 250, 0.9),
-    transparent
-  );
-}
-
-body.sp1__wc-light .sp1__wc-hero-demo-card,
-body.sp1__wc-light .sp1__service,
-body.sp1__wc-light .sp1__wc-demo-window,
-body.sp1__wc-light .sp1__wc-demo-phone {
-  background: #ffffff;
-  border-color: rgba(0, 0, 0, 0.06);
-  box-shadow: 0 16px 38px rgba(0, 0, 0, 0.08);
-}
-
-body.sp1__wc-light .sp1__wc-services-nav-item {
-  background: rgba(255, 255, 255, 0.9);
-}
-
-body.sp1__wc-light .sp1__wc-services-nav-item:hover {
-  background: #ffffff;
-}
-
-body.sp1__wc-light .sp1__wc-service-section-header p,
-body.sp1__wc-light .sp1__wc-services-hero-text p,
-body.sp1__wc-light .sp1__wc-services-nav-item,
-body.sp1__wc-light .sp1__wc-pill,
-body.sp1__wc-light .sp1__wc-section-badge,
-body.sp1__wc-light .sp1__wc-service-demo p,
-body.sp1__wc-light .sp1__wc-service-meta {
-  color: rgba(0, 0, 0, 0.6);
-}
-
-body.sp1__wc-light .sp1__wc-demo-window-body--plain {
-  background: #f3f4fb;
-}
-
-body.sp1__wc-light .sp1__wc-demo-bubble--user {
-  background: #f3f4fb;
-}
-
-body.sp1__wc-light .sp1__wc-demo-bubble--system {
-  background: rgba(46, 204, 113, 0.12);
-  border-color: rgba(46, 204, 113, 0.4);
-}
-
-/* ===== AI Automation Page extra styles ===== */
 
 /* Slight tweak to hero look on AI page */
 .sp1__wc-ai-page .sp1__wc-ai-hero-card {

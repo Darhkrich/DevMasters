@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import "./services.css";
 export const metadata = {
   title: "Our Services | BOEM",
@@ -145,7 +146,13 @@ export default function ServicesPage() {
 
             <div className="sp1__wc-demo-window">
               <div className="sp1__wc-demo-window-body">
-                <img src='/desktopnew.png' className="sp1__two"></img>   
+                <Image
+                  src="/builder-one.png"
+                  alt="Builder website preview"
+                  className="sp1__two"
+                  width={1200}
+                  height={900}
+                />
               </div>
             </div>
 
@@ -270,19 +277,19 @@ export default function ServicesPage() {
               <div className="sp1__wc-demo-phone">
                 <div className="sp1__wc-demo-phone-notch"></div>
                 <div className="sp1__wc-demo-phone-screen sp1__wc-demo-phone-screen--onboarding">
-                  <img src="/ai.jpg" className="sp1__newimg" />
+                  <Image src="/m2.jpg" alt="App onboarding preview" className="sp1__newimg" width={480} height={960} />
                 </div>
               </div>
               <div className="sp1__wc-demo-phone">
                 <div className="sp1__wc-demo-phone-notch"></div>
                 <div className="sp1__wc-demo-phone-screen sp1__wc-demo-phone-screen--dashboard">
-                  <img src="/ai.jpg" className="sp1__newimg" />
+                  <Image src="/m3.jpg" alt="App dashboard preview" className="sp1__newimg" width={480} height={960} />
                 </div>
               </div>
               <div className="sp1__wc-demo-phone">
                 <div className="sp1__wc-demo-phone-notch"></div>
                 <div className="sp1__wc-demo-phone-screen sp1__wc-demo-phone-screen--settings">
-                  <img src="/ai.jpg" className="sp1__newimg" /> 
+                  <Image src="/m4.jpg" alt="App settings preview" className="sp1__newimg" width={480} height={960} />
                 </div>
               </div>
             </div>

@@ -694,55 +694,6 @@ body {
   }
 }
 
-/* ========== LIGHT MODE OPTION (if you ever want it) ========== */
-/* Add class="wc-light" to <body> to switch */
-
-body.wc-light {
-  background: #f5f6fa;
-  color: #05050b;
-}
-body.wc-light .wc-services-page::before {
-  background: linear-gradient(
-    to bottom,
-    rgba(255, 255, 255, 0.85),
-    rgba(245, 246, 250, 0.9),
-    transparent
-  );
-}
-body.wc-light .wc-hero-demo-card,
-body.wc-light .service,
-body.wc-light .wc-demo-window,
-body.wc-light .wc-demo-phone {
-  background: #ffffff;
-  border-color: rgba(0, 0, 0, 0.06);
-  box-shadow: 0 16px 38px rgba(0, 0, 0, 0.08);
-}
-body.wc-light .wc-services-nav-item {
-  background: rgba(255, 255, 255, 0.9);
-}
-body.wc-light .wc-services-nav-item:hover {
-  background: #ffffff;
-}
-body.wc-light .wc-service-section-header p,
-body.wc-light .wc-services-hero-text p,
-body.wc-light .wc-services-nav-item,
-body.wc-light .wc-pill,
-body.wc-light .wc-section-badge,
-body.wc-light .wc-service-demo p,
-body.wc-light .wc-service-meta {
-  color: rgba(0, 0, 0, 0.6);
-}
-body.wc-light .wc-demo-window-body--plain {
-  background: #f3f4fb;
-}
-body.wc-light .wc-demo-bubble--user {
-  background: #f3f4fb;
-}
-body.wc-light .wc-demo-bubble--system {
-  background: rgba(46, 204, 113, 0.12);
-  border-color: rgba(46, 204, 113, 0.4);
-}
-
 
 /* ===== AI Automation Page extra styles ===== */
 

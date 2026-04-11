@@ -1,0 +1,384 @@
+/* =========================================================
+   ADMIN INQUIRY DETAIL PAGE – PREFIXED CLASSES (aid-*)
+   ADAPTED FOR SIDEBAR INTEGRATION
+   ========================================================= */
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", "Roboto", "Segoe UI", sans-serif;
+    background: var(--aid-bg-main);
+    color: var(--aid-text-primary);
+    transition: background 0.3s ease, color 0.3s ease;
+}
+
+:root {
+    /* Light Mode Variables */
+    --aid-bg-main: #f8f9fc;
+    --aid-bg-surface: #ffffff;
+    --aid-bg-soft: #f3f4f7;
+    --aid-bg-lighter: #eef0f5;
+    --aid-border: #e1e4eb;
+    
+    --aid-accent: #0066ff;
+    --aid-accent-light: #e6f0ff;
+    --aid-accent-dark: #0052cc;
+    
+    --aid-text-primary: #0f1419;
+    --aid-text-secondary: #5f6d7b;
+    --aid-text-tertiary: #8b95a5;
+    
+    --aid-status-new: #3b82f6;
+    --aid-status-in-progress: #f59e0b;
+    --aid-status-resolved: #22c55e;
+    --aid-status-spam: #ef4444;
+    
+    --aid-danger: #ef4444;
+    --aid-danger-dark: #dc2626;
+    
+    --aid-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+    --aid-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
+    --aid-shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
+    
+    --aid-radius-md: 8px;
+    --aid-radius-lg: 12px;
+}
+
+[data-theme="dark"],
+.dark-mode {
+    /* Dark Mode Variables */
+    --aid-bg-main: #0d1117;
+    --aid-bg-surface: #1a202c;
+    --aid-bg-soft: #2d3748;
+    --aid-bg-lighter: #374151;
+    --aid-border: #3f4a5c;
+    
+    --aid-accent: #3b82f6;
+    --aid-accent-light: #1e3a8a;
+    --aid-accent-dark: #2563eb;
+    
+    --aid-text-primary: #f1f5f9;
+    --aid-text-secondary: #cbd5e1;
+    --aid-text-tertiary: #94a3b8;
+    
+    --aid-status-new: #60a5fa;
+    --aid-status-in-progress: #fbbf24;
+    --aid-status-resolved: #4ade80;
+    --aid-status-spam: #f87171;
+    
+    --aid-danger: #f87171;
+    --aid-danger-dark: #ef4444;
+    
+    --aid-shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.15);
+    --aid-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.2);
+    --aid-shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+/* ========================================
+   MAIN LAYOUT – SIDEBAR SPACE
+   ======================================== */
+
+.aid-container {
+    flex: 1;
+    background: var(--aid-bg-main);
+    min-height: 100vh;
+}
+
+.aid-main-content {
+    margin-left: 260px; /* match sidebar width */
+    padding: 20px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+/* ========================================
+   HEADER
+   ======================================== */
+
+.aid-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--aid-border);
+}
+
+.aid-header h1 {
+    margin: 0;
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: var(--aid-text-primary);
+}
+
+.aid-header-actions {
+    display: flex;
+    gap: 12px;
+}
+
+/* ========================================
+   BUTTONS
+   ======================================== */
+
+.aid-btn-primary,
+.aid-btn-secondary,
+.aid-btn-danger {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    border-radius: var(--aid-radius-md);
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-decoration: none;
+    border: none;
+}
+
+.aid-btn-primary {
+    background: var(--aid-accent);
+    color: white;
+}
+
+.aid-btn-primary:hover:not(:disabled) {
+    background: var(--aid-accent-dark);
+}
+
+.aid-btn-primary:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.aid-btn-secondary {
+    background: var(--aid-bg-soft);
+    color: var(--aid-text-primary);
+    border: 1px solid var(--aid-border);
+}
+
+.aid-btn-secondary:hover {
+    background: var(--aid-bg-lighter);
+    border-color: var(--aid-accent);
+    color: var(--aid-accent);
+}
+
+.aid-btn-danger {
+    background: rgba(239, 68, 68, 0.1);
+    color: var(--aid-danger);
+    border: 1px solid rgba(239, 68, 68, 0.25);
+}
+
+.aid-btn-danger:hover {
+    background: rgba(239, 68, 68, 0.2);
+    border-color: var(--aid-danger);
+}
+
+/* ========================================
+   CARD
+   ======================================== */
+
+.aid-card {
+    background: var(--aid-bg-surface);
+    border: 1px solid var(--aid-border);
+    border-radius: var(--aid-radius-lg);
+    overflow: hidden;
+    box-shadow: var(--aid-shadow-sm);
+}
+
+.aid-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    padding: 16px 20px;
+    background: var(--aid-bg-soft);
+    border-bottom: 1px solid var(--aid-border);
+}
+
+.aid-card-header h3 {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--aid-text-primary);
+}
+
+.aid-status-actions {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+/* ========================================
+   FORM GRID
+   ======================================== */
+
+.aid-form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    padding: 20px;
+}
+
+.aid-form-grid > div {
+    font-size: 0.85rem;
+    color: var(--aid-text-primary);
+}
+
+.aid-form-grid strong {
+    font-weight: 600;
+    color: var(--aid-text-secondary);
+    margin-right: 8px;
+}
+
+/* ========================================
+   NOTES & METADATA
+   ======================================== */
+
+.aid-note {
+    padding: 12px 20px;
+    border-top: 1px solid var(--aid-border);
+}
+
+.aid-note strong {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--aid-text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: block;
+    margin-bottom: 8px;
+}
+
+.aid-note p {
+    margin: 0;
+    font-size: 0.85rem;
+    line-height: 1.5;
+    white-space: pre-wrap;
+    color: var(--aid-text-primary);
+}
+
+.aid-metadata {
+    padding: 12px 20px;
+    border-top: 1px solid var(--aid-border);
+}
+
+.aid-metadata details {
+    font-size: 0.8rem;
+}
+
+.aid-metadata summary {
+    cursor: pointer;
+    color: var(--aid-accent);
+    font-weight: 500;
+    margin-bottom: 8px;
+}
+
+.aid-metadata pre {
+    margin: 0;
+    padding: 12px;
+    background: var(--aid-bg-lighter);
+    border-radius: var(--aid-radius-md);
+    overflow-x: auto;
+    font-size: 0.7rem;
+    color: var(--aid-text-secondary);
+}
+
+/* ========================================
+   SELECT DROPDOWN
+   ======================================== */
+
+.aid-select {
+    padding: 6px 12px;
+    border: 1px solid var(--aid-border);
+    border-radius: var(--aid-radius-md);
+    background: var(--aid-bg-lighter);
+    color: var(--aid-text-primary);
+    font-size: 0.85rem;
+    outline: none;
+    cursor: pointer;
+}
+
+.aid-select:focus {
+    border-color: var(--aid-accent);
+}
+
+/* ========================================
+   RESPONSIVE
+   ======================================== */
+
+@media (max-width: 1024px) {
+    .aid-main-content {
+        margin-left: 0;
+        padding: 16px;
+        gap: 20px;
+    }
+}
+
+@media (max-width: 768px) {
+    .aid-main-content {
+        padding: 12px;
+        gap: 16px;
+    }
+
+    .aid-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .aid-header-actions {
+        width: 100%;
+    }
+
+    .aid-header-actions .aid-btn-secondary,
+    .aid-header-actions .aid-btn-danger {
+        flex: 1;
+        justify-content: center;
+    }
+
+    .aid-card-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .aid-status-actions {
+        width: 100%;
+    }
+
+    .aid-status-actions .aid-select {
+        flex: 1;
+    }
+
+    .aid-form-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+        padding: 16px;
+    }
+
+    .aid-note,
+    .aid-metadata {
+        padding: 12px 16px;
+    }
+}
+
+@media (max-width: 480px) {
+    .aid-main-content {
+        padding: 10px;
+    }
+
+    .aid-header h1 {
+        font-size: 1.4rem;
+    }
+}

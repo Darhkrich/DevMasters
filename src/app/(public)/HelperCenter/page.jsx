@@ -1,17 +1,18 @@
 "use client";
 
 import { useState } from "react";
-import "./styles.css";
+import Link from "next/link";
+import "./helper.css";
 
 // Sample article data
 const articlesData = [
   {
     id: 1,
     categoryId: "getting-started",
-    title: "Welcome to BOEM – Your first steps",
+    title: "Welcome to DevMasters – Your first steps",
     excerpt: "Learn how to set up your account and navigate the dashboard.",
     content:
-      "<p>Welcome to BOEM! This guide will help you get started with your new account. You'll learn how to customize your profile, understand the dashboard, and find the services you need.</p><p>If you have any questions, our support team is here to help.</p>",
+      "<p>Welcome to DevMasters! This guide will help you get started with your new account. You'll learn how to customize your profile, understand the dashboard, and find the services you need.</p><p>If you have any questions, our support team is here to help.</p>",
   },
   {
     id: 2,
@@ -221,9 +222,9 @@ export default function HelpCenterPage() {
           <ul className="sp6__articles-list">
             {articlesData.slice(0, 5).map((article) => (
               <li key={article.id}>
-                <a href="#" onClick={(e) => { e.preventDefault(); setSelectedArticle(article); }}>
+                <button type="button" onClick={() => setSelectedArticle(article)}>
                   <i className="fas fa-file-alt"></i> {article.title}
-                </a>
+                </button>
               </li>
             ))}
           </ul>
@@ -262,12 +263,12 @@ export default function HelpCenterPage() {
           <h2>Still need help?</h2>
           <p>Our support team is ready to assist you.</p>
           <div className="sp6__contact-options">
-            <a href="/contact" className="sp6__wc-btn-primary">
+            <Link href="/contact" className="sp6__wc-btn-primary">
               <i className="fas fa-envelope"></i> Contact us
-            </a>
-            <a href="#" className="sp6__wc-btn-ghost">
-              <i className="fas fa-comment"></i> Live chat
-            </a>
+            </Link>
+            <Link href="/" className="sp6__wc-btn-ghost">
+              <i className="fas fa-home"></i> Back to Homepage
+            </Link>
           </div>
           <p className="sp6__contact-note">Response time: within 24 hours</p>
         </div>

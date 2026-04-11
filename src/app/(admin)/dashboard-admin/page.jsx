@@ -1,453 +1,477 @@
-
 'use client';
+
 import './dashboard.css';
+import ThemeToggle from '@/components/common/ThemeToggle';
 
+import Link from 'next/link';
+import { useEffect, useMemo, useState } from 'react';
+import {
+  fetchOrderStats,
+  fetchOrders,
+  fetchWorkforceDashboard,
+  getStoredUser,
+} from '@/lib/boemApi';
 
-import { useState, useEffect } from 'react';
+const getQuickActions = (user) => (
+  user?.can_manage_staff_workspace
+    ? [
+      { id: 1, label: 'Team Control', href: '/dashboard-admin/team', icon: 'Team' },
+      { id: 2, label: 'My Workspace', href: '/dashboard-admin/workspace', icon: 'Tasks' },
+      { id: 3, label: 'Orders', href: '/dashboard-admin/orders', icon: 'Orders' },
+      { id: 4, label: 'Clients', href: '/dashboard-admin/clients', icon: 'Clients' },
+    ]
+    : [
+      { id: 1, label: 'My Workspace', href: '/dashboard-admin/workspace', icon: 'Tasks' },
+      { id: 2, label: 'Settings', href: '/dashboard-admin/Settings', icon: 'Settings' },
+    ]
+);
 
-const DashboardPage = () => {
-  // State for dashboard data
+const getInitials = (firstName, lastName, fallback) => {
+  const value = [firstName, lastName]
+    .map((part) => (part || '').trim())
+    .filter(Boolean)
+    .map((part) => part.charAt(0).toUpperCase())
+    .join('')
+    .slice(0, 2);
+  return value || fallback;
+};
+
+const getStatusInfo = (status) => {
+  switch (status) {
+    case 'todo':
+      return { className: 'ad-status-badge ad-status-pending', text: 'To Do' };
+    case 'completed':
+    case 'done':
+      return { className: 'ad-status-badge ad-status-completed', text: 'Completed' };
+    case 'in_progress':
+      return { className: 'ad-status-badge ad-status-in-progress', text: 'In Progress' };
+    case 'pending':
+      return { className: 'ad-status-badge ad-status-pending', text: 'Pending Review' };
+    case 'reviewed':
+      return { className: 'ad-status-badge ad-status-pending', text: 'Reviewed' };
+    case 'awaiting_client':
+      return { className: 'ad-status-badge ad-status-pending', text: 'Awaiting Client' };
+    case 'cancelled':
+      return { className: 'ad-status-badge', text: 'Cancelled' };
+    case 'blocked':
+      return { className: 'ad-status-badge', text: 'Blocked' };
+    default:
+      return { className: 'ad-status-badge', text: status };
+  }
+};
+
+export default function DashboardPage() {
   const [stats, setStats] = useState({
-    totalOrders: 24,
-    monthlyRevenue: 4850,
-    pendingActions: 8,
-    activeProjects: 12,
+    totalOrders: 0,
+    monthlyRevenue: 0,
+    pendingActions: 0,
+    activeProjects: 0,
   });
-
-  // Recent orders data
-  const [recentOrders, setRecentOrders] = useState([
-    {
-      id: 101,
-      orderId: '#101',
-      client: 'John Doe',
-      clientEmail: 'john@example.com',
-      template: 'Business Pro',
-      package: 'Business',
-      status: 'in-progress',
-      date: '2024-01-15',
-      amount: '$499',
-    },
-    {
-      id: 102,
-      orderId: '#102',
-      client: 'Sarah Smith',
-      clientEmail: 'sarah@example.com',
-      template: 'Ecommerce Basic',
-      package: 'E-commerce',
-      status: 'pending',
-      date: '2024-01-14',
-      amount: '$799',
-    },
-    {
-      id: 103,
-      orderId: '#103',
-      client: 'Mike Johnson',
-      clientEmail: 'mike@example.com',
-      template: 'Portfolio Modern',
-      package: 'Essential',
-      status: 'completed',
-      date: '2024-01-13',
-      amount: '$299',
-    },
-    {
-      id: 104,
-      orderId: '#104',
-      client: 'Emily Davis',
-      clientEmail: 'emily@example.com',
-      template: 'Restaurant Elite',
-      package: 'Business',
-      status: 'in-progress',
-      date: '2024-01-12',
-      amount: '$599',
-    },
-    {
-      id: 105,
-      orderId: '#105',
-      client: 'Robert Brown',
-      clientEmail: 'robert@example.com',
-      template: 'Medical Pro',
-      package: 'E-commerce',
-      status: 'pending',
-      date: '2024-01-11',
-      amount: '$899',
-    },
-  ]);
-
-  // Pending actions data
-  const [pendingActions, setPendingActions] = useState([
-    {
-      id: 1,
-      title: 'Client Feedback Needed',
-      description: 'Order #102 - Sarah Smith has been waiting for 2 days',
-      icon: '💬',
-      time: '2 days ago',
-      priority: 'urgent',
-      orderId: 102,
-    },
-    {
-      id: 2,
-      title: 'Payment Verification',
-      description: 'Order #105 - Bank transfer needs confirmation',
-      icon: '💰',
-      time: '1 day ago',
-      priority: 'urgent',
-      orderId: 105,
-    },
-    {
-      id: 3,
-      title: 'Requirements Review',
-      description: 'Order #107 - New order needs requirement analysis',
-      icon: '📋',
-      time: '5 hours ago',
-      priority: 'normal',
-      orderId: 107,
-    },
-    {
-      id: 4,
-      title: 'Design Approval',
-      description: 'Order #99 - Waiting for client design approval',
-      icon: '🎨',
-      time: '3 hours ago',
-      priority: 'normal',
-      orderId: 99,
-    },
-  ]);
-
-  // Quick actions
-  const [quickActions] = useState([
-    { id: 1, label: 'Add New Template', icon: '➕' },
-    { id: 2, label: 'Manage Team', icon: '👥' },
-    { id: 3, label: 'Generate Report', icon: '📊' },
-    { id: 4, label: 'System Settings', icon: '⚙' },
-  ]);
-
-  // Current time for welcome message
+  const [workforce, setWorkforce] = useState(null);
+  const [recentOrders, setRecentOrders] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
   const [currentTime, setCurrentTime] = useState('');
   const [greeting, setGreeting] = useState('');
+  const user = useMemo(() => getStoredUser(), []);
 
-  // Initialize time and greeting
   useEffect(() => {
     const updateTime = () => {
       const now = new Date();
       const timeString = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
       const hours = now.getHours();
-      
+
       let timeGreeting = 'Welcome back';
       if (hours < 12) timeGreeting = 'Good morning';
       else if (hours < 18) timeGreeting = 'Good afternoon';
       else timeGreeting = 'Good evening';
-      
+
       setCurrentTime(timeString);
       setGreeting(timeGreeting);
     };
-    
+
     updateTime();
-    const interval = setInterval(updateTime, 60000); // Update every minute
-    
+    const interval = setInterval(updateTime, 60000);
+
     return () => clearInterval(interval);
-  }, []);
+  }, [user?.can_manage_staff_workspace]);
 
-  // Handle action button click
-  const handleActionClick = (actionId, orderId) => {
-    console.log(`Handling action ${actionId} for order ${orderId}`);
-    
-    // Remove the action from pending list
-    setPendingActions(prev => prev.filter(action => action.id !== actionId));
-    
-    // Update pending actions count
-    setStats(prev => ({
-      ...prev,
-      pendingActions: prev.pendingActions - 1
-    }));
-    
-    // Show success message
-    alert(`Action completed for Order #${orderId}`);
-  };
+  useEffect(() => {
+    let isMounted = true;
 
-  // Handle view all orders
-  const handleViewAllOrders = () => {
-    console.log('Navigating to all orders');
-    // In a real app, this would navigate to orders page
-    alert('Navigating to Orders page');
-  };
+    const loadDashboard = async () => {
+      try {
+        if (user?.can_manage_staff_workspace) {
+          const [statsPayload, ordersPayload, workforcePayload] = await Promise.all([
+            fetchOrderStats(),
+            fetchOrders(),
+            fetchWorkforceDashboard(),
+          ]);
 
-  // Handle view all actions
-  const handleViewAllActions = () => {
-    console.log('Navigating to all actions');
-    // In a real app, this would navigate to actions page
-    alert('Navigating to Pending Actions page');
-  };
+          if (!isMounted) return;
 
-  // Handle quick action click
-  const handleQuickAction = (actionId) => {
-    const action = quickActions.find(a => a.id === actionId);
-    console.log(`Quick action: ${action?.label}`);
-    
-    switch(actionId) {
-      case 1:
-        alert('Opening Template Creator');
-        break;
-      case 2:
-        alert('Opening Team Management');
-        break;
-      case 3:
-        alert('Generating Report...');
-        // Simulate report generation
-        setTimeout(() => {
-          alert('Report generated successfully!');
-        }, 1000);
-        break;
-      case 4:
-        alert('Opening System Settings');
-        break;
-      default:
-        break;
-    }
-  };
+          setStats({
+            totalOrders: statsPayload.total_orders || 0,
+            monthlyRevenue: statsPayload.monthly_revenue || 0,
+            pendingActions: statsPayload.pending_actions || 0,
+            activeProjects: statsPayload.active_projects || 0,
+          });
+          setWorkforce(workforcePayload);
+          setRecentOrders((ordersPayload.results || []).slice(0, 5));
+        } else {
+          const workforcePayload = await fetchWorkforceDashboard();
+          if (!isMounted) return;
+          setWorkforce(workforcePayload);
+          setRecentOrders(workforcePayload.focus_tasks || []);
+        }
 
-  // Format currency
+        setError('');
+      } catch (requestError) {
+        if (!isMounted) return;
+        setError(requestError.message || 'Unable to load dashboard data.');
+      } finally {
+        if (isMounted) setLoading(false);
+      }
+    };
+
+    loadDashboard();
+    return () => { isMounted = false; };
+  }, [user?.can_manage_staff_workspace]);
+
+  const pendingActions = useMemo(() => {
+    return recentOrders
+      .filter((order) => ['pending', 'reviewed', 'awaiting_client'].includes(order.status))
+      .map((order) => ({
+        id: order.id,
+        title: order.status === 'awaiting_client' ? 'Waiting on Client' : 'Order Needs Review',
+        description: `${order.reference} • ${order.client_name || order.client_email}`,
+        time: new Date(order.created_at).toLocaleDateString(),
+        priority: order.status === 'pending' ? 'urgent' : 'normal',
+      }));
+  }, [recentOrders]);
+
   const formatCurrency = (amount) => {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
       currency: 'USD',
       minimumFractionDigits: 0,
-    }).format(amount);
+    }).format(amount || 0);
   };
 
-  // Get status badge class and text
-  const getStatusInfo = (status) => {
-    switch(status) {
-      case 'completed':
-        return { className: 'status-badge status-completed', text: 'Completed' };
-      case 'in-progress':
-        return { className: 'status-badge status-in-progress', text: 'In Progress' };
-      case 'pending':
-        return { className: 'status-badge status-pending', text: 'Awaiting Feedback' };
-      default:
-        return { className: 'status-badge', text: status };
-    }
-  };
+  const quickActions = getQuickActions(user);
+  const staffInitials = getInitials(user?.first_name || 'Staff', user?.last_name || 'User', 'SU');
+  const adminInitials = getInitials(user?.first_name || 'Admin', user?.last_name || 'User', 'AU');
 
-  // Sort orders by date (newest first)
-  const sortedOrders = [...recentOrders].sort((a, b) => 
-    new Date(b.date) - new Date(a.date)
-  );
+  if (user && !user.can_manage_staff_workspace) {
+    return (
+      <div className="ad-dashboard-container">
+        <main className="ad-main-content">
+          <header className="ad-header">
+            <div className="ad-header-left">
+              <h1>{user.workspace_name || 'Staff Workspace Overview'}</h1>
+              <p className="ad-welcome-text">
+                {greeting}, {user?.first_name || 'Team Member'}! {currentTime && `It's ${currentTime}`} Your assigned work is surfaced below.
+              </p>
+            </div>
+            <div className="ad-header-right">
+              <ThemeToggle />
+              <div className="ad-user-info">
+                <div className="ad-user-avatar" aria-hidden="true">
+                  {staffInitials}
+                </div>
+                <div className="ad-user-details">
+                  <span className="ad-user-name">{user?.email || 'Staff User'}</span>
+                  <span className="ad-user-role">{user?.staff_title || user?.workspace_name || 'Internal Staff'}</span>
+                </div>
+              </div>
+            </div>
+          </header>
+
+          {error && (
+            <div className="ad-error-card">
+              <p>{error}</p>
+              <Link href="/dashboard-admin/workspace" className="ad-view-all-btn">
+                Open workspace
+              </Link>
+            </div>
+          )}
+
+          <div className="ad-stats-grid">
+            <div className="ad-stat-card">
+              <div className="ad-stat-icon orders">
+                <span>Tasks</span>
+              </div>
+              <div className="ad-stat-info">
+                <h3>{workforce?.assigned_tasks || 0}</h3>
+                <p>Assigned Tasks</p>
+                <span className="ad-stat-trend positive">Active workload</span>
+              </div>
+            </div>
+
+            <div className="ad-stat-card">
+              <div className="ad-stat-icon revenue">
+                <span>Doing</span>
+              </div>
+              <div className="ad-stat-info">
+                <h3>{workforce?.in_progress_tasks || 0}</h3>
+                <p>In Progress</p>
+                <span className="ad-stat-trend">Tasks moving right now</span>
+              </div>
+            </div>
+
+            <div className="ad-stat-card">
+              <div className="ad-stat-icon queue">
+                <span>Review</span>
+              </div>
+              <div className="ad-stat-info">
+                <h3>{workforce?.review_tasks || 0}</h3>
+                <p>In Review</p>
+                <span className="ad-stat-trend">Waiting on approval</span>
+              </div>
+            </div>
+
+            <div className="ad-stat-card">
+              <div className="ad-stat-icon active">
+                <span>Risk</span>
+              </div>
+              <div className="ad-stat-info">
+                <h3>{workforce?.overdue_tasks || 0}</h3>
+                <p>Overdue</p>
+                <span className={`ad-stat-trend ${(workforce?.overdue_tasks || 0) > 0 ? 'negative' : ''}`}>
+                  {(workforce?.overdue_tasks || 0) > 0 ? 'Needs recovery' : 'On track'}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div className="ad-content-grid">
+            <div className="ad-card">
+              <div className="ad-card-header">
+                <h2>Focus Tasks</h2>
+                <Link className="ad-view-all-btn" href="/dashboard-admin/workspace">
+                  Open Workspace →
+                </Link>
+              </div>
+              <div className="ad-actions-list">
+                {recentOrders.map((task) => {
+                  const statusInfo = getStatusInfo(task.status);
+                  return (
+                    <div key={task.id} className="ad-action-item">
+                      <div className="ad-action-details">
+                        <h4>{task.title}</h4>
+                        <p>{task.team || 'General'} • {task.assigned_to?.full_name || 'Unassigned'}</p>
+                        <span className="ad-action-time">{task.due_at ? new Date(task.due_at).toLocaleString() : 'No deadline'}</span>
+                      </div>
+                      <span className={statusInfo.className}>{statusInfo.text}</span>
+                    </div>
+                  );
+                })}
+
+                {!loading && recentOrders.length === 0 && (
+                  <div className="ad-no-actions">
+                    <div className="ad-no-actions-icon">OK</div>
+                    <p>No focus tasks yet. Open your workspace when new assignments arrive.</p>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            <div className="ad-card">
+              <div className="ad-card-header">
+                <h2>Quick Actions</h2>
+              </div>
+              <div className="ad-action-buttons">
+                {quickActions.map((action) => (
+                  <Link key={action.id} className="ad-quick-btn" href={action.href}>
+                    <span>{action.icon}</span>
+                    {action.label}
+                  </Link>
+                ))}
+              </div>
+            </div>
+          </div>
+        </main>
+      </div>
+    );
+  }
 
   return (
-    <div className="dashboard-container">
-      <main className="main-content">
-        {/* Header */}
-        <header className="dashboard-header">
-          <div className="header-left">
+    <div className="ad-dashboard-container">
+      <main className="ad-main-content">
+        <header className="ad-header">
+          <div className="ad-header-left">
             <h1>Dashboard Overview</h1>
-            <p className="welcome-text">
-              {greeting}, Admin! {currentTime && `It's ${currentTime}`} Here`s what`s happening today.
+            <p className="ad-welcome-text">
+              {greeting}, {user?.first_name || 'Admin'}! {currentTime && `It's ${currentTime}`} Here&apos;s what&apos;s happening today.
             </p>
           </div>
-          <div className="header-right">
-            <div className="user-info">
-              <img 
-                src="https://ui-avatars.com/api/?name=Admin+User&background=007bff&color=fff" 
-                alt="Admin User"
-                className="user-avatar"
-              />
-              <div className="user-details">
-                <span className="user-name">Admin User</span>
-                <span className="user-role">Administrator</span>
+          <div className="ad-header-right">
+            <ThemeToggle />
+            <div className="ad-user-info">
+              <div className="ad-user-avatar" aria-hidden="true">
+                {adminInitials}
+              </div>
+              <div className="ad-user-details">
+                <span className="ad-user-name">{user?.email || 'Admin User'}</span>
+                <span className="ad-user-role">Administrator</span>
               </div>
             </div>
           </div>
         </header>
 
-        {/* Stats Grid */}
-        <div className="stats-grid">
-          <div className="stat-card">
-            <div className="stat-icon" style={{ background: '#e3f2fd' }}>
-              <span>📦</span>
+        {error && (
+          <div className="ad-error-card">
+            <p>{error}</p>
+            <Link href="/admin-login" className="ad-view-all-btn">
+              Go to admin login
+            </Link>
+          </div>
+        )}
+
+        <div className="ad-stats-grid">
+          <div className="ad-stat-card">
+            <div className="ad-stat-icon orders">
+              <span>Orders</span>
             </div>
-            <div className="stat-info">
+            <div className="ad-stat-info">
               <h3>{stats.totalOrders}</h3>
               <p>Total Orders</p>
-              <span className="stat-trend positive">+12% this week</span>
+              <span className="ad-stat-trend positive">Live from backend</span>
             </div>
           </div>
 
-          <div className="stat-card">
-            <div className="stat-icon" style={{ background: '#e8f5e9' }}>
-              <span>💰</span>
+          <div className="ad-stat-card">
+            <div className="ad-stat-icon revenue">
+              <span>Revenue</span>
             </div>
-            <div className="stat-info">
+            <div className="ad-stat-info">
               <h3>{formatCurrency(stats.monthlyRevenue)}</h3>
               <p>Monthly Revenue</p>
-              <span className="stat-trend positive">+8% this month</span>
+              <span className="ad-stat-trend positive">Current month</span>
             </div>
           </div>
 
-          <div className="stat-card">
-            <div className="stat-icon" style={{ background: '#fff3e0' }}>
-              <span>⏰</span>
+          <div className="ad-stat-card">
+            <div className="ad-stat-icon queue">
+              <span>Queue</span>
             </div>
-            <div className="stat-info">
+            <div className="ad-stat-info">
               <h3>{stats.pendingActions}</h3>
               <p>Pending Actions</p>
-              <span className={`stat-trend ${stats.pendingActions > 5 ? 'negative' : ''}`}>
+              <span className={`ad-stat-trend ${stats.pendingActions > 5 ? 'negative' : ''}`}>
                 {stats.pendingActions > 5 ? 'Attention needed' : 'Under control'}
               </span>
             </div>
           </div>
 
-          <div className="stat-card">
-            <div className="stat-icon" style={{ background: '#f3e5f5' }}>
-              <span>🚀</span>
+          <div className="ad-stat-card">
+            <div className="ad-stat-icon active">
+              <span>Active</span>
             </div>
-            <div className="stat-info">
+            <div className="ad-stat-info">
               <h3>{stats.activeProjects}</h3>
               <p>Active Projects</p>
-              <span className="stat-trend">In progress</span>
+              <span className="ad-stat-trend">In progress</span>
             </div>
           </div>
         </div>
 
-        {/* Main Content Grid */}
-        <div className="content-grid">
-          {/* Recent Orders Section */}
-          <div className="content-card">
-            <div className="card-header">
+        <div className="ad-content-grid">
+          <div className="ad-card">
+            <div className="ad-card-header">
               <h2>Recent Orders</h2>
-              <button 
-                className="view-all-btn" 
-                onClick={handleViewAllOrders}
-              >
+              <Link className="ad-view-all-btn" href="/dashboard-admin/orders">
                 View All →
-              </button>
+              </Link>
             </div>
-            <div className="table-container">
-              <table className="data-table">
+            <div className="ad-table-container">
+              <table className="ad-data-table">
                 <thead>
                   <tr>
-                    <th>Order ID</th>
+                    <th>Reference</th>
                     <th>Client</th>
-                    <th>Template</th>
-                    <th>Package</th>
+                    <th>Items</th>
+                    <th>Total</th>
                     <th>Status</th>
                     <th>Date</th>
-                    <th>Actions</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {sortedOrders.map((order) => {
+                  {recentOrders.map((order) => {
                     const statusInfo = getStatusInfo(order.status);
                     return (
                       <tr key={order.id}>
+                        <td>{order.reference}</td>
                         <td>
-                          <a 
-                            href="#" 
-                            className="order-link"
-                            onClick={(e) => {
-                              e.preventDefault();
-                              alert(`Viewing details for ${order.orderId}`);
-                            }}
-                          >
-                            {order.orderId}
-                          </a>
-                        </td>
-                        <td>
-                          <div className="client-cell">
-                            <span className="client-name">{order.client}</span>
-                            <span className="client-email">{order.clientEmail}</span>
+                          <div className="ad-client-cell">
+                            <span className="ad-client-name">{order.client_name || 'Unknown Client'}</span>
+                            <span className="ad-client-email">{order.client_email}</span>
                           </div>
                         </td>
-                        <td>{order.template}</td>
+                        <td>{order.item_count}</td>
+                        <td>{formatCurrency(order.total_amount)}</td>
                         <td>
-                          <span className={`package-badge package-${order.package.toLowerCase()}`}>
-                            {order.package}
-                          </span>
+                          <span className={statusInfo.className}>{statusInfo.text}</span>
                         </td>
-                        <td>
-                          <span className={statusInfo.className}>
-                            {statusInfo.text}
-                          </span>
-                        </td>
-                        <td>{order.date}</td>
-                        <td>
-                          <button 
-                            className="table-action-btn"
-                            onClick={() => alert(`Quick actions for ${order.orderId}`)}
-                          >
-                            ⋮
-                          </button>
-                        </td>
+                        <td>{new Date(order.created_at).toLocaleDateString()}</td>
                       </tr>
                     );
                   })}
+
+                  {!loading && recentOrders.length === 0 && (
+                    <tr>
+                      <td colSpan="6">No orders yet.</td>
+                    </tr>
+                  )}
                 </tbody>
               </table>
             </div>
           </div>
 
-          {/* Pending Actions Section */}
-          <div className="content-card">
-            <div className="card-header">
+          <div className="ad-card">
+            <div className="ad-card-header">
               <h2>Pending Actions ({pendingActions.length})</h2>
-              <button 
-                className="view-all-btn" 
-                onClick={handleViewAllActions}
-              >
+              <Link className="ad-view-all-btn" href="/dashboard-admin/orders">
                 View All →
-              </button>
+              </Link>
             </div>
-            <div className="actions-list">
+            <div className="ad-actions-list">
               {pendingActions.map((action) => (
-                <div 
-                  key={action.id} 
-                  className={`action-item ${action.priority}`}
-                >
-                  <div className="action-icon">{action.icon}</div>
-                  <div className="action-details">
+                <div key={action.id} className={`ad-action-item ${action.priority}`}>
+                  <div className="ad-action-icon">{action.priority === 'urgent' ? '!' : 'i'}</div>
+                  <div className="ad-action-details">
                     <h4>{action.title}</h4>
                     <p>{action.description}</p>
-                    <span className="action-time">{action.time}</span>
+                    <span className="ad-action-time">{action.time}</span>
                   </div>
-                  <button 
-                    className="action-btn"
-                    onClick={() => handleActionClick(action.id, action.orderId)}
-                  >
-                    {action.icon === '💬' ? 'Review' : 
-                     action.icon === '💰' ? 'Verify' : 
-                     action.icon === '📋' ? 'Review' : 'Check'}
-                  </button>
+                  <Link className="ad-action-btn" href="/dashboard-admin/orders">
+                    Review
+                  </Link>
                 </div>
               ))}
-              
-              {pendingActions.length === 0 && (
-                <div className="no-actions">
-                  <div className="no-actions-icon">🎉</div>
-                  <p>All caught up! No pending actions.</p>
+
+              {!loading && pendingActions.length === 0 && (
+                <div className="ad-no-actions">
+                  <div className="ad-no-actions-icon">OK</div>
+                  <p>All caught up. No pending actions.</p>
                 </div>
               )}
             </div>
           </div>
         </div>
 
-        {/* Quick Actions */}
-        <div className="quick-actions">
+        <div className="ad-quick-actions">
           <h2>Quick Actions</h2>
-          <div className="action-buttons">
+          <div className="ad-action-buttons">
             {quickActions.map((action) => (
-              <button 
-                key={action.id}
-                className="quick-btn"
-                onClick={() => handleQuickAction(action.id)}
-              >
+              <Link key={action.id} className="ad-quick-btn" href={action.href}>
                 <span>{action.icon}</span>
                 {action.label}
-              </button>
+              </Link>
             ))}
           </div>
         </div>
       </main>
     </div>
   );
-};
-
-export default DashboardPage;
+}

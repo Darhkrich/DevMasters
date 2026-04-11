@@ -43,7 +43,9 @@ button {
   cursor: pointer;
 }
 
-input, textarea, select {
+input,
+textarea,
+select {
   font-family: inherit;
 }
 
@@ -293,11 +295,11 @@ select:focus-visible {
   .lg\:grid-cols-2 {
     grid-template-columns: repeat(2, 1fr);
   }
-  
+
   .lg\:sticky {
     position: sticky;
   }
-  
+
   .lg\:top-24 {
     top: 96px;
   }
@@ -308,11 +310,11 @@ select:focus-visible {
   .sm\:hidden {
     display: none !important;
   }
-  
+
   .sm\:block {
     display: block !important;
   }
-  
+
   .sm\:text-center {
     text-align: center;
   }
@@ -323,11 +325,11 @@ select:focus-visible {
   .hidden-print {
     display: none !important;
   }
-  
+
   body {
     font-size: 12pt;
   }
-  
+
   .container {
     max-width: 100%;
     padding: 0;
@@ -336,6 +338,7 @@ select:focus-visible {
 
 /* Reduced motion preferences */
 @media (prefers-reduced-motion: reduce) {
+
   *,
   *::before,
   *::after {
@@ -348,6 +351,7 @@ select:focus-visible {
 
 /* Dark mode support (if needed in future) */
 @media (prefers-color-scheme: dark) {
+
   /* This ensures compatibility if you add light mode later */
   body {
     color-scheme: dark;
@@ -356,6 +360,7 @@ select:focus-visible {
 
 /* Touch device optimizations */
 @media (hover: none) and (pointer: coarse) {
+
   /* Increase touch target sizes */
   button,
   a,
@@ -364,11 +369,12 @@ select:focus-visible {
     min-height: 44px;
     min-width: 44px;
   }
-  
+
   /* Prevent zoom on input focus */
   input,
   textarea,
   select {
-    font-size: 16px; /* Prevents iOS zoom */
+    font-size: 16px;
+    /* Prevents iOS zoom */
   }
 }

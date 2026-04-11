@@ -1,0 +1,76 @@
+.am-container {
+  padding: 24px;
+  background: #f5f7fa;
+  min-height: 100vh;
+}
+
+@media (min-width: 1024px) {
+  .am-container {
+    margin-left: 260px;
+  }
+}
+
+.am-layout {
+  display: flex;
+  height: 80vh;
+}
+
+/* SIDEBAR */
+.am-sidebar {
+  width: 300px;
+  background: white;
+  padding: 12px;
+  border-radius: 12px;
+}
+
+.am-search {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.am-thread-item {
+  padding: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.am-thread-item.active {
+  background: #007aff;
+  color: white;
+}
+
+/* THREAD */
+.am-thread {
+  flex: 1;
+  margin-left: 12px;
+  background: white;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+}
+
+.am-messages {
+  flex: 1;
+  padding: 12px;
+  overflow-y: auto;
+}
+
+.am-message {
+  margin-bottom: 10px;
+}
+
+.am-message.outgoing {
+  text-align: right;
+}
+
+/* REPLY */
+.am-reply {
+  padding: 12px;
+  border-top: 1px solid #eee;
+}
+
+.am-reply textarea {
+  width: 100%;
+  margin-bottom: 8px;
+}

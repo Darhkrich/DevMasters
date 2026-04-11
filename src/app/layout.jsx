@@ -1,5 +1,6 @@
 // src/app/layout.jsx
 import { CartProvider } from '../context/CartContext';
+import { ThemeProvider } from '../context/ThemeContext';
 import '../styles/globals.css';
 
 export const viewport = {
@@ -11,11 +12,14 @@ export const viewport = {
 export const metadata = {
   title: 'Service Quotes',
   description: 'Request quotes for development services',
+  icons: {
+    icon: '/builder-one.png',
+  },
 };
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
+    <html lang="en" data-scroll-behavior="smooth">
       <head>
         <link rel="preconnect" href="https://cdnjs.cloudflare.com" />
         <link
@@ -24,9 +28,11 @@ export default function RootLayout({ children }) {
         />
       </head>
       <body>
-        <CartProvider>
-          {children}
-        </CartProvider>
+        <ThemeProvider>
+          <CartProvider>
+            {children}
+          </CartProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

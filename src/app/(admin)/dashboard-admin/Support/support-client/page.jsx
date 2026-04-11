@@ -1,346 +1,145 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import Link from 'next/link';
+import { fetchClients, fetchSupportTickets } from '@/lib/boemApi';
 import './styles.css';
 
-const ClientDashboard = () => {
-  const [clients, setClients] = useState([
-    {
-      id: 1,
-      name: 'Sarah Smith',
-      email: 'sarah@ecommerce.com',
-      avatar: 'https://ui-avatars.com/api/?name=Sarah+Smith&background=3498db&color=fff',
-      status: 'active',
-      tags: ['VIP', 'E-commerce'],
-      tickets: 8,
-      rating: 4.9,
-      lastContact: '2d',
-      package: 'E-commerce'
-    },
-    {
-      id: 2,
-      name: 'Mike Johnson',
-      email: 'mike@portfolio.com',
-      avatar: 'https://ui-avatars.com/api/?name=Mike+Johnson&background=27ae60&color=fff',
-      status: 'active',
-      tags: ['Business'],
-      tickets: 12,
-      rating: 4.7,
-      lastContact: '5h',
-      package: 'Business'
-    },
-    {
-      id: 3,
-      name: 'Emily Davis',
-      email: 'emily@restaurant.com',
-      avatar: 'https://ui-avatars.com/api/?name=Emily+Davis&background=f39c12&color=fff',
-      status: 'away',
-      tags: ['New', 'Essential'],
-      tickets: 3,
-      rating: 5.0,
-      lastContact: '1d',
-      package: 'Essential'
-    },
-    {
-      id: 4,
-      name: 'Robert Brown',
-      email: 'robert@techstartup.com',
-      avatar: 'https://ui-avatars.com/api/?name=Robert+Brown&background=9b59b6&color=fff',
-      status: 'active',
-      tags: ['VIP', 'E-commerce'],
-      tickets: 15,
-      rating: 4.8,
-      lastContact: '3h',
-      package: 'E-commerce'
-    },
-    {
-      id: 5,
-      name: 'Jennifer Wilson',
-      email: 'jennifer@consulting.com',
-      avatar: 'https://ui-avatars.com/api/?name=Jennifer+Wilson&background=e74c3c&color=fff',
-      status: 'inactive',
-      tags: ['Business'],
-      tickets: 5,
-      rating: 4.6,
-      lastContact: '1w',
-      package: 'Business'
-    },
-    {
-      id: 6,
-      name: 'David Miller',
-      email: 'david@fashion.com',
-      avatar: 'https://ui-avatars.com/api/?name=David+Miller&background=1abc9c&color=fff',
-      status: 'active',
-      tags: ['New', 'Essential'],
-      tickets: 2,
-      rating: 5.0,
-      lastContact: '2h',
-      package: 'Essential'
-    }
-  ]);
-
-  const [supportStats, setSupportStats] = useState({
-    activeClients: 24,
-    monthlyGrowth: '+3 this month',
-    totalConversations: 156,
-    engagementGrowth: '+12% engagement',
-    avgResponseTime: '12m',
-    responseRating: 'Excellent',
-    avgSatisfaction: '4.8/5',
-    satisfactionPercent: '94% positive'
-  });
-
-  const [filters, setFilters] = useState({
-    status: 'All Clients',
-    package: 'All Packages',
-    view: 'All Clients'
-  });
-
+export default function SupportClientPage() {
+  const [clients, setClients] = useState([]);
+  const [tickets, setTickets] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
-  const handleFilterChange = (filterType, value) => {
-    setFilters(prev => ({
-      ...prev,
-      [filterType]: value
-    }));
-  };
+  useEffect(() => {
+    let isMounted = true;
 
-  const handleViewChange = (view) => {
-    setFilters(prev => ({
-      ...prev,
-      view
-    }));
-  };
+    const loadData = async () => {
+      try {
+        const [clientsPayload, ticketsPayload] = await Promise.all([
+          fetchClients(),
+          fetchSupportTickets(),
+        ]);
 
-  const handleSearch = (e) => {
-    setSearchQuery(e.target.value);
-  };
+        if (!isMounted) {
+          return;
+        }
 
-  const handleMessageClient = (clientId) => {
-    const client = clients.find(c => c.id === clientId);
-    alert(`Starting chat with ${client.name}...`);
-    // In real app, navigate to chat or open chat modal
-  };
+        setClients(clientsPayload.results || []);
+        setTickets(ticketsPayload.results || []);
+      } catch (requestError) {
+        if (isMounted) {
+          setError(requestError.message || 'Unable to load  clients.');
+        }
+      } finally {
+        if (isMounted) {
+          setLoading(false);
+        }
+      }
+    };
 
-  const handleViewHistory = (clientId) => {
-    const client = clients.find(c => c.id === clientId);
-    alert(`Viewing history for ${client.name}...`);
-    // In real app, navigate to client history page
-  };
+    loadData();
 
-  const handleExportClients = () => {
-    alert('Exporting client data...');
-    // In real app, trigger CSV/Excel export
-  };
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
-  const filteredClients = clients.filter(client => {
-    // Search filter
-    const matchesSearch = searchQuery === '' || 
-      client.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      client.email.toLowerCase().includes(searchQuery.toLowerCase());
-    
-    // Status filter
-    const matchesStatus = filters.status === 'All Clients' || 
-      (filters.status === 'Active' && client.status === 'active') ||
-      (filters.status === 'Inactive' && client.status === 'inactive') ||
-      (filters.status === 'VIP' && client.tags.includes('VIP')) ||
-      (filters.status === 'New' && client.tags.includes('New'));
-    
-    // Package filter
-    const matchesPackage = filters.package === 'All Packages' || 
-      client.package === filters.package;
-
-    // View filter
-    let matchesView = true;
-    if (filters.view === 'Recent Activity') {
-      matchesView = client.lastContact.includes('h') || client.lastContact.includes('d');
-    } else if (filters.view === 'Need Follow-up') {
-      matchesView = client.lastContact.includes('d') || client.lastContact.includes('w');
+  const filteredClients = useMemo(() => {
+    const query = searchQuery.trim().toLowerCase();
+    if (!query) {
+      return clients;
     }
 
-    return matchesSearch && matchesStatus && matchesPackage && matchesView;
-  });
+    return clients.filter((client) =>
+      [client.name, client.email, client.company]
+        .filter(Boolean)
+        .some((value) => value.toLowerCase().includes(query)),
+    );
+  }, [clients, searchQuery]);
+
+  const ticketCountByEmail = useMemo(() => {
+    const counts = new Map();
+    tickets.forEach((ticket) => {
+      const email = ticket.client_email || ticket.guest_email;
+      if (email) {
+        counts.set(email.toLowerCase(), (counts.get(email.toLowerCase()) || 0) + 1);
+      }
+    });
+    return counts;
+  }, [tickets]);
 
   return (
     <div className="admin-container">
-      <main className="main-content">
-        <header className="dashboard-header">
-          <div className="header-left">
-            <h1>My Clients</h1>
-            <p className="welcome-text">Manage client relationships and support history</p>
+      <main className="admin-main-content">
+        <header className="admin-dashboard-header">
+          <div className="admin-header-left">
+            <h1>Support Clients</h1>
+            <p className="admin-welcome-text">A support-focused view of  client relationships.</p>
           </div>
-          <div className="header-right">
-            <div className="search-bar">
-              <input 
-                type="text" 
-                placeholder="Search clients..." 
-                value={searchQuery}
-                onChange={handleSearch}
-              />
-              <button>🔍</button>
-            </div>
+          <div className="admin-header-right">
+            <Link href="/dashboard-admin/clients" className="primary-btn">
+              Full Client Directory
+            </Link>
           </div>
         </header>
 
-        {/* Client Statistics */}
-        <div className="stats-grid">
-          <div className="stat-card">
-            <div className="stat-icon">
-              <span>👥</span>
-            </div>
-            <div className="stat-info">
-              <h3>{supportStats.activeClients}</h3>
-              <p>Active Clients</p>
-              <span className="stat-trend">{supportStats.monthlyGrowth}</span>
-            </div>
-          </div>
-          <div className="stat-card">
-            <div className="stat-icon">
-              <span>💬</span>
-            </div>
-            <div className="stat-info">
-              <h3>{supportStats.totalConversations}</h3>
-              <p>Total Conversations</p>
-              <span className="stat-trend positive">
-                {supportStats.engagementGrowth}
-              </span>
-            </div>
-          </div>
-          <div className="stat-card">
-            <div className="stat-icon">
-              <span>⏱</span>
-            </div>
-            <div className="stat-info">
-              <h3>{supportStats.avgResponseTime}</h3>
-              <p>Avg. Response Time</p>
-              <span className="stat-trend positive">{supportStats.responseRating}</span>
-            </div>
-          </div>
-          <div className="stat-card">
-            <div className="stat-icon">
-              <span>⭐</span>
-            </div>
-            <div className="stat-info">
-              <h3>{supportStats.avgSatisfaction}</h3>
-              <p>Avg. Satisfaction</p>
-              <span className="stat-trend positive">
-                {supportStats.satisfactionPercent} positive
-              </span>
-            </div>
-          </div>
-        </div>
+        {error ? <div className="auth-error-message">{error}</div> : null}
 
-        {/* Client Filters */}
         <div className="filters-bar">
           <div className="filter-group">
-            <label>Status:</label>
-            <select 
-              value={filters.status}
-              onChange={(e) => handleFilterChange('status', e.target.value)}
-            >
-              <option>All Clients</option>
-              <option>Active</option>
-              <option>Inactive</option>
-              <option>VIP</option>
-              <option>New</option>
-            </select>
+            <label htmlFor="clientSearch">Search</label>
+            <input
+              id="clientSearch"
+              type="text"
+              placeholder="Search clients"
+              value={searchQuery}
+              onChange={(event) => setSearchQuery(event.target.value)}
+            />
           </div>
-          <div className="filter-group">
-            <label>Package:</label>
-            <select 
-              value={filters.package}
-              onChange={(e) => handleFilterChange('package', e.target.value)}
-            >
-              <option>All Packages</option>
-              <option>Essential</option>
-              <option>Business</option>
-              <option>E-commerce</option>
-            </select>
-          </div>
-          <button 
-            className={`filter-btn ${filters.view === 'All Clients' ? 'active' : ''}`}
-            onClick={() => handleViewChange('All Clients')}
-          >
-            All Clients
-          </button>
-          <button 
-            className={`filter-btn ${filters.view === 'Recent Activity' ? 'active' : ''}`}
-            onClick={() => handleViewChange('Recent Activity')}
-          >
-            Recent Activity
-          </button>
-          <button 
-            className={`filter-btn ${filters.view === 'Need Follow-up' ? 'active' : ''}`}
-            onClick={() => handleViewChange('Need Follow-up')}
-          >
-            Need Follow-up
-          </button>
         </div>
 
-        {/* Clients List */}
-        <div className="content-card">
-          <div className="card-header">
-            <h2>Client List ({filteredClients.length})</h2>
-            <div className="header-actions">
-              <button className="export-btn" onClick={handleExportClients}>
-                Export
-              </button>
-            </div>
+        <div className="admin-content-card">
+          <div className="admin-card-header">
+            <h2>Clients ({filteredClients.length})</h2>
           </div>
-
           <div className="clients-list">
-            {filteredClients.map(client => (
+            {loading ? <p>Loading clients...</p> : null}
+            {!loading && filteredClients.length === 0 ? <p>No clients found.</p> : null}
+            {filteredClients.map((client) => (
               <div key={client.id} className="client-card">
-                <div className="client-avatar">
-                  <img src={client.avatar} alt={client.name} />
-                  <div className={`client-status ${client.status}`}></div>
-                </div>
                 <div className="client-info">
                   <div className="client-main">
                     <h3>{client.name}</h3>
                     <p className="client-email">{client.email}</p>
                     <div className="client-tags">
-                      {client.tags.map((tag, index) => (
-                        <span 
-                          key={index} 
-                          className={`client-tag ${
-                            tag === 'VIP' ? 'vip' : 
-                            tag === 'New' ? 'new' : 'package'
-                          }`}
-                        >
-                          {tag}
-                        </span>
-                      ))}
+                      <span className="client-tag package">{client.plan || 'starter'}</span>
+                      {client.company ? <span className="client-tag new">{client.company}</span> : null}
                     </div>
                   </div>
                   <div className="client-stats">
                     <div className="client-stat">
-                      <strong>{client.tickets}</strong>
+                      <strong>{client.active_projects || 0}</strong>
+                      <span>Projects</span>
+                    </div>
+                    <div className="client-stat">
+                      <strong>{ticketCountByEmail.get(client.email.toLowerCase()) || 0}</strong>
                       <span>Tickets</span>
                     </div>
                     <div className="client-stat">
-                      <strong>{client.rating}</strong>
-                      <span>Rating</span>
-                    </div>
-                    <div className="client-stat">
-                      <strong>{client.lastContact}</strong>
-                      <span>Last Contact</span>
+                      <strong>{client.credits || 0}</strong>
+                      <span>Credits</span>
                     </div>
                   </div>
                 </div>
                 <div className="client-actions">
-                  <button 
-                    className="action-btn primary"
-                    onClick={() => handleMessageClient(client.id)}
-                  >
+                  <Link className="admin-action-btn primary" href="/dashboard-admin/Messages">
                     Message
-                  </button>
-                  <button 
-                    className="action-btn secondary"
-                    onClick={() => handleViewHistory(client.id)}
-                  >
-                    History
-                  </button>
+                  </Link>
+                  <Link className="admin-action-btn secondary" href="/dashboard-admin/Support/support-tickets">
+                    Tickets
+                  </Link>
                 </div>
               </div>
             ))}
@@ -349,6 +148,4 @@ const ClientDashboard = () => {
       </main>
     </div>
   );
-};
-
-export default ClientDashboard;
+}

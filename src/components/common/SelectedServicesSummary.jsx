@@ -1,25 +1,25 @@
-// src/components/common/SelectedServicesSummary.jsx
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useEffect, useState, useSyncExternalStore } from 'react';
 import { useCart } from '../../context/CartContext';
 import Link from 'next/link';
 
+const emptySubscribe = () => () => {};
+
 export default function SelectedServicesSummary() {
   const { cart, cartCount, getCartTotal, getCartByCategory } = useCart();
+  const mounted = useSyncExternalStore(emptySubscribe, () => true, () => false);
   const [isVisible, setIsVisible] = useState(true);
   const [recentlyAdded, setRecentlyAdded] = useState(null);
 
   const total = getCartTotal();
   const categorizedCart = getCartByCategory();
 
-  // Show notification when item is added
   useEffect(() => {
     const handleCartUpdated = (event) => {
       setRecentlyAdded(event.detail.item);
       setIsVisible(true);
-      
-      // Auto-hide the "recently added" message after 3 seconds
+
       setTimeout(() => {
         setRecentlyAdded(null);
       }, 3000);
@@ -38,35 +38,44 @@ export default function SelectedServicesSummary() {
     };
   }, []);
 
-  // Calculate category counts
   const categoryCounts = {
-    web: categorizedCart['web']?.length || 0,
-    app: categorizedCart['app']?.length || 0,
-    ai: categorizedCart['ai']?.length || 0,
-    template: categorizedCart['template']?.length || 0,
+    web: categorizedCart.web?.length || 0,
+    app: categorizedCart.app?.length || 0,
+    ai: categorizedCart.ai?.length || 0,
+    template: categorizedCart.template?.length || 0,
   };
 
   const getCategoryLabel = (category) => {
-    switch(category) {
-      case 'web': return 'Websites';
-      case 'app': return 'Apps';
-      case 'ai': return 'AI Automation';
-      case 'template': return 'Templates';
-      default: return category;
+    switch (category) {
+      case 'web':
+        return 'Websites';
+      case 'app':
+        return 'Apps';
+      case 'ai':
+        return 'AI Automation';
+      case 'template':
+        return 'Templates';
+      default:
+        return category;
     }
   };
 
   const getCategoryIcon = (category) => {
-    switch(category) {
-      case 'web': return 'fas fa-globe';
-      case 'app': return 'fas fa-mobile-alt';
-      case 'ai': return 'fas fa-robot';
-      case 'template': return 'fas fa-layer-group';
-      default: return 'fas fa-cube';
+    switch (category) {
+      case 'web':
+        return 'fas fa-globe';
+      case 'app':
+        return 'fas fa-mobile-alt';
+      case 'ai':
+        return 'fas fa-robot';
+      case 'template':
+        return 'fas fa-layer-group';
+      default:
+        return 'fas fa-cube';
     }
   };
 
-  if (cartCount === 0) {
+  if (!mounted || cartCount === 0) {
     return (
       <div className="wc-services-summary wc-services-summary-empty">
         <div className="wc-summary-header">
@@ -74,12 +83,7 @@ export default function SelectedServicesSummary() {
             <i className="fas fa-shopping-cart"></i>
             Request
           </div>
-        
         </div>
-        
-      
-        
-       
       </div>
     );
   }
@@ -89,15 +93,47 @@ export default function SelectedServicesSummary() {
       <div className="wc-summary-header">
         <div className="wc-summary-title">
           <i className="fas fa-shopping-cart"></i>
-          
-          <span className="wc-summary-count"> {cartCount} {cartCount === 1 ? 'item' : 'items'}</span>
+          <span className="wc-summary-count">
+            {' '}
+            {cartCount} {cartCount === 1 ? 'item' : 'items'}
+          </span>
         </div>
-        {/* Summary Footer */}
-          
       </div>
 
+      {recentlyAdded && isVisible && (
+        <div className="wc-summary-recent">
+          Added {recentlyAdded.name || recentlyAdded.title || 'service'} to your request
+        </div>
+      )}
 
-     
+      <div className="wc-summary-body">
+        {Object.entries(categoryCounts)
+          .filter(([, count]) => count > 0)
+          .map(([category, count]) => (
+            <div key={category} className="wc-summary-category">
+              <span className="wc-summary-category-label">
+                <i className={getCategoryIcon(category)}></i>
+                {getCategoryLabel(category)}
+              </span>
+              <span className="wc-summary-category-count">{count}</span>
+            </div>
+          ))}
+      </div>
+
+      <div className="wc-summary-footer">
+        <div className="wc-summary-total">
+          <span>Estimated total</span>
+          <strong>${Number(total || 0).toLocaleString()}</strong>
+        </div>
+        <div className="wc-summary-actions">
+          <Link href="/Checkout" className="wc-summary-button wc-summary-button-primary">
+            Continue
+          </Link>
+          <Link href="/packages" className="wc-summary-button wc-summary-button-secondary">
+            Edit
+          </Link>
+        </div>
+      </div>
     </div>
   );
 }

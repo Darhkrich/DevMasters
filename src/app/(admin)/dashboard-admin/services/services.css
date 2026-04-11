@@ -1,0 +1,369 @@
+/* =========================================================
+   ADMIN SERVICES PAGE – PREFIXED CLASSES (as-*)
+   ADAPTED FOR SIDEBAR INTEGRATION
+   ========================================================= */
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", "Roboto", "Segoe UI", sans-serif;
+    background: var(--as-bg-main);
+    color: var(--as-text-primary);
+    transition: background 0.3s ease, color 0.3s ease;
+}
+
+:root {
+    /* Light Mode Variables */
+    --as-bg-main: #f8f9fc;
+    --as-bg-surface: #ffffff;
+    --as-bg-soft: #f3f4f7;
+    --as-bg-lighter: #eef0f5;
+    --as-border: #e1e4eb;
+    
+    --as-accent: #0066ff;
+    --as-accent-light: #e6f0ff;
+    --as-accent-dark: #0052cc;
+    
+    --as-text-primary: #0f1419;
+    --as-text-secondary: #5f6d7b;
+    --as-text-tertiary: #8b95a5;
+    
+    --as-danger: #ef4444;
+    --as-danger-dark: #dc2626;
+    
+    --as-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+    --as-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
+    --as-shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
+    
+    --as-radius-md: 8px;
+    --as-radius-lg: 12px;
+}
+
+[data-theme="dark"],
+.dark-mode {
+    /* Dark Mode Variables */
+    --as-bg-main: #0d1117;
+    --as-bg-surface: #1a202c;
+    --as-bg-soft: #2d3748;
+    --as-bg-lighter: #374151;
+    --as-border: #3f4a5c;
+    
+    --as-accent: #3b82f6;
+    --as-accent-light: #1e3a8a;
+    --as-accent-dark: #2563eb;
+    
+    --as-text-primary: #f1f5f9;
+    --as-text-secondary: #cbd5e1;
+    --as-text-tertiary: #94a3b8;
+    
+    --as-danger: #f87171;
+    --as-danger-dark: #ef4444;
+    
+    --as-shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.15);
+    --as-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.2);
+    --as-shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+/* ========================================
+   MAIN LAYOUT – SIDEBAR SPACE
+   ======================================== */
+
+.as-container {
+    flex: 1;
+    background: var(--as-bg-main);
+    min-height: 100vh;
+}
+
+.as-main-content {
+    margin-left: 260px; /* match sidebar width */
+    padding: 20px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+/* ========================================
+   HEADER
+   ======================================== */
+
+.as-header {
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--as-border);
+}
+
+.as-header h1 {
+    margin: 0;
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: var(--as-text-primary);
+}
+
+/* ========================================
+   BUTTONS
+   ======================================== */
+
+.as-btn-primary,
+.as-btn-secondary,
+.as-btn-outline,
+.as-btn-danger {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    border-radius: var(--as-radius-md);
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: none;
+    text-decoration: none;
+}
+
+.as-btn-primary {
+    background: var(--as-accent);
+    color: white;
+}
+
+.as-btn-primary:hover {
+    background: var(--as-accent-dark);
+}
+
+.as-btn-secondary {
+    background: var(--as-bg-soft);
+    color: var(--as-text-primary);
+    border: 1px solid var(--as-border);
+}
+
+.as-btn-secondary:hover {
+    background: var(--as-bg-lighter);
+    border-color: var(--as-accent);
+    color: var(--as-accent);
+}
+
+.as-btn-outline {
+    background: transparent;
+    border: 1px solid var(--as-border);
+    color: var(--as-text-secondary);
+}
+
+.as-btn-outline:hover {
+    border-color: var(--as-accent);
+    color: var(--as-accent);
+    background: var(--as-bg-soft);
+}
+
+.as-btn-danger {
+    background: rgba(239, 68, 68, 0.1);
+    color: var(--as-danger);
+    border: 1px solid rgba(239, 68, 68, 0.25);
+}
+
+.as-btn-danger:hover {
+    background: rgba(239, 68, 68, 0.2);
+    border-color: var(--as-danger);
+}
+
+/* ========================================
+   CARD (FORM)
+   ======================================== */
+
+.as-card {
+    background: var(--as-bg-surface);
+    border: 1px solid var(--as-border);
+    border-radius: var(--as-radius-lg);
+    overflow: hidden;
+    box-shadow: var(--as-shadow-sm);
+    padding: 20px;
+}
+
+.as-card h3 {
+    margin: 0 0 16px 0;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--as-text-primary);
+}
+
+/* ========================================
+   FORM
+   ======================================== */
+
+.as-form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+.as-form-grid input,
+.as-form-grid select,
+.as-form-grid textarea {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid var(--as-border);
+    border-radius: var(--as-radius-md);
+    background: var(--as-bg-lighter);
+    color: var(--as-text-primary);
+    font-size: 0.85rem;
+    font-family: inherit;
+    outline: none;
+}
+
+.as-form-grid input:focus,
+.as-form-grid select:focus,
+.as-form-grid textarea:focus {
+    border-color: var(--as-accent);
+}
+
+.as-form-grid textarea {
+    resize: vertical;
+}
+
+.as-checkbox-group {
+    grid-column: span 2;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.as-checkbox-group label {
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--as-text-secondary);
+    margin-bottom: 4px;
+}
+
+.as-checkbox-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.as-checkbox-options label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.85rem;
+    font-weight: normal;
+    color: var(--as-text-primary);
+    cursor: pointer;
+}
+
+.as-form-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+}
+
+/* ========================================
+   LIST OF SERVICES
+   ======================================== */
+
+.as-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.as-card-item {
+    background: var(--as-bg-surface);
+    border: 1px solid var(--as-border);
+    border-radius: var(--as-radius-lg);
+    padding: 16px;
+    transition: all 0.2s;
+    box-shadow: var(--as-shadow-sm);
+}
+
+.as-card-item:hover {
+    border-color: var(--as-accent);
+    box-shadow: var(--as-shadow-md);
+}
+
+.as-card-item > div {
+    margin-bottom: 6px;
+    font-size: 0.85rem;
+    color: var(--as-text-secondary);
+}
+
+.as-card-item > div:first-child strong {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--as-text-primary);
+}
+
+.as-card-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 12px;
+}
+
+/* ========================================
+   ERROR STATE
+   ======================================== */
+
+.as-error {
+    background: rgba(239, 68, 68, 0.1);
+    border-left: 3px solid #ef4444;
+    padding: 12px 16px;
+    border-radius: var(--as-radius-md);
+    color: #ef4444;
+    font-size: 0.85rem;
+    margin: 20px;
+}
+
+/* ========================================
+   RESPONSIVE
+   ======================================== */
+
+@media (max-width: 1024px) {
+    .as-main-content {
+        margin-left: 0;
+        padding: 16px;
+        gap: 20px;
+    }
+}
+
+@media (max-width: 768px) {
+    .as-main-content {
+        padding: 12px;
+        gap: 16px;
+    }
+
+    .as-header h1 {
+        font-size: 1.4rem;
+    }
+
+    .as-form-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .as-checkbox-group {
+        grid-column: span 1;
+    }
+
+    .as-form-actions {
+        flex-direction: column;
+    }
+
+    .as-form-actions button {
+        width: 100%;
+    }
+
+    .as-card-actions {
+        flex-direction: column;
+    }
+
+    .as-card-actions button {
+        width: 100%;
+    }
+}

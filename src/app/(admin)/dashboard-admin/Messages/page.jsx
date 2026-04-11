@@ -1,228 +1,256 @@
 'use client';
 
-import { useState } from 'react';
+import { useCallback, useEffect, useMemo, useState, useRef } from 'react';
+import Link from 'next/link';
+import {
+  fetchThreads,
+  fetchThread,
+  replyToThread,
+  markThreadRead,
+  updateThread,
+  deleteThread,
+  getStoredUser,
+} from '@/lib/boemApi';
 import './message.css';
 
-const MessagesDashboard = () => {
-  const [activeConversation, setActiveConversation] = useState(0);
+function formatDateTime(value) {
+  if (!value) return '';
+  return new Date(value).toLocaleString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+    hour: 'numeric',
+    minute: '2-digit',
+  });
+}
+
+export default function AdminMessagesPage() {
+  const [threads, setThreads] = useState([]);
+  const [activeThreadId, setActiveThreadId] = useState(null);
+  const [activeThread, setActiveThread] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [threadLoading, setThreadLoading] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [error, setError] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
   const [newMessage, setNewMessage] = useState('');
+  const [pollingActive, setPollingActive] = useState(true);
+  const messagesEndRef = useRef(null);
 
-  const conversations = [
-    {
-      id: 0,
-      name: 'Sarah Smith',
-      avatar: 'https://ui-avatars.com/api/?name=Sarah+Smith&background=3498db&color=fff',
-      status: 'online',
-      lastSeen: '2 hours ago',
-      project: 'Order #102',
-      unread: 3,
-      preview: 'Can we add Apple Pay to the checkout options? I think it would improve conversion...',
-      messages: [
-        {
-          id: 1,
-          sender: 'Sarah Smith',
-          avatar: 'https://ui-avatars.com/api/?name=Sarah+Smith&background=3498db&color=fff',
-          content: 'Hi Mike, I was reviewing the checkout process and was wondering if we could add Apple Pay as an option?',
-          time: '10:30 AM',
-          type: 'received'
-        },
-        {
-          id: 2,
-          sender: 'Mike Developer',
-          avatar: 'https://ui-avatars.com/api/?name=Mike+Developer&background=27ae60&color=fff',
-          content: 'Hi Sarah! Yes, we can definitely add Apple Pay. I\'ll need to update the payment gateway integration. Should take about 2-3 hours.',
-          time: '10:35 AM',
-          type: 'sent'
-        },
-        {
-          id: 3,
-          sender: 'Sarah Smith',
-          avatar: 'https://ui-avatars.com/api/?name=Sarah+Smith&background=3498db&color=fff',
-          content: 'That would be amazing! Our analytics show that 40% of our mobile users have Apple devices, so this could really help conversions.',
-          time: '10:40 AM',
-          type: 'received'
-        },
-        {
-          id: 4,
-          sender: 'Sarah Smith',
-          avatar: 'https://ui-avatars.com/api/?name=Sarah+Smith&background=3498db&color=fff',
-          content: 'Also, while you\'re working on payments, could you check if Google Pay is possible too?',
-          time: '10:41 AM',
-          type: 'received'
+  const storedUser = getStoredUser();
+  const adminName = storedUser?.first_name
+    ? `${storedUser.first_name} ${storedUser.last_name}`.trim()
+    : storedUser?.email || 'Admin';
+
+  const filteredThreads = useMemo(() => {
+    const query = searchQuery.trim().toLowerCase();
+    if (!query) return threads;
+    return threads.filter((thread) => {
+      const preview = thread.last_message?.body || '';
+      return [thread.subject, preview, thread.client_name, thread.client_email]
+        .filter(Boolean)
+        .some((value) => value.toLowerCase().includes(query));
+    });
+  }, [searchQuery, threads]);
+
+  const loadThreadList = useCallback(async (preferredThreadId = null) => {
+    try {
+      const payload = await fetchThreads();
+      const results = payload.results || [];
+      setThreads(results);
+      setActiveThreadId((previousId) => {
+        if (preferredThreadId && results.some((thread) => thread.id === preferredThreadId)) {
+          return preferredThreadId;
         }
-      ]
-    },
-    {
-      id: 1,
-      name: 'Sarah Lead',
-      avatar: 'https://ui-avatars.com/api/?name=Team+Lead&background=e74c3c&color=fff',
-      status: 'away',
-      lastSeen: '5 hours ago',
-      project: 'Order #107',
-      unread: 0,
-      preview: 'Client approved the design, you can start development on the restaurant website...',
-      messages: []
-    },
-    {
-      id: 2,
-      name: 'Emily Davis',
-      avatar: 'https://ui-avatars.com/api/?name=Emily+Davis&background=f39c12&color=fff',
-      status: 'offline',
-      lastSeen: '1 day ago',
-      project: 'Order #107',
-      unread: 0,
-      preview: 'When can we see the menu functionality working? Our grand opening is approaching...',
-      messages: []
+        if (!previousId && results.length > 0) {
+          return results[0].id;
+        }
+        if (previousId && !results.some((thread) => thread.id === previousId)) {
+          return results[0]?.id || null;
+        }
+        return previousId;
+      });
+      return results;
+    } catch (err) {
+      setError(err.message || 'Unable to load conversations.');
+      return [];
     }
-  ];
+  }, []);
 
-  const handleSendMessage = () => {
-    if (newMessage.trim()) {
-      // In a real app, you would send this to your backend
-      console.log('Sending message:', newMessage);
+  useEffect(() => {
+    let mounted = true;
+    const init = async () => {
+      try {
+        const results = await loadThreadList();
+      } finally {
+        if (mounted) setLoading(false);
+      }
+    };
+    init();
+    return () => { mounted = false; };
+  }, [loadThreadList]);
+
+  useEffect(() => {
+    if (!activeThreadId) return;
+    let mounted = true;
+    const loadActive = async () => {
+      setThreadLoading(true);
+      try {
+        const thread = await fetchThread(activeThreadId, 'admin');
+        if (!mounted) return;
+        setActiveThread(thread);
+
+        if (thread.unread_count > 0) {
+          await markThreadRead(activeThreadId, { sender_role: 'client' });
+          setThreads((prev) =>
+            prev.map((t) =>
+              t.id === activeThreadId ? { ...t, unread_count: 0 } : t
+            )
+          );
+        }
+      } catch (err) {
+        if (mounted) setError(err.message || 'Unable to open thread.');
+      } finally {
+        if (mounted) setThreadLoading(false);
+      }
+    };
+    loadActive();
+    return () => { mounted = false; };
+  }, [activeThreadId]);
+
+  useEffect(() => {
+    if (!activeThreadId || !pollingActive) return;
+    const intervalId = setInterval(async () => {
+      try {
+        const updated = await fetchThread(activeThreadId, 'admin');
+        if (JSON.stringify(updated.messages) !== JSON.stringify(activeThread?.messages)) {
+          setActiveThread(updated);
+        }
+      } catch {}
+    }, 5000);
+    return () => clearInterval(intervalId);
+  }, [activeThreadId, pollingActive, activeThread?.messages]);
+
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [activeThread?.messages]);
+
+  const handleSendReply = async () => {
+    const body = newMessage.trim();
+    if (!body || !activeThreadId) return;
+    setSending(true);
+    try {
+      await replyToThread(activeThreadId, {
+        sender_name: adminName,
+        sender_role: 'admin',
+        body,
+      });
       setNewMessage('');
+      await loadThreadList(activeThreadId);
+      const updated = await fetchThread(activeThreadId, 'admin');
+      setActiveThread(updated);
+    } catch (err) {
+      setError(err.message || 'Unable to send reply.');
+    } finally {
+      setSending(false);
     }
   };
 
-  const handleStartNewMessage = () => {
-    alert('Starting a new message...');
-    // Logic to start a new message
+  const handleArchive = async (threadId, currentArchived) => {
+    await updateThread(threadId, { is_archived: !currentArchived });
+    await loadThreadList(threadId);
   };
 
-  const handleArchiveView = () => {
-    alert('Viewing archived messages...');
-    // Logic to view archived messages
-  };
-
-  const handleKeyPress = (e) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      handleSendMessage();
-    }
+  const handleDelete = async (threadId) => {
+    if (!confirm('Delete this conversation permanently?')) return;
+    await deleteThread(threadId);
+    await loadThreadList();
+    if (activeThreadId === threadId) setActiveThreadId(null);
   };
 
   return (
-    <div className="admin-container">
-      <main className="main-content">
-        <header className="dashboard-header">
-          <div className="header-left">
-            <h1>Messages</h1>
-            <p className="welcome-text">Communicate with clients and team members</p>
-          </div>
-          <div className="header-right">
-            <div className="search-bar">
-              <input type="text" placeholder="Search messages..." />
-              <button>🔍</button>
-            </div>
-            <button className="primary-btn" onClick={handleStartNewMessage}>
-              + New Message
-            </button>
-          </div>
-        </header>
+    <div className="am-container">
+      <main className="am-main-content">
+        <div className="am-header">
+          <h1>Support Conversations</h1>
+        </div>
 
-        <div className="content-grid">
-          {/* Conversations List */}
-          <div className="content-card">
-            <div className="card-header">
-              <h2>Conversations</h2>
-              <button className="view-all-btn" onClick={handleArchiveView}>
-                Archived →
-              </button>
-            </div>
-            <div className="conversations-list">
-              {conversations.map((conversation) => (
+        {error && <div className="am-error">{error}</div>}
+
+        <div className="am-layout">
+          {/* SIDEBAR */}
+          <aside className="am-sidebar">
+            <input
+              type="text"
+              placeholder="Search..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="am-search"
+            />
+
+            <div className="am-thread-list">
+              {loading && <div className="am-loading">Loading conversations...</div>}
+              {!loading && filteredThreads.length === 0 && (
+                <div className="am-empty-state">No conversations found.</div>
+              )}
+              {filteredThreads.map((thread) => (
                 <div
-                  key={conversation.id}
-                  className={`conversation-item ${activeConversation === conversation.id ? 'active' : ''}`}
-                  onClick={() => setActiveConversation(conversation.id)}
+                  key={thread.id}
+                  className={`am-thread-item ${thread.id === activeThreadId ? 'active' : ''}`}
+                  onClick={() => setActiveThreadId(thread.id)}
                 >
-                  <div className="conversation-avatar">
-                    <img src={conversation.avatar} alt={conversation.name} />
-                    <div className={`online-status ${conversation.status}`}></div>
-                  </div>
-                  <div className="conversation-details">
-                    <div className="conversation-header">
-                      <h4>{conversation.name}</h4>
-                      <span className="message-time">{conversation.lastSeen}</span>
-                    </div>
-                    <p className="message-preview">{conversation.preview}</p>
-                    <div className="conversation-meta">
-                      <span className="project-tag">{conversation.project}</span>
-                      {conversation.unread > 0 && (
-                        <span className="unread-count">{conversation.unread}</span>
-                      )}
-                    </div>
-                  </div>
+                  <strong>{thread.subject}</strong>
+                  <p>{thread.client_name || 'Unknown Client'}</p>
+                  {thread.unread_count > 0 && <span className="am-unread-badge">{thread.unread_count}</span>}
                 </div>
               ))}
             </div>
-          </div>
+          </aside>
 
-          {/* Message Thread */}
-          <div className="content-card">
-            <div className="message-thread">
-              <div className="thread-header">
-                <div className="thread-info">
-                  <h3>{conversations[activeConversation].name}</h3>
-                  <p>{conversations[activeConversation].project} - Ecommerce Store</p>
+          {/* THREAD */}
+          <section className="am-thread">
+            {activeThread ? (
+              <>
+                <div className="am-thread-header">
+                  <h3>{activeThread.subject}</h3>
                 </div>
-                <div className="thread-actions">
-                  <button className="icon-btn" title="Call">
-                    📞
-                  </button>
-                  <button className="icon-btn" title="Video Call">
-                    🎥
-                  </button>
-                  <button className="icon-btn" title="More">
-                    ⋯
-                  </button>
-                </div>
-              </div>
 
-              <div className="messages-container">
-                {conversations[activeConversation].messages.map((message) => (
-                  <div key={message.id} className={`message ${message.type}`}>
-                    {message.type === 'received' && (
-                      <div className="message-avatar">
-                        <img src={message.avatar} alt={message.sender} />
+                <div className="am-messages">
+                  {threadLoading && <div className="am-loading">Loading messages...</div>}
+                  {activeThread.messages?.map((msg) => (
+                    <div
+                      key={msg.id}
+                      className={`am-message ${msg.sender_role === 'admin' ? 'outgoing' : 'incoming'}`}
+                    >
+                      <div className="am-message-bubble">
+                        <p>{msg.body}</p>
                       </div>
-                    )}
-                    <div className="message-content">
-                      <p>{message.content}</p>
-                      <span className="message-time">{message.time}</span>
+                      <div className="am-message-meta">
+                        <span>{msg.sender_name}</span>
+                        <span>{formatDateTime(msg.created_at)}</span>
+                      </div>
                     </div>
-                    {message.type === 'sent' && (
-                      <div className="message-avatar">
-                        <img src={message.avatar} alt={message.sender} />
-                      </div>
-                    )}
-                  </div>
-                ))}
-              </div>
-
-              <div className="message-input">
-                <div className="input-tools">
-                  <button className="tool-btn">📎</button>
-                  <button className="tool-btn">🖼</button>
-                  <button className="tool-btn">😊</button>
+                  ))}
+                  <div ref={messagesEndRef} />
                 </div>
-                <textarea
-                  placeholder="Type your message..."
-                  rows="3"
-                  value={newMessage}
-                  onChange={(e) => setNewMessage(e.target.value)}
-                  onKeyPress={handleKeyPress}
-                />
-                <button className="send-btn" onClick={handleSendMessage}>
-                  Send
-                </button>
-              </div>
-            </div>
-          </div>
+
+                <div className="am-reply">
+                  <textarea
+                    value={newMessage}
+                    onChange={(e) => setNewMessage(e.target.value)}
+                    placeholder="Write a reply..."
+                  />
+                  <button onClick={handleSendReply} disabled={sending || !newMessage.trim()}>
+                    {sending ? 'Sending...' : 'Send'}
+                  </button>
+                </div>
+              </>
+            ) : (
+              <div className="am-empty">Select a conversation to view messages.</div>
+            )}
+          </section>
         </div>
       </main>
     </div>
   );
-};
-
-export default MessagesDashboard;
+}

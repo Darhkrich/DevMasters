@@ -1,0 +1,316 @@
+/* =========================================================
+   NOTIFICATIONS PAGE – PREFIXED CLASSES (un-*)
+   ADAPTED FOR GLOBAL HEADER – FLEXIBLE HEIGHT
+   ========================================================= */
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", "Roboto", "Segoe UI", sans-serif;
+    background: var(--un-bg-main);
+    color: var(--un-text-primary);
+    transition: background 0.3s ease, color 0.3s ease;
+}
+
+:root {
+    /* Light Mode Variables */
+    --un-bg-main: #f8f9fc;
+    --un-bg-surface: #ffffff;
+    --un-bg-soft: #f3f4f7;
+    --un-bg-lighter: #eef0f5;
+    --un-border: #e1e4eb;
+    
+    --un-accent: #0066ff;
+    --un-accent-light: #e6f0ff;
+    --un-accent-dark: #0052cc;
+    
+    --un-text-primary: #0f1419;
+    --un-text-secondary: #5f6d7b;
+    --un-text-tertiary: #8b95a5;
+    
+    --un-unread-bg: rgba(0, 102, 255, 0.05);
+    --un-unread-border: #0066ff;
+    
+    --un-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+    --un-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
+    --un-shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
+    
+    --un-radius-md: 8px;
+    --un-radius-lg: 12px;
+}
+
+[data-theme="dark"],
+.dark-mode {
+    /* Dark Mode Variables */
+    --un-bg-main: #0d1117;
+    --un-bg-surface: #1a202c;
+    --un-bg-soft: #2d3748;
+    --un-bg-lighter: #374151;
+    --un-border: #3f4a5c;
+    
+    --un-accent: #3b82f6;
+    --un-accent-light: #1e3a8a;
+    --un-accent-dark: #2563eb;
+    
+    --un-text-primary: #f1f5f9;
+    --un-text-secondary: #cbd5e1;
+    --un-text-tertiary: #94a3b8;
+    
+    --un-unread-bg: rgba(59, 130, 246, 0.1);
+    --un-unread-border: #3b82f6;
+    
+    --un-shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.15);
+    --un-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.2);
+    --un-shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+/* ========================================
+   MAIN LAYOUT – FILLS REMAINING SPACE
+   ======================================== */
+
+.un-dashboard-container {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    background: var(--un-bg-main);
+    overflow: hidden;
+}
+
+.un-main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    padding: 20px 24px;
+    gap: 16px;
+}
+
+/* ========================================
+   HEADER
+   ======================================== */
+
+.un-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--un-border);
+    flex-shrink: 0;
+}
+
+.un-title {
+    margin: 0 0 4px 0;
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: var(--un-text-primary);
+}
+
+.un-subtitle {
+    margin: 0;
+    font-size: 0.85rem;
+    color: var(--un-text-secondary);
+}
+
+/* ========================================
+   BUTTON
+   ======================================== */
+
+.un-btn-outline {
+    padding: 8px 16px;
+    background: transparent;
+    border: 1px solid var(--un-border);
+    border-radius: var(--un-radius-md);
+    color: var(--un-text-secondary);
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.un-btn-outline:hover {
+    border-color: var(--un-accent);
+    color: var(--un-accent);
+    background: var(--un-bg-soft);
+}
+
+/* ========================================
+   ERROR MESSAGE
+   ======================================== */
+
+.un-error {
+    background: rgba(220, 53, 69, 0.1);
+    border-left: 3px solid #dc3545;
+    padding: 12px 16px;
+    border-radius: var(--un-radius-md);
+    color: #dc3545;
+    font-size: 0.85rem;
+    flex-shrink: 0;
+}
+
+/* ========================================
+   NOTIFICATIONS LIST – SCROLLABLE
+   ======================================== */
+
+.un-list {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding-right: 4px;
+}
+
+/* ========================================
+   NOTIFICATION CARD
+   ======================================== */
+
+.un-card {
+    background: var(--un-bg-surface);
+    border: 1px solid var(--un-border);
+    border-radius: var(--un-radius-lg);
+    transition: all 0.2s;
+    cursor: pointer;
+    position: relative;
+}
+
+.un-card:hover {
+    border-color: var(--un-accent);
+    box-shadow: var(--un-shadow-md);
+}
+
+.un-card.unread {
+    background: var(--un-unread-bg);
+    border-left: 3px solid var(--un-unread-border);
+}
+
+.un-link {
+    display: block;
+    padding: 16px;
+    text-decoration: none;
+    color: inherit;
+}
+
+.un-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.un-title-text {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--un-text-primary);
+}
+
+.un-time {
+    font-size: 0.7rem;
+    color: var(--un-text-tertiary);
+}
+
+.un-message {
+    margin: 0;
+    font-size: 0.85rem;
+    color: var(--un-text-secondary);
+    line-height: 1.4;
+}
+
+.un-badge {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 8px;
+    height: 8px;
+    background: var(--un-accent);
+    border-radius: 50%;
+}
+
+/* ========================================
+   EMPTY / LOADING STATES
+   ======================================== */
+
+.un-state,
+.un-empty {
+    text-align: center;
+    padding: 48px 20px;
+    background: var(--un-bg-surface);
+    border: 1px solid var(--un-border);
+    border-radius: var(--un-radius-lg);
+    color: var(--un-text-secondary);
+}
+
+.un-empty h3 {
+    margin: 0 0 8px 0;
+    font-size: 1rem;
+    color: var(--un-text-primary);
+}
+
+.un-empty p {
+    margin: 0;
+    font-size: 0.85rem;
+}
+
+/* ========================================
+   RESPONSIVE
+   ======================================== */
+
+@media (max-width: 768px) {
+    .un-main-content {
+        padding: 16px;
+        gap: 12px;
+    }
+
+    .un-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .un-btn-outline {
+        align-self: flex-start;
+    }
+
+    .un-card-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .un-card {
+        padding: 12px;
+    }
+
+    .un-link {
+        padding: 0;
+    }
+
+    .un-title {
+        font-size: 1.2rem;
+    }
+
+    .un-subtitle {
+        font-size: 0.8rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .un-main-content {
+        padding: 12px;
+    }
+
+    .un-empty {
+        padding: 32px 16px;
+    }
+}

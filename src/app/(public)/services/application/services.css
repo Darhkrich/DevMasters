@@ -772,56 +772,6 @@ button {
   }
 }
 
-/* ========== LIGHT MODE OPTION (if you ever want it) ========== */
-/* Add class="sp4__wc-light" to <body> to switch */
-
-body.sp4__wc-light {
-  background: #f5f6fa;
-  color: #05050b;
-}
-body.sp4__wc-light .sp4__wc-services-page::before {
-  background: linear-gradient(
-    to bottom,
-    rgba(255, 255, 255, 0.85),
-    rgba(245, 246, 250, 0.9),
-    transparent
-  );
-}
-body.sp4__wc-light .sp4__wc-hero-demo-card,
-body.sp4__wc-light .sp4__service,
-body.sp4__wc-light .sp4__wc-demo-window,
-body.sp4__wc-light .sp4__wc-demo-phone {
-  background: #ffffff;
-  border-color: rgba(0, 0, 0, 0.06);
-  box-shadow: 0 16px 38px rgba(0, 0, 0, 0.08);
-}
-body.sp4__wc-light .sp4__wc-services-nav-item {
-  background: rgba(255, 255, 255, 0.9);
-}
-body.sp4__wc-light .sp4__wc-services-nav-item:hover {
-  background: #ffffff;
-}
-body.sp4__wc-light .sp4__wc-service-section-header p,
-body.sp4__wc-light .sp4__wc-services-hero-text p,
-body.sp4__wc-light .sp4__wc-services-nav-item,
-body.sp4__wc-light .sp4__wc-pill,
-body.sp4__wc-light .sp4__wc-section-badge,
-body.sp4__wc-light .sp4__wc-service-demo p,
-body.sp4__wc-light .sp4__wc-service-meta {
-  color: rgba(0, 0, 0, 0.6);
-}
-body.sp4__wc-light .sp4__wc-demo-window-body--plain {
-  background: #f3f4fb;
-}
-body.sp4__wc-light .sp4__wc-demo-bubble--user {
-  background: #f3f4fb;
-}
-body.sp4__wc-light .sp4__wc-demo-bubble--system {
-  background: rgba(46, 204, 113, 0.12);
-  border-color: rgba(46, 204, 113, 0.4);
-}
-
-
 /* ===== AI Automation Page extra styles ===== */
 
 /* Slight tweak to hero look on AI page */

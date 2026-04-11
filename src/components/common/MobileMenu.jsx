@@ -54,7 +54,7 @@ export default function MobileMenu() {
 
         <div className="mm-actions">
           <Link
-            href="/login"
+            href="/dashboard"
             className="mm-btn mm-btn--ghost"
             onClick={() => setOpen(false)}
           >

@@ -1,11 +1,16 @@
 // src/components/common/AddToQuoteButton.jsx
 'use client';
 
-import { useState } from 'react';
-import { useCart } from '../../context/CartContext';
-import { transformToCartItem } from '../../utils/dataTransform';
+import { useState } from "react";
+import { useCart } from "../../context/CartContext";
+import { transformToCartItem } from "../../utils/dataTransform";
 
-export default function AddToQuoteButton({ item, source, className = '' }) {
+export default function AddToQuoteButton({
+  item,
+  source,
+  className = "",
+  onAdded,
+}) {
   const { addToCart, cart } = useCart();
   const [isAdded, setIsAdded] = useState(false);
 
@@ -19,6 +24,9 @@ export default function AddToQuoteButton({ item, source, className = '' }) {
       const cartItem = transformToCartItem(item, source);
       addToCart(cartItem);
       setIsAdded(true);
+      if (onAdded) {
+        onAdded(cartItem);
+      }
       
       // Show success message
       const event = new CustomEvent('cartUpdated', { 
@@ -58,6 +66,7 @@ export default function AddToQuoteButton({ item, source, className = '' }) {
 
   return (
     <button
+      type="button"
       onClick={handleAddToQuote}
       disabled={isInCart}
       className={`add-to-quote-btn ${isAdded ? 'added' : ''} ${isInCart ? 'in-cart' : ''} ${className}`}

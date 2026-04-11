@@ -1,57 +1,92 @@
-// src/app/(public)/Checkout/page.jsx
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useCart } from '@/context/CartContext';
 import { analyzeCart } from '@/utils/dataTransform';
 import CartSummary from '@/components/checkout/CartSummary';
 import QuoteForm from '@/components/checkout/QuoteForm';
 import CheckoutHeader from '@/components/checkout/CheckoutHeader';
-import { useRouter } from 'next/navigation';
-import '@/styles/checkout.css'; // Import CSS
+import { createOrder } from '@/lib/boemApi'; // changed from createInquiry
+import '@/styles/checkout.css';
 
 export default function CheckoutPage() {
-  const { cart, formData, updateFormData } = useCart();
+  const { cart, clearCart } = useCart();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [autoFillData, setAutoFillData] = useState({});
-
-  // Analyze cart for auto-fill data
-  useEffect(() => {
-    const analysis = analyzeCart(cart);
-    setAutoFillData(analysis);
-    
-    // Auto-update form with suggestions
-    if (analysis.serviceCategory && !formData.serviceCategory) {
-      updateFormData({ serviceCategory: analysis.serviceCategory });
-    }
-    if (analysis.suggestedTimeline && !formData.timeline) {
-      updateFormData({ timeline: analysis.suggestedTimeline });
-    }
-  }, [cart, formData, updateFormData]);
+  const autoFillData = analyzeCart(cart);
 
   const handleSubmit = async (formValues) => {
-    setIsSubmitting(true);
-    
-    // Prepare quote data
-    const quoteData = {
-      id: `QR-${Date.now().toString().slice(-8)}`,
-      timestamp: new Date().toISOString(),
-      status: 'New',
-      cartItems: cart,
-      formData: formValues,
-      autoFillData,
-    };
+  setIsSubmitting(true);
 
-    console.log('Submitting quote:', quoteData);
-    
-    // Simulate API delay
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    
-    setIsSubmitting(false);
-    
-    // Redirect to success page
-    window.location.href = `/Checkout/success?quote=${quoteData.id}`;
+  // Build items array from cart
+  const items = cart.map(item => {
+    // Determine item_type based on source
+    let item_type = 'custom';
+    if (item.source === 'appServices') item_type = 'service';
+    else if (item.source === 'automation') item_type = 'ai';
+    else if (item.source === 'pricingData') item_type = 'package';
+    else if (item.source === 'templates') item_type = 'template';
+    else if (item.source === 'bundles') item_type = 'bundle';
+
+    return {
+      item_type,
+      item_id: String(item.id),
+      title: item.title,
+      price: typeof item.price === 'number' ? item.price : null,
+      quantity: 1,
+      metadata: {
+        source: item.source,
+        category: item.category,
+        description: item.description,
+        priceType: item.priceType,
+        requiresDocuments: item.requiresDocuments,
+        features: item.features,
+        deliveryTime: item.deliveryTime,
+        previewUrl: item.previewUrl,
+        icon: item.icon,
+      }
+    };
+  });
+
+  const payload = {
+    client_name: formValues.fullName,
+    client_email: formValues.email,
+    client_company: formValues.company || '',
+    project_details: formValues.description,
+    timeline: formValues.timeline || '',
+    notes: formValues.message,
+    items: items,
+    metadata: {
+      how_heard: formValues.howHeard || "",
+      urgency: formValues.urgency || "",
+      terms_accepted: Boolean(formValues.termsAccepted),
+      cart_analysis: autoFillData,
+    }
   };
+
+  // Add budget_min only if it's a valid number
+  if (formValues.budgetRange && !isNaN(parseFloat(formValues.budgetRange))) {
+    payload.budget_min = parseFloat(formValues.budgetRange);
+  }
+
+  // Log for debugging
+  console.log('Sending order payload:', JSON.stringify(payload, null, 2));
+
+  try {
+    const data = await createOrder(payload);
+    clearCart();
+    window.location.href = `/Checkout/success?order=${data.reference}`;
+  } catch (err) {
+    console.error('Order creation failed:', err);
+    // Try to extract error details from the response
+    if (err.payload && err.payload.errors) {
+      alert(`Error: ${JSON.stringify(err.payload.errors)}`);
+    } else {
+      alert(err.message || 'Something went wrong while submitting your order.');
+    }
+  }
+
+  setIsSubmitting(false);
+};
 
   if (cart.length === 0) {
     return (

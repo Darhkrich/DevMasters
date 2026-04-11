@@ -1,0 +1,588 @@
+/* =========================================================
+   PROJECT PROGRESS PAGE – PREFIXED CLASSES (pp-*)
+   ADAPTED FOR GLOBAL HEADER – FLEXIBLE HEIGHT
+   ========================================================= */
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", "Roboto", "Segoe UI", sans-serif;
+    background: var(--pp-bg-main);
+    color: var(--pp-text-primary);
+    transition: background 0.3s ease, color 0.3s ease;
+}
+
+:root {
+    /* Light Mode Variables */
+    --pp-bg-main: #f8f9fc;
+    --pp-bg-surface: #ffffff;
+    --pp-bg-soft: #f3f4f7;
+    --pp-bg-lighter: #eef0f5;
+    --pp-border: #e1e4eb;
+    
+    --pp-accent: #0066ff;
+    --pp-accent-light: #e6f0ff;
+    --pp-accent-dark: #0052cc;
+    
+    --pp-text-primary: #0f1419;
+    --pp-text-secondary: #5f6d7b;
+    --pp-text-tertiary: #8b95a5;
+    
+    --pp-status-pending: #f59e0b;
+    --pp-status-completed: #22c55e;
+    --pp-status-cancelled: #ef4444;
+    --pp-status-in-progress: #3b82f6;
+    --pp-status-awaiting-client: #8b5cf6;
+    
+    --pp-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+    --pp-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
+    --pp-shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
+    
+    --pp-radius-md: 8px;
+    --pp-radius-lg: 12px;
+}
+
+[data-theme="dark"],
+.dark-mode {
+    /* Dark Mode Variables */
+    --pp-bg-main: #0d1117;
+    --pp-bg-surface: #1a202c;
+    --pp-bg-soft: #2d3748;
+    --pp-bg-lighter: #374151;
+    --pp-border: #3f4a5c;
+    
+    --pp-accent: #3b82f6;
+    --pp-accent-light: #1e3a8a;
+    --pp-accent-dark: #2563eb;
+    
+    --pp-text-primary: #f1f5f9;
+    --pp-text-secondary: #cbd5e1;
+    --pp-text-tertiary: #94a3b8;
+    
+    --pp-status-pending: #fbbf24;
+    --pp-status-completed: #4ade80;
+    --pp-status-cancelled: #f87171;
+    --pp-status-in-progress: #60a5fa;
+    --pp-status-awaiting-client: #a78bfa;
+    
+    --pp-shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.15);
+    --pp-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.2);
+    --pp-shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+/* ========================================
+   MAIN LAYOUT – FILLS REMAINING SPACE
+   ======================================== */
+
+.pp-dashboard-container {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    background: var(--pp-bg-main);
+    overflow: hidden;
+}
+
+.pp-main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    padding: 20px 24px;
+    gap: 16px;
+}
+
+/* ========================================
+   HEADER
+   ======================================== */
+
+.pp-top-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--pp-border);
+    flex-shrink: 0;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.pp-header-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.pp-breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.85rem;
+    color: var(--pp-text-secondary);
+}
+
+.pp-breadcrumb a {
+    color: var(--pp-accent);
+}
+
+.pp-overview-actions {
+    display: flex;
+    gap: 12px;
+}
+
+/* ========================================
+   BUTTONS
+   ======================================== */
+
+.pp-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    border-radius: var(--pp-radius-md);
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background: transparent;
+    border: 1px solid var(--pp-border);
+    color: var(--pp-text-primary);
+    text-decoration: none;
+}
+
+.pp-btn-primary {
+    background: var(--pp-accent);
+    border-color: var(--pp-accent);
+    color: white;
+}
+
+.pp-btn-primary:hover {
+    background: var(--pp-accent-dark);
+}
+
+.pp-btn-outline {
+    border-color: var(--pp-border);
+    color: var(--pp-text-secondary);
+}
+
+.pp-btn-outline:hover {
+    border-color: var(--pp-accent);
+    color: var(--pp-accent);
+    background: var(--pp-bg-soft);
+}
+
+/* ========================================
+   ERROR / MESSAGES
+   ======================================== */
+
+.pp-auth-error-message {
+    background: rgba(220, 53, 69, 0.1);
+    border-left: 3px solid #dc3545;
+    padding: 12px 16px;
+    border-radius: var(--pp-radius-md);
+    color: #dc3545;
+    font-size: 0.85rem;
+    flex-shrink: 0;
+}
+
+.pp-loading-text,
+.pp-empty-text {
+    color: var(--pp-text-secondary);
+    padding: 20px;
+    text-align: center;
+}
+
+/* ========================================
+   CONTENT AREA – SCROLLABLE
+   ======================================== */
+
+.pp-content-area {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    padding-right: 4px;
+}
+
+/* ========================================
+   OVERVIEW SECTION
+   ======================================== */
+
+.pp-progress-overview {
+    background: var(--pp-bg-surface);
+    border: 1px solid var(--pp-border);
+    border-radius: var(--pp-radius-lg);
+    padding: 20px;
+    box-shadow: var(--pp-shadow-sm);
+}
+
+.pp-overview-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-bottom: 24px;
+}
+
+.pp-project-basic-info h1 {
+    margin: 0 0 8px 0;
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: var(--pp-text-primary);
+}
+
+.pp-project-basic-info p {
+    margin: 0 0 12px 0;
+    color: var(--pp-text-secondary);
+    font-size: 0.85rem;
+}
+
+.pp-project-status-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    background: var(--pp-bg-soft);
+    color: var(--pp-text-primary);
+    border: 1px solid var(--pp-border);
+}
+
+.pp-project-status-badge.pending {
+    background: rgba(245, 158, 11, 0.1);
+    color: var(--pp-status-pending);
+    border-color: rgba(245, 158, 11, 0.25);
+}
+
+.pp-project-status-badge.in_progress {
+    background: rgba(59, 130, 246, 0.1);
+    color: var(--pp-status-in-progress);
+    border-color: rgba(59, 130, 246, 0.25);
+}
+
+.pp-project-status-badge.awaiting_client {
+    background: rgba(139, 92, 246, 0.1);
+    color: var(--pp-status-awaiting-client);
+    border-color: rgba(139, 92, 246, 0.25);
+}
+
+.pp-project-status-badge.completed {
+    background: rgba(34, 197, 94, 0.1);
+    color: var(--pp-status-completed);
+    border-color: rgba(34, 197, 94, 0.25);
+}
+
+.pp-project-status-badge.cancelled {
+    background: rgba(239, 68, 68, 0.1);
+    color: var(--pp-status-cancelled);
+    border-color: rgba(239, 68, 68, 0.25);
+}
+
+.pp-form-group {
+    min-width: 200px;
+}
+
+.pp-form-group label {
+    display: block;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: var(--pp-text-secondary);
+    margin-bottom: 4px;
+}
+
+.pp-form-group select {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid var(--pp-border);
+    border-radius: var(--pp-radius-md);
+    background: var(--pp-bg-lighter);
+    color: var(--pp-text-primary);
+    font-size: 0.85rem;
+    outline: none;
+}
+
+.pp-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 14px;
+}
+
+.pp-stat-card {
+    background: var(--pp-bg-soft);
+    border: 1px solid var(--pp-border);
+    border-radius: var(--pp-radius-lg);
+    padding: 16px;
+    text-align: center;
+}
+
+.pp-stat-info h3 {
+    margin: 0 0 4px 0;
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: var(--pp-text-primary);
+}
+
+.pp-stat-info p {
+    margin: 0;
+    font-size: 0.8rem;
+    color: var(--pp-text-secondary);
+}
+
+/* ========================================
+   TWO-COLUMN LAYOUT
+   ======================================== */
+
+.pp-content-columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+}
+
+.pp-column {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+/* ========================================
+   CARDS
+   ======================================== */
+
+.pp-card {
+    background: var(--pp-bg-surface);
+    border: 1px solid var(--pp-border);
+    border-radius: var(--pp-radius-lg);
+    overflow: hidden;
+    box-shadow: var(--pp-shadow-sm);
+}
+
+.pp-card-header {
+    padding: 14px 16px;
+    background: var(--pp-bg-soft);
+    border-bottom: 1px solid var(--pp-border);
+}
+
+.pp-card-header h3 {
+    margin: 0;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--pp-text-primary);
+}
+
+.pp-card-body {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* ========================================
+   SUMMARY ITEMS
+   ======================================== */
+
+.pp-summary {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.pp-summary-item {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+    font-size: 0.85rem;
+}
+
+.pp-summary-item span:first-child {
+    color: var(--pp-text-secondary);
+    font-weight: 500;
+}
+
+.pp-summary-value {
+    font-weight: 500;
+    color: var(--pp-text-primary);
+    text-align: right;
+    word-break: break-word;
+}
+
+/* ========================================
+   TASK LIST
+   ======================================== */
+
+.pp-task-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    background: var(--pp-border);
+}
+
+.pp-task-item {
+    background: var(--pp-bg-surface);
+    padding: 10px 12px;
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    font-size: 0.85rem;
+    color: var(--pp-text-primary);
+}
+
+/* ========================================
+   ACTIVITY FEED
+   ======================================== */
+
+.pp-activity-feed {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.pp-activity-item {
+    border-left: 2px solid var(--pp-accent);
+    padding-left: 12px;
+}
+
+.pp-activity-content p {
+    margin: 0 0 4px 0;
+    font-size: 0.85rem;
+    color: var(--pp-text-primary);
+}
+
+.pp-activity-content span {
+    font-size: 0.7rem;
+    color: var(--pp-text-tertiary);
+}
+
+/* ========================================
+   MILESTONE / THREAD LIST
+   ======================================== */
+
+.pp-milestone-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.pp-milestone-item {
+    padding: 8px 0;
+    border-bottom: 1px solid var(--pp-border);
+}
+
+.pp-milestone-content {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.pp-milestone-title {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--pp-text-primary);
+}
+
+.pp-milestone-date {
+    font-size: 0.7rem;
+    color: var(--pp-text-tertiary);
+}
+
+/* ========================================
+   FILE LIST
+   ======================================== */
+
+.pp-file-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.pp-file-item {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+    font-size: 0.8rem;
+    padding: 8px;
+    background: var(--pp-bg-lighter);
+    border-radius: var(--pp-radius-md);
+}
+
+/* ========================================
+   RESPONSIVE
+   ======================================== */
+
+@media (max-width: 1024px) {
+    .pp-content-columns {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+}
+
+@media (max-width: 768px) {
+    .pp-main-content {
+        padding: 16px;
+        gap: 12px;
+    }
+
+    .pp-top-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .pp-overview-header {
+        flex-direction: column;
+    }
+
+    .pp-project-basic-info h1 {
+        font-size: 1.2rem;
+    }
+
+    .pp-stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+
+    .pp-form-group {
+        width: 100%;
+    }
+
+    .pp-summary-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .pp-summary-value {
+        text-align: left;
+    }
+}
+
+@media (max-width: 480px) {
+    .pp-main-content {
+        padding: 12px;
+    }
+
+    .pp-stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .pp-overview-actions {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .pp-overview-actions .pp-btn {
+        width: 100%;
+        justify-content: center;
+    }
+}

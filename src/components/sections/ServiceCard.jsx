@@ -31,10 +31,9 @@ function ServiceCard({ service }) {
         <Link href={`/services/application/${service.id}`} className="wc-btn-secondary">
           View Details
         </Link>
-         {/* FIXED: Changed 'service' to 'template' and 'source' to 'templates' */}
         <AddToQuoteButton 
            item={service} 
-          source="templates" 
+          source="appServices" 
            className="wc-btn-secondary wc-btn-large"
           />
       </div>

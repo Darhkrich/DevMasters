@@ -1,6 +1,7 @@
 "use client";
 import SelectedServicesSummary from '@/components/common/SelectedServicesSummary';
 import Link from "next/link";
+
 export default function Navbar() {
   return (
     <header className="dc-navbar">
@@ -22,7 +23,7 @@ export default function Navbar() {
 
         {/* Actions */}
         <div className="dc-navbar__actions">
-          <Link href="/login" className="dc-btn dc-btn--ghost">
+          <Link href="/dashboard" className="dc-btn dc-btn--ghost">
             Client Portal
           </Link>
 

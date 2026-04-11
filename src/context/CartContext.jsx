@@ -5,6 +5,25 @@ import React, { createContext, useContext, useState, useEffect, useCallback } fr
 
 const CartContext = createContext();
 
+function readStoredJson(key, fallback) {
+  if (typeof window === 'undefined') {
+    return fallback;
+  }
+
+  const rawValue = window.localStorage.getItem(key);
+  if (!rawValue) {
+    return fallback;
+  }
+
+  try {
+    return JSON.parse(rawValue);
+  } catch (error) {
+    console.error(`Error loading ${key}:`, error);
+    window.localStorage.removeItem(key);
+    return fallback;
+  }
+}
+
 export const useCart = () => {
   const context = useContext(CartContext);
   if (!context) {
@@ -14,44 +33,9 @@ export const useCart = () => {
 };
 
 export const CartProvider = ({ children }) => {
-  const [cart, setCart] = useState([]);
-  const [formData, setFormData] = useState({});
-  const [builderSelections, setBuilderSelections] = useState({});
-
-  // Load from localStorage on mount
-  useEffect(() => {
-    const savedCart = localStorage.getItem('serviceQuoteCart');
-    const savedForm = localStorage.getItem('quoteFormData');
-    const savedBuilder = localStorage.getItem('builderSelections');
-    
-    if (savedCart) {
-      try {
-        setCart(JSON.parse(savedCart));
-      } catch (e) {
-        console.error('Error loading cart:', e);
-        // Clear corrupted data
-        localStorage.removeItem('serviceQuoteCart');
-      }
-    }
-    
-    if (savedForm) {
-      try {
-        setFormData(JSON.parse(savedForm));
-      } catch (e) {
-        console.error('Error loading form:', e);
-        localStorage.removeItem('quoteFormData');
-      }
-    }
-    
-    if (savedBuilder) {
-      try {
-        setBuilderSelections(JSON.parse(savedBuilder));
-      } catch (e) {
-        console.error('Error loading builder:', e);
-        localStorage.removeItem('builderSelections');
-      }
-    }
-  }, []);
+  const [cart, setCart] = useState(() => readStoredJson('serviceQuoteCart', []));
+  const [formData, setFormData] = useState(() => readStoredJson('quoteFormData', {}));
+  const [builderSelections, setBuilderSelections] = useState(() => readStoredJson('builderSelections', {}));
 
   // Save to localStorage
   useEffect(() => {

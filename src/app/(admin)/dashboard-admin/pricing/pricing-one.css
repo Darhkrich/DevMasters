@@ -1,0 +1,359 @@
+/* =========================================================
+   ADMIN PRICING PAGE – PREFIXED CLASSES (ap-*)
+   ADAPTED FOR SIDEBAR INTEGRATION
+   ========================================================= */
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", "Roboto", "Segoe UI", sans-serif;
+    background: var(--ap-bg-main);
+    color: var(--ap-text-primary);
+    transition: background 0.3s ease, color 0.3s ease;
+}
+
+:root {
+    /* Light Mode Variables */
+    --ap-bg-main: #f8f9fc;
+    --ap-bg-surface: #ffffff;
+    --ap-bg-soft: #f3f4f7;
+    --ap-bg-lighter: #eef0f5;
+    --ap-border: #e1e4eb;
+    
+    --ap-accent: #0066ff;
+    --ap-accent-light: #e6f0ff;
+    --ap-accent-dark: #0052cc;
+    
+    --ap-text-primary: #0f1419;
+    --ap-text-secondary: #5f6d7b;
+    --ap-text-tertiary: #8b95a5;
+    
+    --ap-danger: #ef4444;
+    --ap-danger-dark: #dc2626;
+    
+    --ap-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+    --ap-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
+    --ap-shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
+    
+    --ap-radius-md: 8px;
+    --ap-radius-lg: 12px;
+}
+
+[data-theme="dark"],
+.dark-mode {
+    /* Dark Mode Variables */
+    --ap-bg-main: #0d1117;
+    --ap-bg-surface: #1a202c;
+    --ap-bg-soft: #2d3748;
+    --ap-bg-lighter: #374151;
+    --ap-border: #3f4a5c;
+    
+    --ap-accent: #3b82f6;
+    --ap-accent-light: #1e3a8a;
+    --ap-accent-dark: #2563eb;
+    
+    --ap-text-primary: #f1f5f9;
+    --ap-text-secondary: #cbd5e1;
+    --ap-text-tertiary: #94a3b8;
+    
+    --ap-danger: #f87171;
+    --ap-danger-dark: #ef4444;
+    
+    --ap-shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.15);
+    --ap-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.2);
+    --ap-shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+/* ========================================
+   MAIN LAYOUT – SIDEBAR SPACE
+   ======================================== */
+
+.ap-container {
+    flex: 1;
+    background: var(--ap-bg-main);
+    min-height: 100vh;
+}
+
+.ap-main-content {
+    margin-left: 260px; /* match sidebar width */
+    padding: 20px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+}
+
+.ap-header {
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--ap-border);
+}
+
+.ap-header h1 {
+    margin: 0;
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: var(--ap-text-primary);
+}
+
+/* ========================================
+   SECTIONS
+   ======================================== */
+
+.ap-section {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.ap-section h2 {
+    margin: 0;
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: var(--ap-text-primary);
+}
+
+/* ========================================
+   CARDS
+   ======================================== */
+
+.ap-card {
+    background: var(--ap-bg-surface);
+    border: 1px solid var(--ap-border);
+    border-radius: var(--ap-radius-lg);
+    overflow: hidden;
+    box-shadow: var(--ap-shadow-sm);
+    padding: 20px;
+}
+
+.ap-card h3 {
+    margin: 0 0 16px 0;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--ap-text-primary);
+}
+
+.ap-card-item {
+    background: var(--ap-bg-surface);
+    border: 1px solid var(--ap-border);
+    border-radius: var(--ap-radius-lg);
+    padding: 16px;
+    transition: all 0.2s;
+    box-shadow: var(--ap-shadow-sm);
+}
+
+.ap-card-item:hover {
+    border-color: var(--ap-accent);
+    box-shadow: var(--ap-shadow-md);
+}
+
+.ap-card-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 12px;
+}
+
+/* ========================================
+   FORMS
+   ======================================== */
+
+.ap-form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+.ap-form-grid input,
+.ap-form-grid select,
+.ap-form-grid textarea {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid var(--ap-border);
+    border-radius: var(--ap-radius-md);
+    background: var(--ap-bg-lighter);
+    color: var(--ap-text-primary);
+    font-size: 0.85rem;
+    font-family: inherit;
+    outline: none;
+}
+
+.ap-form-grid input:focus,
+.ap-form-grid select:focus,
+.ap-form-grid textarea:focus {
+    border-color: var(--ap-accent);
+}
+
+.ap-form-grid textarea {
+    resize: vertical;
+}
+
+.ap-checkbox-group {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+}
+
+.ap-checkbox-group label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.85rem;
+    color: var(--ap-text-primary);
+    cursor: pointer;
+}
+
+.ap-form-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+}
+
+/* ========================================
+   BUTTONS
+   ======================================== */
+
+.ap-btn-primary,
+.ap-btn-secondary,
+.ap-btn-outline,
+.ap-btn-danger {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    border-radius: var(--ap-radius-md);
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: none;
+}
+
+.ap-btn-primary {
+    background: var(--ap-accent);
+    color: white;
+}
+
+.ap-btn-primary:hover {
+    background: var(--ap-accent-dark);
+}
+
+.ap-btn-secondary {
+    background: var(--ap-bg-soft);
+    color: var(--ap-text-primary);
+    border: 1px solid var(--ap-border);
+}
+
+.ap-btn-secondary:hover {
+    background: var(--ap-bg-lighter);
+    border-color: var(--ap-accent);
+    color: var(--ap-accent);
+}
+
+.ap-btn-outline {
+    background: transparent;
+    border: 1px solid var(--ap-border);
+    color: var(--ap-text-secondary);
+}
+
+.ap-btn-outline:hover {
+    border-color: var(--ap-accent);
+    color: var(--ap-accent);
+    background: var(--ap-bg-soft);
+}
+
+.ap-btn-danger {
+    background: rgba(239, 68, 68, 0.1);
+    color: var(--ap-danger);
+    border: 1px solid rgba(239, 68, 68, 0.25);
+}
+
+.ap-btn-danger:hover {
+    background: rgba(239, 68, 68, 0.2);
+    border-color: var(--ap-danger);
+}
+
+/* ========================================
+   LIST
+   ======================================== */
+
+.ap-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* ========================================
+   ERROR / LOADING
+   ======================================== */
+
+.ap-error {
+    background: rgba(239, 68, 68, 0.1);
+    border-left: 3px solid #ef4444;
+    padding: 12px 16px;
+    border-radius: var(--ap-radius-md);
+    color: #ef4444;
+    font-size: 0.85rem;
+    margin: 20px;
+}
+
+/* ========================================
+   RESPONSIVE
+   ======================================== */
+
+@media (max-width: 1024px) {
+    .ap-main-content {
+        margin-left: 0;
+        padding: 16px;
+        gap: 24px;
+    }
+}
+
+@media (max-width: 768px) {
+    .ap-main-content {
+        padding: 12px;
+        gap: 20px;
+    }
+
+    .ap-header h1 {
+        font-size: 1.4rem;
+    }
+
+    .ap-section h2 {
+        font-size: 1.2rem;
+    }
+
+    .ap-form-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .ap-checkbox-group {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .ap-form-actions {
+        flex-direction: column;
+    }
+
+    .ap-form-actions button {
+        width: 100%;
+    }
+
+    .ap-card-actions {
+        flex-direction: column;
+    }
+
+    .ap-card-actions button {
+        width: 100%;
+    }
+}

@@ -8,21 +8,22 @@ import UserLayoutContent from './components/UserLayoutContent';
 import './styles.css';
 // Preload all dashboard page CSS so layout renders correctly on client navigation
 
-import './dashboard/Project/dashboardproject.css';
 
-import './dashboard/UploadFile/upload.css';
-import './dashboard/Settings/setting.css';
-import './dashboard/Messages/message.css';
-import './dashboard/Support/styles.css';
-import './dashboard/Project-progress/styles.css';
+import NotificationBell from '@/components/NotificationBell';
+import DashboardGuard from '@/components/auth/DashboardGuard';
 
 
 export default function UserLayout({ children }) {
   return (
-    <div className="dashboard-container">
-      <Sidebar />
-      <MobileMenu />
-      <UserLayoutContent>{children}</UserLayoutContent>
-    </div>
+    <DashboardGuard>
+      <div className="dashboard-container">
+        <Sidebar />
+        <MobileMenu />
+        <NotificationBell />
+        <UserLayoutContent>{children}</UserLayoutContent>
+      </div>
+    </DashboardGuard>
   );
 }
+
+

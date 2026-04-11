@@ -2,8 +2,8 @@
 
 const mockUser = {
   id: "user_001",
-  name: "John Doe",
-  email: "john@example.com",
+  name: "Emma Smith",
+  email: "emma@example.com",
 };
 
 const DASHBOARD_KEY = `dashboard:${mockUser.id}`;

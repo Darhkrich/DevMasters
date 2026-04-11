@@ -1,199 +1,228 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import './BuilderSection.css';
-import { builderOptions } from '@/data/pricingBuilder';
-import AddToQuoteButton from '@/components/common/AddToQuoteButton';
+import { useEffect, useMemo, useState } from "react";
+import "./BuilderSection.css";
+import AddToQuoteButton from "@/components/common/AddToQuoteButton";
+import { fetchBuilderOptions } from "@/lib/boemApi";
+import { builderOptions as fallbackBuilderOptions } from "@/data/pricingBuilder";
 
-export default function BuilderSection({ onPackageSelect, onDashboardNavigate }) {
-  // State for builder calculator
-  const [builderCategories, setBuilderCategories] = useState({
-    web: false,
-    app: false,
-    ai: false
-  });
-  
-  const [builderSelections, setBuilderSelections] = useState({
-    webBase: 'none',
-    appBase: 'none',
-    aiBase: 'none',
-    webExtras: [],
-    appExtras: [],
-    aiExtras: [],
-    priority: 'speed'
-  });
-  
-  const [builderTotal, setBuilderTotal] = useState(0);
-  const [builderBreakdown, setBuilderBreakdown] = useState([]);
-  const [notification, setNotification] = useState({ visible: false, message: '' });
+const defaultCategoryState = {
+  web: false,
+  app: false,
+  ai: false,
+};
 
-  // Handle builder category toggle
+const defaultSelectionState = {
+  webBase: "",
+  appBase: "",
+  aiBase: "",
+  webExtras: [],
+  appExtras: [],
+  aiExtras: [],
+  priority: "speed",
+};
+
+function findOption(options = [], value) {
+  return options.find((option) => option.value === value) || null;
+}
+
+export default function BuilderSection({ onDashboardNavigate }) {
+  const [builderOptions, setBuilderOptions] = useState(fallbackBuilderOptions);
+  const [builderCategories, setBuilderCategories] = useState(defaultCategoryState);
+  const [builderSelections, setBuilderSelections] = useState(defaultSelectionState);
+  const [notification, setNotification] = useState({ visible: false, message: "" });
+  const [loading, setLoading] = useState(true);
+  const [dataError, setDataError] = useState("");
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const loadBuilderOptions = async () => {
+      try {
+        const groupedOptions = await fetchBuilderOptions();
+        if (!isMounted) {
+          return;
+        }
+
+        setBuilderOptions(groupedOptions);
+        setDataError("");
+      } catch (error) {
+        if (!isMounted) {
+          return;
+        }
+
+        setBuilderOptions(fallbackBuilderOptions);
+        setDataError("Live builder options could not be loaded, so local pricing logic is being used.");
+      } finally {
+        if (isMounted) {
+          setLoading(false);
+        }
+      }
+    };
+
+    loadBuilderOptions();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    setBuilderSelections((previousSelections) => ({
+      ...previousSelections,
+      priority: builderOptions.priority?.[0]?.value || previousSelections.priority,
+    }));
+  }, [builderOptions.priority]);
+
   const handleBuilderCategoryToggle = (category) => {
-    setBuilderCategories(prev => {
-      const newValue = !prev[category];
-      
-      if (!newValue) {
-        setBuilderSelections(prevSelections => ({
-          ...prevSelections,
-          [`${category}Base`]: 'none',
-          [`${category}Extras`]: []
+    setBuilderCategories((previousCategories) => {
+      const isActive = !previousCategories[category];
+
+      if (!isActive) {
+        setBuilderSelections((previousSelections) => ({
+          ...previousSelections,
+          [`${category}Base`]: "",
+          [`${category}Extras`]: [],
         }));
       }
-      
+
       return {
-        ...prev,
-        [category]: newValue
+        ...previousCategories,
+        [category]: isActive,
       };
     });
   };
 
-  // Handle builder base selection
   const handleBuilderBaseSelect = (category, value) => {
-    setBuilderSelections(prev => ({
-      ...prev,
-      [`${category}Base`]: value
+    setBuilderSelections((previousSelections) => ({
+      ...previousSelections,
+      [`${category}Base`]: value,
     }));
   };
 
-  // Handle builder extra toggle
   const handleBuilderExtraToggle = (category, value) => {
-    setBuilderSelections(prev => {
+    setBuilderSelections((previousSelections) => {
       const extrasKey = `${category}Extras`;
-      const currentExtras = prev[extrasKey];
-      
+      const currentExtras = previousSelections[extrasKey];
+
       if (currentExtras.includes(value)) {
         return {
-          ...prev,
-          [extrasKey]: currentExtras.filter(item => item !== value)
-        };
-      } else {
-        return {
-          ...prev,
-          [extrasKey]: [...currentExtras, value]
+          ...previousSelections,
+          [extrasKey]: currentExtras.filter((item) => item !== value),
         };
       }
+
+      return {
+        ...previousSelections,
+        [extrasKey]: [...currentExtras, value],
+      };
     });
   };
 
-  // Handle priority selection
   const handlePrioritySelect = (value) => {
-    setBuilderSelections(prev => ({
-      ...prev,
-      priority: value
+    setBuilderSelections((previousSelections) => ({
+      ...previousSelections,
+      priority: value,
     }));
   };
 
-  // Calculate builder total
-  useEffect(() => {
-    let total = 0;
+  const builderSummary = useMemo(() => {
     const breakdown = [];
+    let subtotal = 0;
 
-    // Calculate web total
-    if (builderCategories.web) {
-      const webBase = builderOptions.web.base.find(opt => opt.value === builderSelections.webBase);
-      if (webBase && webBase.price > 0) {
-        total += webBase.price;
-        breakdown.push({ label: 'Website base', price: webBase.price });
+    ["web", "app", "ai"].forEach((category) => {
+      if (!builderCategories[category]) {
+        return;
       }
 
-      // Web extras
-      builderSelections.webExtras.forEach(extraValue => {
-        const extra = builderOptions.web.extras.find(opt => opt.value === extraValue);
-        if (extra) {
-          total += extra.price;
-          breakdown.push({ label: extra.label, price: extra.price });
-        }
-      });
-    }
+      const base = findOption(
+        builderOptions[category]?.base,
+        builderSelections[`${category}Base`],
+      );
 
-    // Calculate app total
-    if (builderCategories.app) {
-      const appBase = builderOptions.app.base.find(opt => opt.value === builderSelections.appBase);
-      if (appBase && appBase.price > 0) {
-        total += appBase.price;
-        breakdown.push({ label: 'App base', price: appBase.price });
+      if (base) {
+        subtotal += Number(base.price || 0);
+        breakdown.push({
+          label: `${category.toUpperCase()} base: ${base.label}`,
+          price: Number(base.price || 0),
+        });
       }
 
-      // App extras
-      builderSelections.appExtras.forEach(extraValue => {
-        const extra = builderOptions.app.extras.find(opt => opt.value === extraValue);
-        if (extra) {
-          total += extra.price;
-          breakdown.push({ label: extra.label, price: extra.price });
+      builderSelections[`${category}Extras`].forEach((extraValue) => {
+        const extra = findOption(builderOptions[category]?.extras, extraValue);
+        if (!extra) {
+          return;
         }
+
+        subtotal += Number(extra.price || 0);
+        breakdown.push({
+          label: `${category.toUpperCase()} extra: ${extra.label}`,
+          price: Number(extra.price || 0),
+        });
       });
-    }
+    });
 
-    // Calculate AI total
-    if (builderCategories.ai) {
-      const aiBase = builderOptions.ai.base.find(opt => opt.value === builderSelections.aiBase);
-      if (aiBase && aiBase.price > 0) {
-        total += aiBase.price;
-        breakdown.push({ label: 'AI base', price: aiBase.price });
-      }
-
-      // AI extras
-      builderSelections.aiExtras.forEach(extraValue => {
-        const extra = builderOptions.ai.extras.find(opt => opt.value === extraValue);
-        if (extra) {
-          total += extra.price;
-          breakdown.push({ label: extra.label, price: extra.price });
-        }
-      });
-    }
-
-    setBuilderTotal(total);
-    setBuilderBreakdown(breakdown);
-  }, [builderCategories, builderSelections]);
-
-  // Handle save custom package
-  const handleSaveCustomPackage = () => {
+    const priority = findOption(builderOptions.priority, builderSelections.priority);
+    const multiplier = Number(priority?.multiplier || 1);
+    const total = Math.round(subtotal * multiplier * 100) / 100;
     const selectedTypes = Object.entries(builderCategories)
-      .filter(([_, isChecked]) => isChecked)
+      .filter(([, selected]) => selected)
       .map(([category]) => category);
 
-    const builderData = {
-      id: `custom-builder-${Date.now()}`,
-      category: 'custom-builder',
-      title: 'Custom Package Request',
-      types: selectedTypes,
-      priority: builderSelections.priority,
-      estimateTotal: builderTotal,
-      breakdown: builderBreakdown,
-      price: builderTotal.toString(),
-      subtitle: `Custom package with ${selectedTypes.map(t => t).join(', ')}`
+    const selectionId = [
+      ...selectedTypes,
+      builderSelections.webBase,
+      builderSelections.appBase,
+      builderSelections.aiBase,
+      ...builderSelections.webExtras,
+      ...builderSelections.appExtras,
+      ...builderSelections.aiExtras,
+      builderSelections.priority,
+    ]
+      .filter(Boolean)
+      .join("-");
+
+    return {
+      subtotal,
+      multiplier,
+      total,
+      breakdown,
+      selectedTypes,
+      priority,
+      item: {
+        id: selectionId ? `custom-package-${selectionId}` : "custom-package-empty",
+        title: "Custom Package Request",
+        description: `Custom DevMasters package covering ${selectedTypes.join(", ") || "multiple services"}.`,
+        price: total,
+        priority: priority?.label || builderSelections.priority,
+        types: selectedTypes,
+        breakdown,
+        deliveryTime: "Custom schedule",
+      },
     };
+  }, [builderCategories, builderOptions, builderSelections]);
 
-    // Call parent handler
-    if (onPackageSelect) {
-      onPackageSelect(builderData);
-    }
+  const canAddToQuote = builderSummary.breakdown.length > 0;
 
-    // Show notification
+  const handlePackageAdded = () => {
     setNotification({
       visible: true,
-      message: `✅ Your custom package has been added to your client dashboard.`
+      message: "Your custom package has been added to your quote request.",
     });
-    
-    setTimeout(() => {
-      setNotification({ visible: false, message: '' });
-    }, 7000);
-  };
 
-  // Helper function to capitalize
-  const capitalize = (str) => {
-    if (!str) return '';
-    return str.charAt(0).toUpperCase() + str.slice(1);
+    window.setTimeout(() => {
+      setNotification({ visible: false, message: "" });
+    }, 5000);
   };
 
   return (
     <section className="builder-section">
-      {/* Notification */}
       {notification.visible && (
         <div className="builder-notification builder-notification--visible">
           <span>{notification.message}</span>
-          <br/>
-          <span>Go to your <a href="/dashboard">client dashboard</a> to check it out.</span>
+          <br />
+          <span>
+            Continue to your <a href="/Checkout">quote checkout</a> whenever you&apos;re ready.
+          </span>
         </div>
       )}
 
@@ -201,26 +230,25 @@ export default function BuilderSection({ onPackageSelect, onDashboardNavigate })
         <div>
           <h2>Build your own package</h2>
           <p>
-            Choose exactly what you need across websites, apps and AI automation. 
+            Choose exactly what you need across websites, apps and AI automation.
             See your estimated cost update in real time before you request the package.
           </p>
+          {dataError && <p className="builder-hint">{dataError}</p>}
         </div>
         <div className="builder-badge">Live estimate calculator</div>
       </header>
 
       <div className="builder-card">
-        {/* LEFT COLUMN: Options */}
         <div className="builder-column builder-options">
           <h3>1. What do you need?</h3>
-          <h4> One-time payment for development</h4>
+          <h4>One-time payment for development</h4>
           <p className="builder-hint">
             Pick one or more categories and then customize the options below.
           </p>
 
-          {/* Categories selection */}
           <div className="builder-category-group">
             {Object.entries(builderCategories).map(([category, isChecked]) => (
-              <label key={category} className={`builder-category ${isChecked ? 'active' : ''}`}>
+              <label key={category} className={`builder-category ${isChecked ? "active" : ""}`}>
                 <input
                   type="checkbox"
                   className="builder-cat-input"
@@ -228,173 +256,96 @@ export default function BuilderSection({ onPackageSelect, onDashboardNavigate })
                   onChange={() => handleBuilderCategoryToggle(category)}
                 />
                 <span>
-                  <i className={`fas fa-${category === 'web' ? 'globe' : category === 'app' ? 'mobile-alt' : 'robot'}`}></i>
-                  {category === 'web' ? ' Website / Landing page' : category === 'app' ? ' Web or mobile app' : ' AI automation & workflows'}
+                  <i
+                    className={`fas fa-${
+                      category === "web" ? "globe" : category === "app" ? "mobile-alt" : "robot"
+                    }`}
+                  ></i>
+                  {category === "web"
+                    ? " Website / Landing page"
+                    : category === "app"
+                      ? " Web or mobile app"
+                      : " AI automation & workflows"}
                 </span>
               </label>
             ))}
           </div>
 
-          {/* Website options */}
-          <div 
-            className={`builder-options-group ${builderCategories.web ? 'visible' : ''}`} 
-            data-group="web"
-          >
-            <h4>Website options</h4>
-            <p className="builder-hint">
-              Choose how advanced your website should be.
-            </p>
+          {["web", "app", "ai"].map((category) => (
+            <div
+              key={category}
+              className={`builder-options-group ${builderCategories[category] ? "visible" : ""}`}
+              data-group={category}
+            >
+              <h4>
+                {category === "web"
+                  ? "Website options"
+                  : category === "app"
+                    ? "Web & mobile app options"
+                    : "AI automation options"}
+              </h4>
+              <p className="builder-hint">
+                {category === "web"
+                  ? "Choose how advanced your website should be."
+                  : category === "app"
+                    ? "Choose how complex your app should be."
+                    : "Decide how much you want to automate with AI."}
+              </p>
 
-            <div className="builder-options-grid">
-              {builderOptions.web.base.map((option) => (
-                <label
-                  key={option.value}
-                  className={`builder-option-pill ${builderSelections.webBase === option.value ? 'active' : ''}`}
-                >
-                  <input
-                    type="radio"
-                    name="webBase"
-                    value={option.value}
-                    checked={builderSelections.webBase === option.value}
-                    onChange={() => handleBuilderBaseSelect('web', option.value)}
-                  />
-                  <span>{option.label}</span>
-                  <span className="builder-option-price">
-                    {option.price === 0 ? 'Included' : `+ $${option.price}`}
-                  </span>
-                </label>
-              ))}
+              <div className="builder-options-grid">
+                {(builderOptions[category]?.base || []).map((option) => (
+                  <label
+                    key={option.value}
+                    className={`builder-option-pill ${
+                      builderSelections[`${category}Base`] === option.value ? "active" : ""
+                    }`}
+                  >
+                    <input
+                      type="radio"
+                      name={`${category}Base`}
+                      value={option.value}
+                      checked={builderSelections[`${category}Base`] === option.value}
+                      onChange={() => handleBuilderBaseSelect(category, option.value)}
+                    />
+                    <span>{option.label}</span>
+                    <span className="builder-option-price">
+                      {Number(option.price || 0) === 0 ? "Included" : `+ $${option.price}`}
+                    </span>
+                  </label>
+                ))}
+              </div>
+
+              <h5>Extras</h5>
+              <div className="builder-options-grid">
+                {(builderOptions[category]?.extras || []).map((extra) => (
+                  <label
+                    key={extra.value}
+                    className={`builder-option-pill ${
+                      builderSelections[`${category}Extras`].includes(extra.value) ? "active" : ""
+                    }`}
+                  >
+                    <input
+                      type="checkbox"
+                      className="builder-extra-input"
+                      checked={builderSelections[`${category}Extras`].includes(extra.value)}
+                      onChange={() => handleBuilderExtraToggle(category, extra.value)}
+                    />
+                    <span>{extra.label}</span>
+                    <span className="builder-option-price">+ ${extra.price}</span>
+                  </label>
+                ))}
+              </div>
             </div>
+          ))}
 
-            <h5>Extras</h5>
-            <div className="builder-options-grid">
-              {builderOptions.web.extras.map((extra) => (
-                <label
-                  key={extra.value}
-                  className={`builder-option-pill ${builderSelections.webExtras.includes(extra.value) ? 'active' : ''}`}
-                >
-                  <input
-                    type="checkbox"
-                    className="builder-extra-input"
-                    checked={builderSelections.webExtras.includes(extra.value)}
-                    onChange={() => handleBuilderExtraToggle('web', extra.value)}
-                  />
-                  <span>{extra.label}</span>
-                  <span className="builder-option-price">+ ${extra.price}</span>
-                </label>
-              ))}
-            </div>
-          </div>
-
-          {/* App options */}
-          <div 
-            className={`builder-options-group ${builderCategories.app ? 'visible' : ''}`} 
-            data-group="app"
-          >
-            <h4>Web & mobile app options</h4>
-            <p className="builder-hint">
-              Choose how complex your app should be.
-            </p>
-
-            <div className="builder-options-grid">
-              {builderOptions.app.base.map((option) => (
-                <label
-                  key={option.value}
-                  className={`builder-option-pill ${builderSelections.appBase === option.value ? 'active' : ''}`}
-                >
-                  <input
-                    type="radio"
-                    name="appBase"
-                    value={option.value}
-                    checked={builderSelections.appBase === option.value}
-                    onChange={() => handleBuilderBaseSelect('app', option.value)}
-                  />
-                  <span>{option.label}</span>
-                  <span className="builder-option-price">
-                    {option.price === 0 ? 'Included' : `+ $${option.price}`}
-                  </span>
-                </label>
-              ))}
-            </div>
-
-            <h5>Extras</h5>
-            <div className="builder-options-grid">
-              {builderOptions.app.extras.map((extra) => (
-                <label
-                  key={extra.value}
-                  className={`builder-option-pill ${builderSelections.appExtras.includes(extra.value) ? 'active' : ''}`}
-                >
-                  <input
-                    type="checkbox"
-                    className="builder-extra-input"
-                    checked={builderSelections.appExtras.includes(extra.value)}
-                    onChange={() => handleBuilderExtraToggle('app', extra.value)}
-                  />
-                  <span>{extra.label}</span>
-                  <span className="builder-option-price">+ ${extra.price}</span>
-                </label>
-              ))}
-            </div>
-          </div>
-
-          {/* AI options */}
-          <div 
-            className={`builder-options-group ${builderCategories.ai ? 'visible' : ''}`} 
-            data-group="ai"
-          >
-            <h4>AI automation options</h4>
-            <p className="builder-hint">
-              Decide how much you want to automate with AI.
-            </p>
-
-            <div className="builder-options-grid">
-              {builderOptions.ai.base.map((option) => (
-                <label
-                  key={option.value}
-                  className={`builder-option-pill ${builderSelections.aiBase === option.value ? 'active' : ''}`}
-                >
-                  <input
-                    type="radio"
-                    name="aiBase"
-                    value={option.value}
-                    checked={builderSelections.aiBase === option.value}
-                    onChange={() => handleBuilderBaseSelect('ai', option.value)}
-                  />
-                  <span>{option.label}</span>
-                  <span className="builder-option-price">
-                    {option.price === 0 ? 'Included' : `+ $${option.price}`}
-                  </span>
-                </label>
-              ))}
-            </div>
-
-            <h5>Extras</h5>
-            <div className="builder-options-grid">
-              {builderOptions.ai.extras.map((extra) => (
-                <label
-                  key={extra.value}
-                  className={`builder-option-pill ${builderSelections.aiExtras.includes(extra.value) ? 'active' : ''}`}
-                >
-                  <input
-                    type="checkbox"
-                    className="builder-extra-input"
-                    checked={builderSelections.aiExtras.includes(extra.value)}
-                    onChange={() => handleBuilderExtraToggle('ai', extra.value)}
-                  />
-                  <span>{extra.label}</span>
-                  <span className="builder-option-price">+ ${extra.price}</span>
-                </label>
-              ))}
-            </div>
-          </div>
-
-          {/* Priority */}
-          <h3>2. What's your priority?</h3>
+          <h3>2. What&apos;s your priority?</h3>
           <div className="builder-options-grid">
-            {builderOptions.priority.map((option) => (
+            {(builderOptions.priority || []).map((option) => (
               <label
                 key={option.value}
-                className={`builder-option-pill ${builderSelections.priority === option.value ? 'active' : ''}`}
+                className={`builder-option-pill ${
+                  builderSelections.priority === option.value ? "active" : ""
+                }`}
               >
                 <input
                   type="radio"
@@ -409,7 +360,6 @@ export default function BuilderSection({ onPackageSelect, onDashboardNavigate })
           </div>
         </div>
 
-        {/* RIGHT COLUMN: Live summary & total */}
         <div className="builder-column builder-summary">
           <h3>3. Your package summary</h3>
           <p className="builder-hint">
@@ -420,40 +370,56 @@ export default function BuilderSection({ onPackageSelect, onDashboardNavigate })
             <div className="builder-total-label">Estimated total</div>
             <div className="builder-total-value">
               <span className="builder-total-currency">$</span>
-              <span className="builder-total-number">{builderTotal}</span>
+              <span className="builder-total-number">{builderSummary.total.toLocaleString()}</span>
             </div>
             <div className="builder-total-note">
-              One-time setup estimate • Taxes & recurring costs (hosting, tools) may be separate.
+              Priority multiplier: x{builderSummary.multiplier.toFixed(2)}
             </div>
           </div>
 
           <div className="builder-breakdown">
             <h4>Breakdown</h4>
             <ul className="builder-breakdown-list">
-              {builderBreakdown.length === 0 ? (
-                <li><span>No paid options selected yet.</span><span>$0</span></li>
+              {builderSummary.breakdown.length === 0 ? (
+                <li>
+                  <span>No paid options selected yet.</span>
+                  <span>$0</span>
+                </li>
               ) : (
-                builderBreakdown.map((item, index) => (
+                builderSummary.breakdown.map((item, index) => (
                   <li key={index}>
-                    <span>{item.label}</span><span>${item.price}</span>
+                    <span>{item.label}</span>
+                    <span>${item.price}</span>
                   </li>
                 ))
               )}
             </ul>
           </div>
-         
-              
-{/* FIXED: Changed 'service' to 'template' and 'source' to 'templates' */}
-            <AddToQuoteButton 
-              item={builderCategories} 
-              source="templates" 
+
+          {canAddToQuote ? (
+            <AddToQuoteButton
+              item={builderSummary.item}
+              source="builderPackage"
               className="wc-btn-ghost wc-btn-customize"
+              onAdded={handlePackageAdded}
             />
+          ) : (
+            <button type="button" className="wc-btn-ghost wc-btn-customize" disabled>
+              Select options to add this package
+            </button>
+          )}
 
           <p className="builder-footnote">
-            When you save, we'll send this custom package to your client dashboard. You'll be able to 
-            review, ask questions and confirm before anything starts.
+            When you add this package, it goes straight into your  quote cart for checkout.
           </p>
+
+          {onDashboardNavigate && (
+            <button type="button" className="wc-btn-ghost wc-btn-customize" onClick={onDashboardNavigate}>
+              Go to Quote Checkout
+            </button>
+          )}
+
+          {loading && <p className="builder-hint">Loading live builder options...</p>}
         </div>
       </div>
     </section>

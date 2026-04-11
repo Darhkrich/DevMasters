@@ -157,14 +157,14 @@ const SettingsDashboard = () => {
   };
 
   return (
-    <main className="main-content">
+    <main className="admin-main-content">
       {/* Header */}
-      <header className="dashboard-header">
-        <div className="header-left">
+      <header className="admin-dashboard-header">
+        <div className="admin-header-left">
           <h1>System Settings</h1>
-          <p className="welcome-text">Manage your platform configuration and preferences</p>
+          <p className="admin-welcome-text">Manage your platform configuration and preferences</p>
         </div>
-        <div className="header-right">
+        <div className="admin-header-right">
           <div className="security-badge">
             <span>🔒</span>
             Admin Access Only
@@ -190,8 +190,8 @@ const SettingsDashboard = () => {
       <div className="settings-content">
         {/* General Settings Tab */}
         <div className={`settings-tab-content ${activeTab === 'general' ? 'active' : ''}`} id="general-tab">
-          <div className="content-card">
-            <div className="card-header">
+          <div className="admin-content-card">
+            <div className="admin-card-header">
               <h2>General Settings</h2>
             </div>
             
@@ -336,8 +336,8 @@ const SettingsDashboard = () => {
 
         {/* Payments Settings Tab */}
         <div className={`settings-tab-content ${activeTab === 'payments' ? 'active' : ''}`} id="payments-tab">
-          <div className="content-card">
-            <div className="card-header">
+          <div className="admin-content-card">
+            <div className="admin-card-header">
               <h2>Payment Settings</h2>
             </div>
             
@@ -512,8 +512,8 @@ const SettingsDashboard = () => {
 
         {/* Email Settings Tab */}
         <div className={`settings-tab-content ${activeTab === 'email' ? 'active' : ''}`} id="email-tab">
-          <div className="content-card">
-            <div className="card-header">
+          <div className="admin-content-card">
+            <div className="admin-card-header">
               <h2>Email & Notifications</h2>
             </div>
             
@@ -673,8 +673,8 @@ const SettingsDashboard = () => {
         {/* Placeholder tabs */}
         {['security', 'templates', 'advanced'].includes(activeTab) && (
           <div className={`settings-tab-content active`} id={`${activeTab}-tab`}>
-            <div className="content-card">
-              <div className="card-header">
+            <div className="admin-content-card">
+              <div className="admin-card-header">
                 <h2>
                   {activeTab === 'security' && 'Security Settings'}
                   {activeTab === 'templates' && 'Template Settings'}

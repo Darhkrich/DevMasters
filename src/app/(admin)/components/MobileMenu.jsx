@@ -1,99 +1,126 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import './MobileMenu.css';
+import { 
+  FaUsers, FaEnvelope, 
+  FaCog, FaHeadset, FaShoppingCart, FaFileSignature, 
+  FaFolderOpen, FaBars, FaTimes, FaTasks, FaUserCog
+} from 'react-icons/fa';
+import { getStoredUser } from '@/lib/boemApi';
+import './MobileMenu.css'; // adjust path
 
-const MobileMenu = () => {
-  const [isOpen, setIsOpen] = useState(false);
+const managerNavItems = [
+  { name: 'Dashboard-Overview', path: '/dashboard-admin', icon: <FaHeadset /> },
+  { name: 'Team-Control', path: '/dashboard-admin/team', icon: <FaUserCog /> },
+  { name: 'My-Workspace', path: '/dashboard-admin/workspace', icon: <FaTasks /> },
+  { name: 'Orders', path: '/dashboard-admin/orders', icon: <FaShoppingCart /> },
+  { name: 'Inquiries', path: '/dashboard-admin/inquiries', icon: <FaFileSignature /> },
+  { name: 'Clients', path: '/dashboard-admin/clients', icon: <FaUsers /> },
+  { name: 'Messages', path: '/dashboard-admin/Messages', icon: <FaEnvelope /> },
+
+  { name: 'Automation-sevices', path: '/dashboard-admin/automation', icon: <FaCog /> },
+  { name: 'Pricing-Packages', path: '/dashboard-admin/pricing', icon: <FaHeadset /> },
+  { name: 'Websites-Templates', path: '/dashboard-admin/templates', icon: <FaCog /> },
+  { name: 'Applications-Services', path: '/dashboard-admin/services', icon: <FaHeadset /> },
+
+  { name: 'Files-Receive', path: '/dashboard-admin/FilesReceive', icon: <FaFolderOpen /> },
+ 
+
+  { name: 'Settings', path: '/dashboard-admin/Settings', icon: <FaCog /> },
+  { name: 'Support', path: '/dashboard-admin/Support', icon: <FaHeadset /> },
+  { name: 'Notifications', path: '/dashboard-admin/notifications', icon: <FaHeadset /> },
+ 
+];
+
+const staffNavItems = [
+  { name: 'Dashboard-Overview', path: '/dashboard-admin', icon: <FaHeadset /> },
+  { name: 'My-Workspace', path: '/dashboard-admin/workspace', icon: <FaTasks /> },
+  { name: 'Settings', path: '/dashboard-admin/Settings', icon: <FaCog /> },
+];
+
+export default function AdminSidebar() {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const pathname = usePathname();
-  
-  const navItems = [
-    { id: 1, name: 'Dashboard', icon: '📊', href: '/dashboard' },
-    { id: 2, name: 'Orders', icon: '📦', href: '/orders' },
-    { id: 3, name: 'Templates', icon: '🎨', href: '/templates' },
-    { id: 4, name: 'Clients', icon: '👥', href: '/clients' },
-    { id: 5, name: 'Team', icon: '👨‍💼', href: '/team' },
-    { id: 6, name: 'Settings', icon: '⚙', href: '/settings' },
-  ];
+  const currentUser = getStoredUser();
+  const navItems = currentUser?.can_manage_staff_workspace ? managerNavItems : staffNavItems;
 
-  const toggleMenu = () => {
-    setIsOpen(!isOpen);
-  };
-
-  const closeMenu = () => {
-    setIsOpen(false);
-  };
+  // Prevent body scroll when mobile menu is open
+  useEffect(() => {
+    if (isMobileMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+  }, [isMobileMenuOpen]);
 
   return (
     <>
-      {/* Mobile Menu Toggle Button */}
-      <button 
-        className="mobile-menu-toggle"
-        onClick={toggleMenu}
-        aria-label={isOpen ? 'Close menu' : 'Open menu'}
-        aria-expanded={isOpen}
-      >
-        <div className={`hamburger ${isOpen ? 'open' : ''}`}>
-          <span></span>
-          <span></span>
-          <span></span>
-        </div>
-      </button>
+      {/* Mobile header with hamburger */}
+      <header className="admin-mobile-header">
+        <button
+          className="admin-hamburger"
+          onClick={() => setIsMobileMenuOpen(true)}
+          aria-label="Open menu"
+        >
+          <FaBars />
+        </button>
+        <div className="admin-mobile-logo">Admin Panel</div>
+      </header>
 
-      {/* Mobile Menu Overlay */}
-      <div 
-        className={`mobile-menu-overlay ${isOpen ? 'open' : ''}`}
-        onClick={closeMenu}
-      />
+      {/* Desktop sidebar */}
+      <aside className="admin-desktop-sidebar">
+        <div className="admin-sidebar-header">Admin Panel</div>
+        <nav className="admin-sidebar-nav">
+          {navItems.map((item) => (
+            <Link
+              key={item.path}
+              href={item.path}
+              className={`admin-nav-link ${pathname === item.path ? 'active' : ''}`}
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              <span className="admin-icon">{item.icon}</span>
+              <span className="admin-label">{item.name}</span>
+            </Link>
+          ))}
+        </nav>
+      </aside>
 
-      {/* Mobile Menu Container */}
-      <nav className={`mobile-menu ${isOpen ? 'open' : ''}`}>
-        <div className="mobile-menu-header">
-          <div className="logo">
-            <h2>Admin Panel</h2>
-          </div>
-          <button 
-            className="mobile-menu-close"
-            onClick={closeMenu}
+      {/* Mobile drawer */}
+      <div className={`admin-mobile-drawer ${isMobileMenuOpen ? 'open' : ''}`}>
+        <div className="admin-drawer-header">
+          <span>Admin Panel</span>
+          <button
+            className="admin-close-btn"
+            onClick={() => setIsMobileMenuOpen(false)}
             aria-label="Close menu"
           >
-            <span>✕</span>
+            <FaTimes />
           </button>
         </div>
+        <nav className="admin-drawer-nav">
+          {navItems.map((item) => (
+            <Link
+              key={item.path}
+              href={item.path}
+              className={`admin-nav-link ${pathname === item.path ? 'active' : ''}`}
+            >
+              <span className="admin-icon">{item.icon}</span>
+              <span className="admin-label">{item.name}</span>
+            </Link>
+          ))}
+        </nav>
+      </div>
 
-        <ul className="mobile-nav-links">
-          {navItems.map((item) => {
-            const isActive = pathname === item.href || pathname.startsWith(`${item.href}/`);
-            
-            return (
-              <li 
-                key={item.id} 
-                className={isActive ? 'active' : ''}
-                onClick={closeMenu}
-              >
-                <Link href={item.href}>
-                  <span className="mobile-nav-icon">{item.icon}</span>
-                  <span className="mobile-nav-text">{item.name}</span>
-                  {isActive && (
-                    <span className="mobile-nav-indicator">
-                      <svg width="8" height="8" viewBox="0 0 8 8" fill="none">
-                        <circle cx="4" cy="4" r="4" fill="currentColor" />
-                      </svg>
-                    </span>
-                  )}
-                </Link>
-              </li>
-            );
-          })}
-        </ul>
-
-        {/* Bottom Safe Area for iOS */}
-        <div className="mobile-menu-safe-area" />
-      </nav>
+      {/* Overlay for mobile drawer */}
+      {isMobileMenuOpen && (
+        <div
+          className="admin-drawer-overlay"
+          onClick={() => setIsMobileMenuOpen(false)}
+        />
+      )}
     </>
   );
-};
+}
 
-export default MobileMenu;

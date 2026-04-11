@@ -1,0 +1,301 @@
+/* =========================================================
+   ADMIN TEMPLATES PAGE – PREFIXED CLASSES (at-*)
+   ADAPTED FOR SIDEBAR INTEGRATION
+   ========================================================= */
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", "Roboto", "Segoe UI", sans-serif;
+    background: var(--at-bg-main);
+    color: var(--at-text-primary);
+    transition: background 0.3s ease, color 0.3s ease;
+}
+
+:root {
+    /* Light Mode Variables */
+    --at-bg-main: #f8f9fc;
+    --at-bg-surface: #ffffff;
+    --at-bg-soft: #f3f4f7;
+    --at-bg-lighter: #eef0f5;
+    --at-border: #e1e4eb;
+    
+    --at-accent: #0066ff;
+    --at-accent-light: #e6f0ff;
+    --at-accent-dark: #0052cc;
+    
+    --at-text-primary: #0f1419;
+    --at-text-secondary: #5f6d7b;
+    --at-text-tertiary: #8b95a5;
+    
+    --at-danger: #ef4444;
+    --at-danger-dark: #dc2626;
+    
+    --at-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+    --at-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
+    --at-shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
+    
+    --at-radius-md: 8px;
+    --at-radius-lg: 12px;
+}
+
+[data-theme="dark"],
+.dark-mode {
+    /* Dark Mode Variables */
+    --at-bg-main: #0d1117;
+    --at-bg-surface: #1a202c;
+    --at-bg-soft: #2d3748;
+    --at-bg-lighter: #374151;
+    --at-border: #3f4a5c;
+    
+    --at-accent: #3b82f6;
+    --at-accent-light: #1e3a8a;
+    --at-accent-dark: #2563eb;
+    
+    --at-text-primary: #f1f5f9;
+    --at-text-secondary: #cbd5e1;
+    --at-text-tertiary: #94a3b8;
+    
+    --at-danger: #f87171;
+    --at-danger-dark: #ef4444;
+    
+    --at-shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.15);
+    --at-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.2);
+    --at-shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+/* ========================================
+   MAIN LAYOUT – SIDEBAR SPACE
+   ======================================== */
+
+.at-container {
+    flex: 1;
+    background: var(--at-bg-main);
+    min-height: 100vh;
+}
+
+.at-main-content {
+    margin-left: 260px; /* match sidebar width */
+    padding: 20px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+/* ========================================
+   HEADER
+   ======================================== */
+
+.at-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--at-border);
+}
+
+.at-header h1 {
+    margin: 0;
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: var(--at-text-primary);
+}
+
+/* ========================================
+   BUTTONS
+   ======================================== */
+
+.at-btn-primary,
+.at-btn-outline,
+.at-btn-danger {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    border-radius: var(--at-radius-md);
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: none;
+    text-decoration: none;
+}
+
+.at-btn-primary {
+    background: var(--at-accent);
+    color: white;
+}
+
+.at-btn-primary:hover {
+    background: var(--at-accent-dark);
+}
+
+.at-btn-outline {
+    background: transparent;
+    border: 1px solid var(--at-border);
+    color: var(--at-text-secondary);
+}
+
+.at-btn-outline:hover {
+    border-color: var(--at-accent);
+    color: var(--at-accent);
+    background: var(--at-bg-soft);
+}
+
+.at-btn-danger {
+    background: rgba(239, 68, 68, 0.1);
+    color: var(--at-danger);
+    border: 1px solid rgba(239, 68, 68, 0.25);
+}
+
+.at-btn-danger:hover {
+    background: rgba(239, 68, 68, 0.2);
+    border-color: var(--at-danger);
+}
+
+/* ========================================
+   LIST OF TEMPLATES
+   ======================================== */
+
+.at-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.at-card {
+    background: var(--at-bg-surface);
+    border: 1px solid var(--at-border);
+    border-radius: var(--at-radius-lg);
+    padding: 16px;
+    transition: all 0.2s;
+    box-shadow: var(--at-shadow-sm);
+}
+
+.at-card:hover {
+    border-color: var(--at-accent);
+    box-shadow: var(--at-shadow-md);
+}
+
+.at-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.at-card-header strong {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--at-text-primary);
+}
+
+.at-badge-group {
+    display: flex;
+    gap: 8px;
+}
+
+.at-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    font-weight: 500;
+}
+
+.at-badge-draft {
+    background: rgba(245, 158, 11, 0.1);
+    color: #f59e0b;
+    border: 1px solid rgba(245, 158, 11, 0.25);
+}
+
+.at-badge-inactive {
+    background: rgba(107, 114, 128, 0.1);
+    color: #6b7280;
+    border: 1px solid rgba(107, 114, 128, 0.25);
+}
+
+.at-card-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 16px;
+    font-size: 0.85rem;
+    color: var(--at-text-secondary);
+}
+
+.at-card-actions {
+    display: flex;
+    gap: 10px;
+}
+
+/* ========================================
+   ERROR / LOADING
+   ======================================== */
+
+.at-error {
+    background: rgba(239, 68, 68, 0.1);
+    border-left: 3px solid #ef4444;
+    padding: 12px 16px;
+    border-radius: var(--at-radius-md);
+    color: #ef4444;
+    font-size: 0.85rem;
+    margin: 20px;
+}
+
+/* ========================================
+   RESPONSIVE
+   ======================================== */
+
+@media (max-width: 1024px) {
+    .at-main-content {
+        margin-left: 0;
+        padding: 16px;
+        gap: 20px;
+    }
+}
+
+@media (max-width: 768px) {
+    .at-main-content {
+        padding: 12px;
+        gap: 16px;
+    }
+
+    .at-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .at-header h1 {
+        font-size: 1.4rem;
+    }
+
+    .at-card-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .at-card-actions {
+        flex-direction: column;
+    }
+
+    .at-card-actions a,
+    .at-card-actions button {
+        width: 100%;
+        text-align: center;
+    }
+}

@@ -725,54 +725,7 @@ button {
   }
 }
 
-/* ========== LIGHT MODE OPTION (if you ever want it) ========== */
-/* Add class="sp2__wc-light" to <body> to switch */
 
-body.sp2__wc-light {
-  background: #f5f6fa;
-  color: #05050b;
-}
-body.sp2__wc-light .sp2__wc-services-page::before {
-  background: linear-gradient(
-    to bottom,
-    rgba(255, 255, 255, 0.85),
-    rgba(245, 246, 250, 0.9),
-    transparent
-  );
-}
-body.sp2__wc-light .sp2__wc-hero-demo-card,
-body.sp2__wc-light .sp2__service,
-body.sp2__wc-light .sp2__wc-demo-window,
-body.sp2__wc-light .sp2__wc-demo-phone {
-  background: #ffffff;
-  border-color: rgba(0, 0, 0, 0.06);
-  box-shadow: 0 16px 38px rgba(0, 0, 0, 0.08);
-}
-body.sp2__wc-light .sp2__wc-services-nav-item {
-  background: rgba(255, 255, 255, 0.9);
-}
-body.sp2__wc-light .sp2__wc-services-nav-item:hover {
-  background: #ffffff;
-}
-body.sp2__wc-light .sp2__wc-service-section-header p,
-body.sp2__wc-light .sp2__wc-services-hero-text p,
-body.sp2__wc-light .sp2__wc-services-nav-item,
-body.sp2__wc-light .sp2__wc-pill,
-body.sp2__wc-light .sp2__wc-section-badge,
-body.sp2__wc-light .sp2__wc-service-demo p,
-body.sp2__wc-light .sp2__wc-service-meta {
-  color: rgba(0, 0, 0, 0.6);
-}
-body.sp2__wc-light .sp2__wc-demo-window-body--plain {
-  background: #f3f4fb;
-}
-body.sp2__wc-light .sp2__wc-demo-bubble--user {
-  background: #f3f4fb;
-}
-body.sp2__wc-light .sp2__wc-demo-bubble--system {
-  background: rgba(46, 204, 113, 0.12);
-  border-color: rgba(46, 204, 113, 0.4);
-}
 
 
 /* ===== AI Automation Page extra styles ===== */
@@ -1902,3 +1855,4 @@ body.sp2__wc-light .sp2__wc-demo-bubble--system {
     padding: 0 1rem;
   }
 }
+
