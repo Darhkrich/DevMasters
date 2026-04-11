@@ -45,36 +45,9 @@ export default function SelectedServicesSummary() {
     template: categorizedCart.template?.length || 0,
   };
 
-  const getCategoryLabel = (category) => {
-    switch (category) {
-      case 'web':
-        return 'Websites';
-      case 'app':
-        return 'Apps';
-      case 'ai':
-        return 'AI Automation';
-      case 'template':
-        return 'Templates';
-      default:
-        return category;
-    }
-  };
+ 
 
-  const getCategoryIcon = (category) => {
-    switch (category) {
-      case 'web':
-        return 'fas fa-globe';
-      case 'app':
-        return 'fas fa-mobile-alt';
-      case 'ai':
-        return 'fas fa-robot';
-      case 'template':
-        return 'fas fa-layer-group';
-      default:
-        return 'fas fa-cube';
-    }
-  };
-
+ 
   if (!mounted || cartCount === 0) {
     return (
       <div className="wc-services-summary wc-services-summary-empty">
@@ -100,25 +73,7 @@ export default function SelectedServicesSummary() {
         </div>
       </div>
 
-      {recentlyAdded && isVisible && (
-        <div className="wc-summary-recent">
-          Added {recentlyAdded.name || recentlyAdded.title || 'service'} to your request
-        </div>
-      )}
-
-      <div className="wc-summary-body">
-        {Object.entries(categoryCounts)
-          .filter(([, count]) => count > 0)
-          .map(([category, count]) => (
-            <div key={category} className="wc-summary-category">
-              <span className="wc-summary-category-label">
-                <i className={getCategoryIcon(category)}></i>
-                {getCategoryLabel(category)}
-              </span>
-              <span className="wc-summary-category-count">{count}</span>
-            </div>
-          ))}
-      </div>
+   
 
      
     </div>
