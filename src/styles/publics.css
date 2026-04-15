@@ -131,7 +131,7 @@
 
 
 /* =====================================
-   MOBILE MENU — MOBILE ONLY (FIXED)
+   MOBILE MENU — MOBILE ONLY (FIXED + COMPACT)
 ===================================== */
 
 /* Hide MobileMenu on desktop */
@@ -144,7 +144,7 @@
 }
 
 /* ===============================
-   TOP BAR
+   TOP BAR — COMPACT
 ================================ */
 .mm-topbar {
   position: sticky;
@@ -155,7 +155,7 @@
   align-items: center;
   justify-content: space-between;
 
-  padding: 14px 18px;
+  padding: 10px 16px;           /* reduced from 14px 18px */
 
   background: linear-gradient(
     135deg,
@@ -167,9 +167,9 @@
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-/* Logo */
+/* Logo — slightly smaller */
 .mm-logo {
-  font-size: 1.4rem;
+  font-size: 1.25rem;           /* reduced from 1.4rem */
   font-weight: 700;
 
   background: linear-gradient(135deg, #3b82f6, #22c55e);
@@ -178,11 +178,11 @@
 }
 
 /* ===============================
-   HAMBURGER (FIXED)
+   HAMBURGER — COMPACT
 ================================ */
 .mm-toggle {
-  width: 24px;                  /* slightly larger touch target */
-  height: 20px;
+  width: 20px;                  /* reduced from 24px */
+  height: 16px;                 /* reduced from 20px */
 
   display: flex;
   flex-direction: column;
@@ -195,16 +195,16 @@
 }
 
 .mm-toggle span {
-  height: 2.5px;                /* thinner lines for modern look */
+  height: 2px;                  /* reduced from 2.5px */
   width: 100%;
   background: #000000;
-  border-radius: 4px;
+  border-radius: 2px;
   transition: all 0.3s ease;
 }
 
-/* Animate to X — values corrected for 20px container */
+/* Animate to X — values adjusted for 16px container */
 .mm-toggle.active span:nth-child(1) {
-  transform: translateY(8.75px) rotate(45deg);
+  transform: translateY(7px) rotate(45deg);   /* (16 - 2) / 2 = 7 */
 }
 
 .mm-toggle.active span:nth-child(2) {
@@ -212,11 +212,11 @@
 }
 
 .mm-toggle.active span:nth-child(3) {
-  transform: translateY(-8.75px) rotate(-45deg);
+  transform: translateY(-7px) rotate(-45deg);
 }
 
 /* ===============================
-   OVERLAY (FIXED)
+   OVERLAY
 ================================ */
 .mm-overlay {
   position: fixed;
@@ -236,7 +236,7 @@
 }
 
 /* ===============================
-   SLIDE PANEL (FIXED)
+   SLIDE PANEL — FULL HEIGHT
 ================================ */
 .mm-panel {
   position: fixed;
@@ -271,7 +271,7 @@
 }
 
 /* ===============================
-   NAV LINKS (FIXED)
+   NAV LINKS — FIXED ALIGNMENT
 ================================ */
 .mm-nav {
   display: flex;
