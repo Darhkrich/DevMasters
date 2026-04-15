@@ -59,7 +59,6 @@
 }
 
 .dc-navbar__links a {
- 
   position: relative;
   font-size: 1.20rem;
   font-weight: 750;
@@ -131,11 +130,8 @@
 }
 
 
-
-
-
 /* =====================================
-   MOBILE MENU — MOBILE ONLY
+   MOBILE MENU — MOBILE ONLY (FIXED)
 ===================================== */
 
 /* Hide MobileMenu on desktop */
@@ -182,11 +178,11 @@
 }
 
 /* ===============================
-   HAMBURGER
+   HAMBURGER (FIXED)
 ================================ */
 .mm-toggle {
-  width: 9px;
-  height: 9px;
+  width: 24px;                  /* slightly larger touch target */
+  height: 20px;
 
   display: flex;
   flex-direction: column;
@@ -195,19 +191,20 @@
   background: none;
   border: none;
   cursor: pointer;
+  padding: 0;
 }
 
 .mm-toggle span {
-  height: 3px;
+  height: 2.5px;                /* thinner lines for modern look */
   width: 100%;
   background: #000000;
-  border-radius: 3px;
+  border-radius: 4px;
   transition: all 0.3s ease;
 }
 
-/* Animate to X */
+/* Animate to X — values corrected for 20px container */
 .mm-toggle.active span:nth-child(1) {
-  transform: translateY(12px) rotate(45deg);
+  transform: translateY(8.75px) rotate(45deg);
 }
 
 .mm-toggle.active span:nth-child(2) {
@@ -215,16 +212,16 @@
 }
 
 .mm-toggle.active span:nth-child(3) {
-  transform: translateY(-12px) rotate(-45deg);
+  transform: translateY(-8.75px) rotate(-45deg);
 }
 
 /* ===============================
-   OVERLAY
+   OVERLAY (FIXED)
 ================================ */
 .mm-overlay {
   position: fixed;
   inset: 0;
-  z-index: 1400;
+  z-index: 1450;                /* sits between topbar (1500) and panel (1501) */
 
   background: rgba(0, 0, 0, 0.6);
   opacity: 0;
@@ -239,7 +236,7 @@
 }
 
 /* ===============================
-   SLIDE PANEL
+   SLIDE PANEL (FIXED)
 ================================ */
 .mm-panel {
   position: fixed;
@@ -249,7 +246,8 @@
 
   width: 85%;
   max-width: 340px;
-  height: 75vh;
+  height: 100vh;                /* full height instead of 75vh */
+  max-height: 100dvh;           /* dynamic viewport height support */
 
   background: linear-gradient(
     180deg,
@@ -265,6 +263,7 @@
   justify-content: space-between;
 
   padding: 32px 24px;
+  overflow-y: auto;             /* allows scrolling if content is too long */
 }
 
 .mm-panel.open {
@@ -272,13 +271,14 @@
 }
 
 /* ===============================
-   NAV LINKS
+   NAV LINKS (FIXED)
 ================================ */
 .mm-nav {
   display: flex;
   flex-direction: column;
   gap: 22px;
-  margin-left: 50px;
+  margin-left: 0;               /* removed the 50px push */
+  padding: 0;
 }
 
 .mm-nav a {
@@ -333,7 +333,6 @@
 .mm-btn--primary:hover {
   transform: translateY(-1px);
 }
-
 
 
 /* =====================================
@@ -433,7 +432,6 @@
 }
 
 
-
 /* ===============================
    MOBILE FOOTER FIX
 ================================ */
@@ -494,5 +492,3 @@
     font-size: 0.8rem;
   }
 }
-
-

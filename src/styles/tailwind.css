@@ -1,0 +1,170 @@
+@layer theme, base, components, utilities;
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/utilities.css" layer(utilities);
+
+:root {
+  --ds-bg: #080f1e;
+  --ds-surface: #111c32;
+  --ds-surface-soft: #172642;
+  --ds-text: #e8efff;
+  --ds-muted: #9cafcc;
+  --ds-border: #263a5f;
+  --ds-brand: #2f6df6;
+  --ds-brand-strong: #1d4ed8;
+  --ds-accent: #0f9d92;
+}
+
+[data-theme="light"] {
+  --ds-bg: #f3f7ff;
+  --ds-surface: #ffffff;
+  --ds-surface-soft: #eef3ff;
+  --ds-text: #0f172a;
+  --ds-muted: #475569;
+  --ds-border: #d7e2f5;
+  --ds-brand: #2563eb;
+  --ds-brand-strong: #1e40af;
+  --ds-accent: #0f766e;
+}
+
+@theme inline {
+  --color-bg: var(--ds-bg);
+  --color-surface: var(--ds-surface);
+  --color-surface-soft: var(--ds-surface-soft);
+  --color-text: var(--ds-text);
+  --color-muted: var(--ds-muted);
+  --color-border: var(--ds-border);
+  --color-brand: var(--ds-brand);
+  --color-brand-strong: var(--ds-brand-strong);
+  --color-accent: var(--ds-accent);
+
+  --font-sans: var(--font-ui), "Segoe UI", "Helvetica Neue", sans-serif;
+  --font-display: var(--font-title), "Segoe UI", sans-serif;
+
+  --radius-card: 1rem;
+  --radius-input: 0.75rem;
+  --radius-button: 0.75rem;
+
+  --shadow-card: 0 14px 36px rgb(2 8 23 / 0.18);
+  --shadow-soft: 0 8px 20px rgb(2 8 23 / 0.12);
+
+  --text-display-1: clamp(2rem, 4vw, 3.4rem);
+  --text-display-2: clamp(1.6rem, 3.1vw, 2.6rem);
+  --text-heading: clamp(1.25rem, 2vw, 1.8rem);
+  --text-body: clamp(0.97rem, 1.2vw, 1.06rem);
+  --text-small: 0.875rem;
+
+  --spacing-18: 4.5rem;
+  --spacing-22: 5.5rem;
+  --spacing-30: 7.5rem;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background-color: var(--ds-bg);
+    color: var(--ds-text);
+    font-family: var(--font-ui), "Segoe UI", "Helvetica Neue", sans-serif;
+    text-rendering: optimizeLegibility;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    margin: 0;
+    font-family: var(--font-title), "Segoe UI", sans-serif;
+    letter-spacing: -0.015em;
+    color: var(--ds-text);
+  }
+
+  p {
+    margin: 0;
+    color: var(--ds-muted);
+  }
+
+  * {
+    box-sizing: border-box;
+    border-color: var(--ds-border);
+  }
+}
+
+@layer components {
+  .layout-shell {
+    @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
+  }
+
+  .section-wrap {
+    padding-block: clamp(3.2rem, 7.5vw, 6.4rem);
+  }
+
+  .eyebrow {
+    @apply inline-flex items-center gap-2 rounded-full border border-border/90 bg-surface-soft px-3 py-1 text-xs font-semibold uppercase tracking-[0.08em] text-muted;
+  }
+
+  .heading-xl {
+    @apply font-display font-semibold text-display-1 leading-tight text-text;
+  }
+
+  .heading-lg {
+    @apply font-display font-semibold text-display-2 leading-tight text-text;
+  }
+
+  .heading-md {
+    @apply font-display font-semibold text-heading leading-tight text-text;
+  }
+
+  .lead-text {
+    @apply text-body leading-relaxed text-muted;
+  }
+
+  .btn,
+  .btn-primary,
+  .btn-secondary,
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 rounded-button px-5 py-3 text-sm font-semibold transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/30 disabled:pointer-events-none disabled:opacity-50;
+  }
+
+  .btn-primary {
+    @apply bg-brand text-white hover:bg-brand-strong;
+  }
+
+  .btn-secondary {
+    @apply bg-surface text-text hover:bg-surface-soft;
+  }
+
+  .btn-ghost {
+    @apply border border-border bg-transparent text-text hover:bg-surface-soft;
+  }
+
+  .card {
+    @apply rounded-card border border-border bg-surface shadow-card;
+  }
+
+  .card-soft {
+    @apply rounded-card border border-border bg-surface-soft shadow-soft;
+  }
+
+  .field-label {
+    @apply mb-2 block text-sm font-medium text-text;
+  }
+
+  .field-input {
+    @apply w-full rounded-input border border-border bg-surface-soft px-4 py-3 text-sm text-text placeholder:text-muted focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/25;
+  }
+
+  .field-select {
+    @apply w-full rounded-input border border-border bg-surface-soft px-4 py-3 text-sm text-text focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/25;
+  }
+
+  .field-textarea {
+    @apply w-full rounded-input border border-border bg-surface-soft px-4 py-3 text-sm text-text placeholder:text-muted focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/25;
+  }
+}
