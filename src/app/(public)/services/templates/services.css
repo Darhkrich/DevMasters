@@ -1,11 +1,9 @@
 /* =====================================
-   SERVICES TEMPLATES PAGE (FIXED)
-   - Responsive category chips
-   - Improved text contrast
-   - Proper grid sizing on mobile
-   - iOS stable (no backdrop-filter issues)
+   SERVICES TEMPLATES PAGE — FINAL CSS
+   All fixes applied. iOS-safe. Responsive.
 ===================================== */
 
+/* ========== VARIABLES & RESET ========== */
 :root {
   --bg-dark: #000000;
   --bg-card: rgba(28, 28, 30, 0.85);
@@ -30,9 +28,15 @@
   padding: 0;
 }
 
+html,
+body {
+  overflow-x: hidden;
+  width: 100%;
+}
+
 body {
   background-color: var(--bg-dark);
-  background-image: 
+  background-image:
     radial-gradient(circle at 10% 20%, rgba(41, 151, 255, 0.12) 0%, transparent 40%),
     radial-gradient(circle at 90% 80%, rgba(175, 82, 222, 0.1) 0%, transparent 40%);
   color: var(--text-primary);
@@ -42,96 +46,6 @@ body {
   min-height: 100vh;
 }
 
-
-/* =====================================
-   FIX: Horizontal Scroll & Image Fit
-   Add this to your templates CSS
-===================================== */
-
-/* Prevent page-level horizontal overflow */
-html, body {
-  overflow-x: hidden;
-  width: 100%;
-}
-
-.sp3__wc-services-page {
-  overflow-x: hidden;
-  width: 100%;
-}
-
-/* Constrain filter chips container to prevent overflow */
-.sp3__wc-templates-filter-chips {
-  max-width: 100%;
-  overflow-x: auto;
-  overflow-y: hidden;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none; /* Firefox */
-  padding-bottom: 4px;
-}
-
-.sp3__wc-templates-filter-chips::-webkit-scrollbar {
-  display: none; /* Chrome/Safari */
-}
-
-/* Ensure chips don't shrink and cause layout issues */
-.sp3__wc-t-chip {
-  flex-shrink: 0;
-}
-
-/* Image thumbnail fixes */
-.sp3__wc-template-thumb {
-  width: 100%;
-  aspect-ratio: 16 / 9;
-  background: #151515;
-  overflow: hidden;
-  position: relative;
-}
-
-.sp3__wc-template-thumb img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;          /* Ensures image fills area without distortion */
-  display: block;
-}
-
-/* Alternative aspect ratio for mobile if needed */
-@media (max-width: 480px) {
-  .sp3__wc-template-thumb {
-    aspect-ratio: 4 / 3;
-  }
-}
-
-/* =====================================
-   FIX: Template Thumbnail Image Fill (Mobile)
-===================================== */
-
-@media (max-width: 767px) {
-  .sp3__wc-template-thumb {
-    width: 100%;
-    aspect-ratio: 16 / 9;          /* or 4/3, whichever matches your design */
-    overflow: hidden;
-    background: #151515;            /* fallback while loading */
-    display: flex;                 /* ensures img inside fills */
-    align-items: center;
-    justify-content: center;
-  }
-
-  .sp3__wc-template-thumb img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;             /* critical for filling the box */
-    display: block;
-    min-width: 100%;
-    min-height: 100%;
-  }
-
-  /* Remove any unintended padding/margin from parent containers */
-  .sp3__wc-template-card,
-  .sp3__wc-template-thumb div {
-    padding: 0 !important;
-    margin: 0 !important;
-  }
-}
 button,
 input {
   font-family: inherit;
@@ -144,6 +58,8 @@ input {
   padding: 28px clamp(16px, 4vw, 32px) 72px;
   max-width: min(1180px, 100%);
   margin: 0 auto;
+  overflow-x: hidden;
+  width: 100%;
 }
 
 /* ========== HERO SECTION ========== */
@@ -174,7 +90,7 @@ input {
   align-items: center;
   gap: 8px;
   padding: 4px 12px;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid var(--border-glass);
   font-size: 0.7rem;
@@ -250,7 +166,7 @@ input {
   color: var(--text-secondary);
 }
 
-/* Filter chips + toggle */
+/* Filter chips container */
 .sp3__wc-templates-filters {
   display: flex;
   justify-content: space-between;
@@ -261,8 +177,18 @@ input {
 
 .sp3__wc-templates-filter-chips {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   gap: 8px;
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  padding-bottom: 4px;
+}
+
+.sp3__wc-templates-filter-chips::-webkit-scrollbar {
+  display: none;
 }
 
 .sp3__wc-t-chip {
@@ -279,6 +205,7 @@ input {
   transition: background 0.18s ease, border-color 0.18s ease, color 0.18s ease;
   min-height: 44px;
   white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .sp3__wc-t-chip i {
@@ -392,16 +319,25 @@ input {
   border-color: rgba(255, 255, 255, 0.15);
 }
 
+/* ========== THUMBNAIL — PERFECT IMAGE FIT ========== */
 .sp3__wc-template-thumb {
+  position: relative;
   width: 100%;
   aspect-ratio: 16 / 9;
-  background: #151515;
-  position: relative;
   overflow: hidden;
-  background: radial-gradient(circle at top, #4a90ff, #151728);
+  background: #151515;
+}
+
+.sp3__wc-template-thumb div {
+  position: static;
+  width: 100%;
+  height: 100%;
 }
 
 .sp3__wc-template-thumb img {
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -413,6 +349,7 @@ input {
   transform: scale(1.05);
 }
 
+/* ========== CARD BODY ========== */
 .sp3__wc-template-body {
   padding: 1.5rem;
   display: flex;
@@ -594,7 +531,7 @@ input {
     grid-template-columns: 1fr;
     gap: 24px;
   }
-  
+
   .sp3__wc-services-hero-demo {
     justify-content: flex-start;
   }
@@ -605,52 +542,45 @@ input {
     grid-template-columns: 1fr;
     gap: 1.5rem;
   }
-  
-  .sp3__wc-template-card {
-    margin: 0;
-  }
-  
+
   .sp3__wc-service-section-header {
     flex-direction: column;
     align-items: flex-start;
     gap: 12px;
   }
-  
+
   .sp3__wc-templates-filters {
     flex-direction: column;
     align-items: stretch;
   }
-  
-  .sp3__wc-templates-filter-chips {
-    overflow-x: auto;
-    flex-wrap: nowrap;
-    padding-bottom: 8px;
-    -webkit-overflow-scrolling: touch;
-  }
-  
+
   .sp3__wc-templates-toggle {
     align-self: flex-start;
   }
-  
+
   .sp3__wc-btn-primary1 {
     margin-left: 0;
     width: 100%;
   }
-  
+
   .sp3__wc-template-footer {
     flex-direction: column;
     align-items: stretch;
   }
-  
+
   .sp3__wc-template-actions {
     width: 100%;
     flex-direction: column;
   }
-  
+
   .sp3__wc-btn-primary,
   .sp3__wc-btn-ghost {
     width: 100%;
     text-align: center;
+  }
+
+  .sp3__wc-template-thumb {
+    aspect-ratio: 4 / 3;
   }
 }
 
@@ -658,19 +588,15 @@ input {
   .sp3__wc-services-page {
     padding: 16px 12px 48px;
   }
-  
+
   .sp3__wc-t-chip,
   .sp3__wc-t-view {
     font-size: 0.8rem;
     padding: 8px 12px;
   }
-  
+
   .sp3__wc-template-header h3 {
     font-size: 1.1rem;
-  }
-  
-  .sp3__wc-template-thumb {
-    aspect-ratio: 4 / 3;
   }
 }
 
