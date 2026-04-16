@@ -1,109 +1,94 @@
 /* =====================================
-   CHECKOUT HEADER COMPONENT CSS (STANDALONE)
-   Includes all variables & fixes
+   CHECKOUT HEADER – MOBILE FIRST
 ===================================== */
 
-/* ========== VARIABLES (CHECKOUT-ONLY) ========== */
-:root {
-  --gradient-blue-purple: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
-  --color-primary: #3b82f6;
-  --color-light: #ffffff;
-  --color-gray-300: #e5e7eb;
-  --color-gray-400: #b0b5bd;
-  --color-gray-500: #6b7280;
-  --color-gray-700: #374151;
-  --color-gray-800: #1e293b;
-  --border-radius-lg: 0.75rem;
-  --border-radius-xl: 1rem;
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-  --glass-bg: rgba(30, 41, 59, 0.95);
-  --glass-border: rgba(255, 255, 255, 0.1);
+.chk-header {
+  width: 100%;
+  margin-bottom: 24px;
+  padding-top: 8px;
 }
 
-/* ========== CHECKOUT HEADER ========== */
-.checkout-header {
-  margin-bottom: 2rem;
-  padding-top: 1rem;
-}
-
-/* ========== TITLE ========== */
-.checkout-title {
-  font-size: clamp(1.75rem, 5vw, 2rem);
+.chk-header-title {
+  font-size: 1.8rem;
   font-weight: 700;
-  color: var(--color-light);
-  margin-bottom: 0.5rem;
+  color: #ffffff;
+  margin-bottom: 8px;
   line-height: 1.2;
 }
 
-/* ========== SUBTITLE ========== */
-.checkout-subtitle {
-  font-size: clamp(0.875rem, 2vw, 1rem);
-  color: var(--color-gray-300);
-  margin-bottom: 1.5rem;
+@media (min-width: 640px) {
+  .chk-header-title {
+    font-size: 2rem;
+  }
+}
+
+.chk-header-subtitle {
+  font-size: 1rem;
+  color: #cbd5e1;
+  margin-bottom: 24px;
   line-height: 1.5;
 }
 
-/* ========== STATS GRID ========== */
-.stats-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
+/* Stats Grid */
+.chk-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
-@media (min-width: 640px) {
-  .stats-grid {
+@media (min-width: 480px) {
+  .chk-stats {
+    display: grid;
     grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
   }
 }
 
 @media (min-width: 768px) {
-  .stats-grid {
+  .chk-stats {
     grid-template-columns: repeat(3, 1fr);
   }
 }
 
-/* ========== STAT CARD ========== */
-.stat-card {
-  background: var(--glass-bg);
-  border-radius: var(--border-radius-lg);
-  border: 1px solid var(--glass-border);
-  padding: 1rem;
+/* Stat Card */
+.chk-stat-card {
+  background: #1e293b;
+  border-radius: 16px;
+  border: 1px solid #334155;
+  padding: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
-.stat-label {
+.chk-stat-label {
   font-size: 0.875rem;
-  color: var(--color-gray-400);
-  margin-bottom: 0.25rem;
+  color: #94a3b8;
+  margin-bottom: 8px;
 }
 
-.stat-value {
-  font-size: clamp(1.25rem, 4vw, 1.5rem);
+.chk-stat-value {
+  font-size: 1.5rem;
   font-weight: 700;
-  color: var(--color-light);
+  color: #ffffff;
   line-height: 1.2;
 }
 
-.stat-subvalue {
+.chk-stat-sub {
   font-size: 0.75rem;
-  color: var(--color-gray-500);
-  margin-top: 0.25rem;
+  color: #64748b;
+  margin-top: 6px;
 }
 
-/* ========== RESPONSIVE FINE-TUNING ========== */
+/* Responsive adjustments */
 @media (max-width: 480px) {
-  .checkout-header {
-    margin-bottom: 1.5rem;
+  .chk-header-title {
+    font-size: 1.6rem;
   }
-
-  .stat-card {
-    padding: 0.875rem;
+  
+  .chk-stat-card {
+    padding: 14px;
   }
-}
-
-/* ========== VISIBILITY FIX (iOS/ANDROID) ========== */
-.checkout-header,
-.stat-card {
-  opacity: 1 !important;
-  visibility: visible !important;
+  
+  .chk-stat-value {
+    font-size: 1.3rem;
+  }
 }

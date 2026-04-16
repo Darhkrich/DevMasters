@@ -3,6 +3,7 @@
 
 import { useState } from 'react';
 import './servicecard.css';
+
 export default function ServiceCard({ item, index, onRemove }) {
   const [expanded, setExpanded] = useState(false);
   
@@ -27,42 +28,38 @@ export default function ServiceCard({ item, index, onRemove }) {
   };
 
   return (
-    <div className="service-card">
-      <div className="service-card-header">
-        <div className="flex items-start gap-3">
+    <div className="chk-service">
+      <div className="chk-service-header">
+        <div className="chk-service-info">
           <div 
-            className="service-icon"
+            className="chk-service-icon"
             style={{ background: getCategoryColor(item.category) }}
           >
             {item.icon ? (
               <i className={item.icon}></i>
             ) : (
-              <span className="font-bold text-sm">
+              <span className="chk-service-icon-text">
                 {item.category?.charAt(0).toUpperCase()}
               </span>
             )}
           </div>
           
-          <div className="flex-1">
-            <div className="flex items-center gap-2 mb-1">
-              <span className="service-category">
+          <div className="chk-service-content">
+            <div className="chk-service-meta">
+              <span className="chk-service-category">
                 {getCategoryLabel(item.category)}
               </span>
-              <span className="text-xs px-2 py-0.5 rounded-full bg-gray-800 text-gray-400">
-                
-              </span>
+              <span className="chk-service-badge"></span>
             </div>
             
-            <h4 className="service-title">{item.title}</h4>
-            <p className="service-description">
-              {item.description}
-            </p>
+            <h4 className="chk-service-title">{item.title}</h4>
+            <p className="chk-service-desc">{item.description}</p>
           </div>
         </div>
         
         <button
           onClick={onRemove}
-          className="remove-service-btn"
+          className="chk-service-remove"
           title="Remove service"
         >
           <i className="fas fa-times"></i>
@@ -70,29 +67,29 @@ export default function ServiceCard({ item, index, onRemove }) {
       </div>
       
       {/* Features & Details */}
-      <div className="mt-4">
+      <div className="chk-service-expand">
         <button
           onClick={() => setExpanded(!expanded)}
-          className="service-details-toggle"
+          className="chk-service-toggle"
         >
           <span>{expanded ? 'Show less' : 'Show details'}</span>
-          <i className={`fas fa-chevron-${expanded ? 'up' : 'down'} text-xs`}></i>
+          <i className={`fas fa-chevron-${expanded ? 'up' : 'down'}`}></i>
         </button>
         
         {expanded && (
-          <div className="mt-3 space-y-3 animate-fadeIn">
+          <div className="chk-service-details">
             {item.features && item.features.length > 0 && (
-              <div>
-                <h5 className="text-sm font-medium text-gray-300 mb-2">Features:</h5>
-                <ul className="space-y-1">
+              <div className="chk-service-features">
+                <h5 className="chk-service-features-title">Features:</h5>
+                <ul className="chk-service-features-list">
                   {item.features.slice(0, 3).map((feature, idx) => (
-                    <li key={idx} className="service-feature">
-                      <i className="fas fa-check text-green-500 mt-0.5"></i>
+                    <li key={idx} className="chk-service-feature">
+                      <i className="fas fa-check"></i>
                       <span>{feature}</span>
                     </li>
                   ))}
                   {item.features.length > 3 && (
-                    <li className="text-xs text-gray-500">
+                    <li className="chk-service-feature-more">
                       +{item.features.length - 3} more features
                     </li>
                   )}
@@ -101,13 +98,13 @@ export default function ServiceCard({ item, index, onRemove }) {
             )}
             
             {item.deliveryTime && (
-              <div className="flex items-center gap-4 text-sm">
-                <div>
-                  <span className="text-gray-400">Delivery:</span>
-                  <span className="ml-2 font-medium">{item.deliveryTime}</span>
+              <div className="chk-service-delivery">
+                <div className="chk-service-delivery-info">
+                  <span className="chk-service-delivery-label">Delivery:</span>
+                  <span className="chk-service-delivery-value">{item.deliveryTime}</span>
                 </div>
                 {item.requiresDocuments && (
-                  <div className="px-2 py-0.5 bg-blue-600/20 text-blue-400 rounded-full text-xs">
+                  <div className="chk-service-docs-badge">
                     Requires documents
                   </div>
                 )}
@@ -118,14 +115,14 @@ export default function ServiceCard({ item, index, onRemove }) {
       </div>
       
       {/* Bottom Bar */}
-      <div className="service-footer">
+      <div className="chk-service-footer">
         <div>
           {item.price ? (
-            <div className="service-price">
+            <div className="chk-service-price">
               {item.priceType === 'monthly' ? '$' + item.price + '/mo' : '$' + item.price}
             </div>
           ) : (
-            <div className="text-gray-400 italic">Custom quote required</div>
+            <div className="chk-service-price-custom">Custom quote required</div>
           )}
         </div>
         
@@ -134,9 +131,9 @@ export default function ServiceCard({ item, index, onRemove }) {
             href={item.previewUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-sm text-blue-400 hover:text-blue-300 transition-colors"
+            className="chk-service-preview"
           >
-            <i className="fas fa-external-link-alt mr-1"></i>
+            <i className="fas fa-external-link-alt"></i>
             Preview
           </a>
         )}
