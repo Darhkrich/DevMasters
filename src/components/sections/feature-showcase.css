@@ -1,17 +1,18 @@
 /* =====================================
-   FEATURED SERVICES SECTION (iOS 16.3 SAFE)
+   DEVMASTERS FEATURE SHOWCASE
+   Prefix: dcfs- (no conflicts)
+   iOS 16.3+ Safe — solid backgrounds
 ===================================== */
 
 :root {
-  --fs-overlay-dark: rgba(0, 0, 0, 0.4);
-  --fs-card-bg: rgba(20, 30, 50, 0.7);    /* solid fallback color */
-  --fs-card-bg-fallback: rgba(20, 30, 50, 0.7);
-  --fs-card-border: rgba(255, 255, 255, 0.15);
-  --fs-glow-color: rgba(59, 130, 246, 0.25);
-  --fs-transition: 0.25s cubic-bezier(0.2, 0, 0, 1);
+  --dcfs-overlay-dark: rgba(0, 0, 0, 0.4);
+  --dcfs-card-bg: rgba(20, 30, 50, 0.75);
+  --dcfs-card-border: rgba(255, 255, 255, 0.15);
+  --dcfs-glow-color: rgba(59, 130, 246, 0.25);
+  --dcfs-transition: 0.25s cubic-bezier(0.2, 0, 0, 1);
 }
 
-.fs-section {
+.dcfs-section {
   position: relative;
   padding: clamp(3rem, 8vw, 6rem) clamp(1rem, 4vw, 2rem);
   background-image: url('/newback.jpg');
@@ -21,11 +22,10 @@
   background-attachment: scroll;
   color: #fff;
   overflow: hidden;
-  /* No isolation */
 }
 
-/* Simple dark overlay using ::before (this works reliably) */
-.fs-section::before {
+/* Dark overlay for text readability */
+.dcfs-section::before {
   content: '';
   position: absolute;
   inset: 0;
@@ -38,39 +38,38 @@
   pointer-events: none;
 }
 
-/* Glow effect */
-.fs-glow {
+.dcfs-glow {
   position: absolute;
   inset: -50%;
   background: radial-gradient(
     circle at 30% 40%,
-    var(--fs-glow-color),
+    var(--dcfs-glow-color),
     transparent 70%
   );
-  animation: glowMove 20s ease-in-out infinite;
+  animation: dcfsGlowMove 20s ease-in-out infinite;
   z-index: 0;
   pointer-events: none;
 }
 
-@keyframes glowMove {
+@keyframes dcfsGlowMove {
   0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.6; }
   33% { transform: translate(-5%, 8%) scale(1.1); opacity: 0.8; }
   66% { transform: translate(5%, -5%) scale(0.9); opacity: 0.5; }
 }
 
-.fs-container {
+.dcfs-container {
   max-width: 1200px;
   margin: 0 auto;
   position: relative;
   z-index: 2;
 }
 
-.fs-header {
+.dcfs-header {
   text-align: center;
   margin-bottom: clamp(2.5rem, 5vw, 4rem);
 }
 
-.fs-header h2 {
+.dcfs-header h2 {
   font-size: clamp(2rem, 6vw, 3rem);
   font-weight: 700;
   letter-spacing: -0.02em;
@@ -80,7 +79,7 @@
   color: #fff;
 }
 
-.fs-header p {
+.dcfs-header p {
   opacity: 0.95;
   max-width: 720px;
   margin: 0 auto;
@@ -89,79 +88,67 @@
   color: #fff;
 }
 
-.fs-grid {
+.dcfs-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
   gap: clamp(1.5rem, 3vw, 2.5rem);
 }
 
-.fs-card {
-  /* Use a solid background that works everywhere */
-  background: var(--fs-card-bg);
-  border: 1px solid var(--fs-card-border);
+.dcfs-card {
+  background: var(--dcfs-card-bg);
+  border: 1px solid var(--dcfs-card-border);
   border-radius: 24px;
   padding: clamp(1.5rem, 4vw, 2.5rem);
-  transition: transform var(--fs-transition),
-              box-shadow var(--fs-transition),
-              border-color var(--fs-transition);
+  transition: transform var(--dcfs-transition),
+              box-shadow var(--dcfs-transition),
+              border-color var(--dcfs-transition),
+              background var(--dcfs-transition);
   box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.4);
   color: #fff;
   will-change: transform;
   -webkit-tap-highlight-color: transparent;
-  /* No backdrop-filter — fallback for iOS */
+  /* No backdrop-filter for iOS stability */
 }
 
-/* Add backdrop-filter only for browsers that support it reliably */
-@supports (backdrop-filter: blur(16px)) and (not (-webkit-backdrop-filter: blur(16px))) {
-  /* Modern non‑WebKit browsers get glass effect */
-  .fs-card {
-    background: rgba(255, 255, 255, 0.06);
-    backdrop-filter: blur(16px);
-  }
-}
-
-/* For WebKit browsers that might have issues, we skip backdrop-filter entirely
-   and keep the solid background. */
-
-.fs-card:hover {
+.dcfs-card:hover {
   transform: translateY(-6px);
   box-shadow: 0 32px 64px -12px rgba(0, 0, 0, 0.6);
-  border-color: rgba(59, 130, 246, 0.4);
-  background: rgba(255, 255, 255, 0.12); /* slight lightening on hover */
+  border-color: rgba(59, 130, 246, 0.5);
+  background: rgba(30, 40, 60, 0.8);
 }
 
-.fs-card:active {
+.dcfs-card:active {
   transform: translateY(-2px);
   transition-duration: 0.1s;
 }
 
-.fs-icon {
+.dcfs-icon {
   font-size: clamp(2rem, 5vw, 3rem);
   margin-bottom: 1.25rem;
   display: inline-block;
   filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
 }
 
-.fs-card h3 {
+.dcfs-card h3 {
   font-size: clamp(1.25rem, 3vw, 1.5rem);
   font-weight: 600;
   margin-bottom: 0.75rem;
   color: #fff;
 }
 
-.fs-card p {
+.dcfs-card p {
   opacity: 0.9;
   line-height: 1.6;
   color: rgba(255, 255, 255, 0.95);
 }
 
-.fs-card ul {
+.dcfs-card ul {
   list-style: none;
   padding: 0;
   margin: 1.25rem 0 0;
 }
 
-.fs-card li {
+.dcfs-card li {
   opacity: 0.9;
   margin-bottom: 0.5rem;
   padding-left: 1.5rem;
@@ -171,7 +158,7 @@
   color: rgba(255, 255, 255, 0.95);
 }
 
-.fs-card li::before {
+.dcfs-card li::before {
   content: "▹";
   position: absolute;
   left: 0;
@@ -179,7 +166,7 @@
   font-weight: bold;
 }
 
-.fs-banner {
+.dcfs-banner {
   margin-top: clamp(2.5rem, 5vw, 4rem);
   text-align: center;
   padding: clamp(1.8rem, 5vw, 3rem) clamp(1.5rem, 4vw, 3rem);
@@ -187,16 +174,22 @@
   background: linear-gradient(135deg, #1e40af, #2563eb);
   box-shadow: 0 20px 40px -8px rgba(37, 99, 235, 0.4);
   border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: transform 0.2s ease;
+  cursor: pointer;
 }
 
-.fs-banner h3 {
+.dcfs-banner:hover {
+  transform: scale(1.01);
+}
+
+.dcfs-banner h3 {
   font-size: clamp(1.5rem, 4vw, 2rem);
   font-weight: 700;
   margin-bottom: 0.5rem;
   color: #fff;
 }
 
-.fs-banner p {
+.dcfs-banner p {
   opacity: 0.95;
   font-size: clamp(0.95rem, 2vw, 1.1rem);
   color: rgba(255, 255, 255, 0.95);
@@ -206,10 +199,10 @@
 .reveal {
   opacity: 0;
   transform: translateY(30px);
-  animation: revealUp 0.7s cubic-bezier(0.2, 0.9, 0.1, 1) forwards;
+  animation: dcfsRevealUp 0.7s cubic-bezier(0.2, 0.9, 0.1, 1) forwards;
 }
 
-@keyframes revealUp {
+@keyframes dcfsRevealUp {
   to {
     opacity: 1;
     transform: translateY(0);
@@ -220,29 +213,29 @@
    RESPONSIVE
 ===================================== */
 @media (max-width: 768px) {
-  .fs-section {
+  .dcfs-section {
     background-position: center 20%;
   }
   
-  .fs-card:hover {
+  .dcfs-card:hover {
     transform: translateY(-4px);
   }
   
-  .fs-banner {
+  .dcfs-banner {
     border-radius: 24px;
   }
 }
 
 @media (max-width: 480px) {
-  .fs-card li {
+  .dcfs-card li {
     font-size: 0.9rem;
   }
 }
 
 /* Accessibility */
 @media (prefers-reduced-motion: reduce) {
-  .fs-card,
-  .fs-glow,
+  .dcfs-card,
+  .dcfs-glow,
   .reveal {
     animation: none !important;
     transition: none !important;
@@ -251,10 +244,10 @@
 }
 
 @media (forced-colors: active) {
-  .fs-card {
+  .dcfs-card {
     border: 2px solid CanvasText;
   }
-  .fs-banner {
+  .dcfs-banner {
     border: 2px solid CanvasText;
   }
 }

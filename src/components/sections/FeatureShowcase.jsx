@@ -1,7 +1,8 @@
 "use client";
 import { useEffect, useRef } from "react";
-import "./feature-showcase.css";
-import Link from "next/link"
+import "./feature-showcase.css"; // You can keep the same CSS file name or change it
+import Link from "next/link";
+
 export default function FeatureShowcase() {
   const cardsRef = useRef([]);
 
@@ -84,13 +85,12 @@ export default function FeatureShowcase() {
   ];
 
   return (
-    <section className="fs-section">
-     
-      <div className="fs-glow" />
+    <section className="dcfs-section">
+      <div className="dcfs-glow" />
 
-      <div className="fs-container">
+      <div className="dcfs-container">
         {/* HEADER */}
-        <div className="fs-header reveal">
+        <div className="dcfs-header reveal">
           <h2>Next-Gen Digital Services</h2>
           <p>
             Premium <strong>Websites, Apps</strong>, intelligent <strong>AI</strong>, your 
@@ -99,14 +99,14 @@ export default function FeatureShowcase() {
         </div>
 
         {/* CARDS */}
-        <div className="fs-grid">
+        <div className="dcfs-grid">
           {features.map((f, i) => (
             <div
               key={i}
               ref={(el) => (cardsRef.current[i] = el)}
-              className="fs-card reveal"
+              className="dcfs-card reveal"
             >
-              <div className="fs-icon">{f.icon}</div>
+              <div className="dcfs-icon">{f.icon}</div>
               <h3>{f.title}</h3>
               <p>{f.desc}</p>
               <ul>
@@ -119,14 +119,12 @@ export default function FeatureShowcase() {
         </div>
 
         {/* CTA */}
- <Link href={'/services'}>
-        <div className="fs-banner reveal">
-   
-          <h3> Build Faster. Scale Smarter.</h3>
-          <p>Let’s create technology that puts your brand ahead.</p>
-      
-        </div>
-          </Link>
+        <Link href={'/services'}>
+          <div className="dcfs-banner reveal">
+            <h3> Build Faster. Scale Smarter.</h3>
+            <p>Let’s create technology that puts your brand ahead.</p>
+          </div>
+        </Link>
       </div>
     </section>
   );
