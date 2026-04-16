@@ -199,3 +199,130 @@
   opacity: 1 !important;
   visibility: visible !important;
 }
+
+/* =====================================
+   MOBILE LAYOUT FIX – FULL CONTENT VISIBLE
+===================================== */
+
+/* Ensure body and page allow full scroll */
+html, body {
+  overflow-x: hidden;
+  width: 100%;
+}
+
+.checkout-page {
+  min-height: 100vh;
+  overflow-x: hidden;
+  width: 100%;
+}
+
+/* Container takes full width with safe padding */
+.checkout-container {
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 0 1rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Remove any fixed height or overflow restrictions */
+.checkout-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  width: 100%;
+}
+
+/* Ensure both sections expand fully */
+.cart-summary,
+.quote-form {
+  width: 100%;
+  max-width: 100%;
+  overflow: visible; /* allow content to be seen */
+  box-sizing: border-box;
+}
+
+/* Cart items scrollable only if needed, but no fixed max-height on mobile */
+@media (max-width: 1023px) {
+  .cart-items {
+    max-height: none;
+    overflow-y: visible;
+  }
+}
+
+/* Sticky sidebar should not clip content on mobile */
+.sticky-sidebar {
+  position: relative;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+/* Fix negative margins on submit section */
+.submit-section {
+  position: relative; /* not sticky on mobile to avoid issues */
+  bottom: auto;
+  background: rgba(30, 41, 59, 0.95);
+  border-radius: 0.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 1rem;
+  margin: 1.5rem 0 0 0; /* remove negative margins */
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Radio group stack on small screens */
+.radio-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+/* Ensure form elements are fully visible */
+.form-input,
+.form-textarea,
+.form-select {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Service card full width */
+.service-card {
+  width: 100%;
+  box-sizing: border-box;
+  margin-left: 0;
+  margin-right: 0;
+}
+
+/* For desktop, restore two‑column layout */
+@media (min-width: 1024px) {
+  .checkout-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    align-items: start;
+  }
+
+  .sticky-sidebar {
+    position: sticky;
+    top: 100px;
+    height: fit-content;
+    max-height: calc(100vh - 120px);
+    overflow-y: auto;
+  }
+
+  .submit-section {
+    position: sticky;
+    bottom: 0;
+  }
+}
+
+/* Ensure all cards and forms are visible */
+.cart-summary,
+.quote-form,
+.stat-card,
+.service-card {
+  opacity: 1 !important;
+  visibility: visible !important;
+  transform: none !important;
+}
