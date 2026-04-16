@@ -23,6 +23,30 @@
   --transition: all 0.3s ease;
 }
 
+
+/* =====================================
+   ANDROID BACKGROUND FIX
+===================================== */
+body {
+  /* Solid fallback for Android */
+  background-color: #0a0a0f !important;
+  
+  /* Gradient with multiple vendor prefixes */
+  background: #0a0a0f;
+  background: -webkit-radial-gradient(circle at top, #1a1b28 0%, #05050a 45%, #272935 100%);
+  background: radial-gradient(circle at top, #1a1b28 0%, #05050a 45%, #272935 100%);
+  
+  /* Ensure it covers the whole viewport */
+  min-height: 100vh;
+  background-attachment: fixed; /* Helps Android render the gradient correctly */
+}
+
+/* Force hardware acceleration on the main container */
+.sp2__wc-services-page {
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+}
+
 /* ========== PAGE WRAPPER ========== */
 .sp2__wc-services-page {
   max-width: 1180px;
