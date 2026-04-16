@@ -42,6 +42,66 @@ body {
   min-height: 100vh;
 }
 
+
+/* =====================================
+   FIX: Horizontal Scroll & Image Fit
+   Add this to your templates CSS
+===================================== */
+
+/* Prevent page-level horizontal overflow */
+html, body {
+  overflow-x: hidden;
+  width: 100%;
+}
+
+.sp3__wc-services-page {
+  overflow-x: hidden;
+  width: 100%;
+}
+
+/* Constrain filter chips container to prevent overflow */
+.sp3__wc-templates-filter-chips {
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none; /* Firefox */
+  padding-bottom: 4px;
+}
+
+.sp3__wc-templates-filter-chips::-webkit-scrollbar {
+  display: none; /* Chrome/Safari */
+}
+
+/* Ensure chips don't shrink and cause layout issues */
+.sp3__wc-t-chip {
+  flex-shrink: 0;
+}
+
+/* Image thumbnail fixes */
+.sp3__wc-template-thumb {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: #151515;
+  overflow: hidden;
+  position: relative;
+}
+
+.sp3__wc-template-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;          /* Ensures image fills area without distortion */
+  display: block;
+}
+
+/* Alternative aspect ratio for mobile if needed */
+@media (max-width: 480px) {
+  .sp3__wc-template-thumb {
+    aspect-ratio: 4 / 3;
+  }
+}
+
+
 button,
 input {
   font-family: inherit;
