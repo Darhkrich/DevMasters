@@ -101,7 +101,37 @@ html, body {
   }
 }
 
+/* =====================================
+   FIX: Template Thumbnail Image Fill (Mobile)
+===================================== */
 
+@media (max-width: 767px) {
+  .sp3__wc-template-thumb {
+    width: 100%;
+    aspect-ratio: 16 / 9;          /* or 4/3, whichever matches your design */
+    overflow: hidden;
+    background: #151515;            /* fallback while loading */
+    display: flex;                 /* ensures img inside fills */
+    align-items: center;
+    justify-content: center;
+  }
+
+  .sp3__wc-template-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;             /* critical for filling the box */
+    display: block;
+    min-width: 100%;
+    min-height: 100%;
+  }
+
+  /* Remove any unintended padding/margin from parent containers */
+  .sp3__wc-template-card,
+  .sp3__wc-template-thumb div {
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+}
 button,
 input {
   font-family: inherit;
