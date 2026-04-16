@@ -1,57 +1,7 @@
 "use client";
-import { useEffect, useRef } from "react";
-import "./feature-showcase.css"; // You can keep the same CSS file name or change it
 import Link from "next/link";
-
+import './feature-showcase.css';
 export default function FeatureShowcase() {
-  const cardsRef = useRef([]);
-
-  useEffect(() => {
-    const prefersReducedMotion = window.matchMedia(
-      "(prefers-reduced-motion: reduce)"
-    ).matches;
-
-    cardsRef.current.forEach((card, index) => {
-      if (!card) return;
-
-      /* STAGGERED REVEAL */
-      card.style.animationDelay = `${index * 120}ms`;
-
-      if (prefersReducedMotion) return;
-
-      /* TILT EFFECT */
-      const handleMove = (e) => {
-        const rect = card.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-
-        const rotateX = ((y / rect.height) - 0.5) * 18;
-        const rotateY = ((x / rect.width) - 0.5) * -18;
-
-        card.style.transform = `
-          perspective(1200px)
-          rotateX(${rotateX}deg)
-          rotateY(${rotateY}deg)
-          translateY(-10px)
-          scale(1.02)
-        `;
-      };
-
-      const reset = () => {
-        card.style.transform =
-          "perspective(1200px) rotateX(0) rotateY(0) translateY(0) scale(1)";
-      };
-
-      card.addEventListener("mousemove", handleMove);
-      card.addEventListener("mouseleave", reset);
-
-      return () => {
-        card.removeEventListener("mousemove", handleMove);
-        card.removeEventListener("mouseleave", reset);
-      };
-    });
-  }, []);
-
   const features = [
     {
       title: "Application Development",
@@ -85,12 +35,9 @@ export default function FeatureShowcase() {
   ];
 
   return (
-    <section className="dcfs-section">
-      <div className="dcfs-glow" />
-
-      <div className="dcfs-container">
-        {/* HEADER */}
-        <div className="dcfs-header reveal">
+    <section className="simple-features">
+      <div className="simple-container">
+        <div className="simple-header">
           <h2>Next-Gen Digital Services</h2>
           <p>
             Premium <strong>Websites, Apps</strong>, intelligent <strong>AI</strong>, your 
@@ -98,15 +45,9 @@ export default function FeatureShowcase() {
           </p>
         </div>
 
-        {/* CARDS */}
-        <div className="dcfs-grid">
+        <div className="simple-grid">
           {features.map((f, i) => (
-            <div
-              key={i}
-              ref={(el) => (cardsRef.current[i] = el)}
-              className="dcfs-card reveal"
-            >
-              <div className="dcfs-icon">{f.icon}</div>
+            <div key={i} className="simple-card">
               <h3>{f.title}</h3>
               <p>{f.desc}</p>
               <ul>
@@ -118,11 +59,10 @@ export default function FeatureShowcase() {
           ))}
         </div>
 
-        {/* CTA */}
         <Link href={'/services'}>
-          <div className="dcfs-banner reveal">
-            <h3> Build Faster. Scale Smarter.</h3>
-            <p>Let’s create technology that puts your brand ahead.</p>
+          <div className="simple-banner">
+            <h3>Build Faster. Scale Smarter.</h3>
+            <p>Let's create technology that puts your brand ahead.</p>
           </div>
         </Link>
       </div>
