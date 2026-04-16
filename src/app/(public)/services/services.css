@@ -383,11 +383,12 @@ button {
   border-radius: 1rem;
   border: 1px solid var(--wc-border-light);
   background: rgba(15, 15, 25, 0.95);
+ 
 }
 
 /* Remove left margin that may cause misalignment */
 .sp1__wc-demo-phone {
-  margin-left: 0;
+  margin-left: 10px;
 }
 
 /* Add spacing between phones using gap on parent */
