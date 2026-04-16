@@ -1,0 +1,225 @@
+/* =====================================
+   CHECKOUT PAGE CSS (FIXED)
+   No backdrop-filter, full visibility
+===================================== */
+
+/* ========== VARIABLES ========== */
+:root {
+  --color-primary: #3b82f6;
+  --color-success: #10b981;
+  --color-danger: #ef4444;
+  --color-light: #ffffff;
+  --color-gray-300: #e5e7eb;
+  --color-gray-400: #b0b5bd;
+  --color-gray-500: #6b7280;
+  --color-gray-700: #374151;
+  --color-gray-800: #1e293b;
+  --color-gray-900: #0f172a;
+  --border-radius-lg: 0.75rem;
+  --border-radius-xl: 1rem;
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  --glass-bg: rgba(30, 41, 59, 0.95);
+  --glass-border: rgba(255, 255, 255, 0.1);
+}
+
+/* ========== PAGE LAYOUT ========== */
+.checkout-page {
+  min-height: 100vh;
+  background: #0f172a; /* Solid fallback */
+  background: radial-gradient(circle at top, #1a1b28 0, #05050a 45%, #272935 100%);
+  color: var(--color-light);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  overflow-x: hidden;
+  width: 100%;
+}
+
+.checkout-container {
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+/* ========== PROGRESS BAR ========== */
+.progress-bar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(15, 23, 42, 0.95);
+  border-bottom: 1px solid var(--color-gray-800);
+  width: 100%;
+}
+
+.progress-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 0;
+  overflow-x: auto;
+  gap: 0.5rem;
+}
+
+.progress-steps {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.progress-step {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.step-number {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 0.875rem;
+  flex-shrink: 0;
+}
+
+.step-number.active {
+  background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+  color: white;
+}
+
+.step-number.inactive,
+.step-number.upcoming {
+  background: var(--color-gray-800);
+  border: 1px solid var(--color-gray-700);
+  color: var(--color-gray-400);
+}
+
+.step-label {
+  font-weight: 500;
+  font-size: 0.875rem;
+  white-space: nowrap;
+}
+
+.step-label.active {
+  color: var(--color-light);
+}
+
+.step-label.inactive {
+  color: var(--color-gray-400);
+}
+
+.step-connector {
+  width: 2rem;
+  height: 2px;
+  background: var(--color-gray-700);
+  flex-shrink: 0;
+}
+
+/* ========== CHECKOUT GRID ========== */
+.checkout-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+/* ========== EMPTY CART ========== */
+.empty-cart {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+  text-align: center;
+  padding: 3rem 1.5rem;
+}
+
+.empty-cart-icon {
+  font-size: 4rem;
+  margin-bottom: 1.5rem;
+  opacity: 0.7;
+}
+
+.empty-cart-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-light);
+  margin-bottom: 0.75rem;
+}
+
+.empty-cart-message {
+  font-size: 1rem;
+  color: var(--color-gray-400);
+  margin-bottom: 2rem;
+}
+
+.browse-services-btn {
+  padding: 0.75rem 1.5rem;
+  background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+  color: white;
+  border: none;
+  border-radius: var(--border-radius-lg);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 44px;
+}
+
+.browse-services-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+/* ========== RESPONSIVE ========== */
+@media (min-width: 640px) {
+  .checkout-container {
+    max-width: 640px;
+    padding: 0 1.5rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .checkout-container {
+    max-width: 768px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .checkout-container {
+    max-width: 1200px;
+  }
+
+  .checkout-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+  }
+
+  .sticky-sidebar {
+    position: sticky;
+    top: 100px;
+    height: fit-content;
+  }
+}
+
+@media (max-width: 480px) {
+  .step-label {
+    display: none;
+  }
+
+  .progress-step {
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+}
+
+/* ========== VISIBILITY FIX ========== */
+.checkout-page,
+.checkout-container,
+.progress-bar,
+.empty-cart {
+  opacity: 1 !important;
+  visibility: visible !important;
+}

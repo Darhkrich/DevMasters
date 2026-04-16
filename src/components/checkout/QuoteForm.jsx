@@ -3,6 +3,8 @@
 
 import { useState, useEffect } from 'react';
 import { useCart } from '../../context/CartContext';
+import './Quoteform.css';
+
 
 export default function QuoteForm({ onSubmit, isSubmitting, autoFillData }) {
   const { formData, updateFormData } = useCart();

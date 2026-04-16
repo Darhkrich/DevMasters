@@ -2,7 +2,7 @@
 'use client';
 
 import { useCart } from '../../context/CartContext';
-
+import './checkoutHeader.css';
 export default function CheckoutHeader({ cart }) {
   const { getCartTotal } = useCart();
   const total = getCartTotal();

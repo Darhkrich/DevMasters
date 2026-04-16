@@ -7,7 +7,7 @@ import CartSummary from '@/components/checkout/CartSummary';
 import QuoteForm from '@/components/checkout/QuoteForm';
 import CheckoutHeader from '@/components/checkout/CheckoutHeader';
 import { createOrder } from '@/lib/boemApi'; // changed from createInquiry
-import '@/styles/checkout.css';
+import './checkout.css';
 
 export default function CheckoutPage() {
   const { cart, clearCart } = useCart();

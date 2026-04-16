@@ -2,7 +2,7 @@
 'use client';
 
 import { useState } from 'react';
-
+import './servicecard.css';
 export default function ServiceCard({ item, index, onRemove }) {
   const [expanded, setExpanded] = useState(false);
   

@@ -4,7 +4,7 @@
 import { useState } from 'react';
 import { useCart } from '../../context/CartContext';
 import ServiceCard from './ServiceCard';
-
+import './CartSummary.css';
 export default function CartSummary() {
   const { cart, getCartByCategory, removeFromCart } = useCart();
   const [activeCategory, setActiveCategory] = useState('all');
