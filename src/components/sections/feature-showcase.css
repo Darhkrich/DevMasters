@@ -1,6 +1,8 @@
 /* =====================================
-   FEATURED SERVICES SECTION (ENHANCED)
+   FEATURED SERVICES SECTION (iOS SAFE)
+   Replace entire .fs-section block with this
 ===================================== */
+
 :root {
   --fs-overlay-dark: rgba(0, 0, 0, 0.4);
   --fs-card-bg: rgba(255, 255, 255, 0.06);
@@ -14,17 +16,16 @@
   padding: clamp(3rem, 8vw, 6rem) clamp(1rem, 4vw, 2rem);
   background-image: url('/newback.jpg');
   background-size: cover;
-  background-position: center 30%; /* slight upward shift for better framing */
+  background-position: center 30%;
   background-repeat: no-repeat;
-  background-attachment: scroll; /* prevents iOS jank */
+  background-attachment: scroll;   /* ✅ scroll prevents iOS jank */
   color: #fff;
   overflow: hidden;
-  isolation: isolate;
+  /* ❌ isolation: isolate REMOVED — breaks iOS stacking */
 }
 
-/* Dark overlay with gradient for depth */
-.fs-section::before {
-  content: '';
+/* Overlay — must be a real <div> in HTML (see note below) */
+.fs-overlay {
   position: absolute;
   inset: 0;
   background: linear-gradient(
@@ -33,6 +34,7 @@
     rgba(0, 0, 0, 0.5) 100%
   );
   z-index: 1;
+  pointer-events: none;            /* clicks pass through to content */
 }
 
 /* Animated glow */
@@ -47,6 +49,8 @@
   animation: glowMove 20s ease-in-out infinite;
   z-index: 0;
   pointer-events: none;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);         /* hardware acceleration */
 }
 
 @keyframes glowMove {
@@ -59,7 +63,7 @@
   max-width: 1200px;
   margin: 0 auto;
   position: relative;
-  z-index: 2;
+  z-index: 2;                      /* above overlay and glow */
 }
 
 .fs-header {
@@ -104,9 +108,9 @@
   box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.4);
   color: #fff;
   will-change: transform;
-  
-  /* Improve tap highlight on mobile */
   -webkit-tap-highlight-color: transparent;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);         /* GPU acceleration for Safari */
 }
 
 .fs-card:hover {
@@ -116,7 +120,6 @@
   background: rgba(255, 255, 255, 0.1);
 }
 
-/* Active state for touch devices */
 .fs-card:active {
   transform: translateY(-2px);
   transition-duration: 0.1s;
@@ -188,24 +191,12 @@
   color: rgba(255, 255, 255, 0.95);
 }
 
-/* Reveal animation with staggered delay option */
+/* Reveal animation */
 .reveal {
   opacity: 0;
   transform: translateY(30px);
   animation: revealUp 0.7s cubic-bezier(0.2, 0.9, 0.1, 1) forwards;
 }
-
-/* Stagger children if you want (add class to parent) */
-.reveal-stagger > * {
-  opacity: 0;
-  transform: translateY(30px);
-  animation: revealUp 0.6s cubic-bezier(0.2, 0.9, 0.1, 1) forwards;
-}
-
-.reveal-stagger > *:nth-child(1) { animation-delay: 0.05s; }
-.reveal-stagger > *:nth-child(2) { animation-delay: 0.15s; }
-.reveal-stagger > *:nth-child(3) { animation-delay: 0.25s; }
-.reveal-stagger > *:nth-child(4) { animation-delay: 0.35s; }
 
 @keyframes revealUp {
   to {
@@ -244,21 +235,19 @@
   .fs-card li {
     font-size: 0.9rem;
   }
-  
-  /* Reduce motion if user prefers */
-  @media (prefers-reduced-motion: reduce) {
-    .fs-card,
-    .fs-glow,
-    .reveal,
-    .reveal-stagger > * {
-      animation: none !important;
-      transition: none !important;
-      transform: none !important;
-    }
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .fs-card,
+  .fs-glow,
+  .reveal {
+    animation: none !important;
+    transition: none !important;
+    transform: none !important;
   }
 }
 
-/* High contrast / forced colors support */
 @media (forced-colors: active) {
   .fs-card {
     border: 2px solid CanvasText;

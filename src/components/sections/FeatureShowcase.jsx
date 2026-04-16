@@ -85,6 +85,7 @@ export default function FeatureShowcase() {
 
   return (
     <section className="fs-section">
+      <div className="fs-overlay"></div>
       <div className="fs-glow" />
 
       <div className="fs-container">
