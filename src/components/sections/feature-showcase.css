@@ -1,13 +1,13 @@
 /* =====================================
-   FEATURED SERVICES SECTION (iOS SAFE)
-   Replace entire .fs-section block with this
+   FEATURED SERVICES SECTION (iOS 16.3 SAFE)
 ===================================== */
 
 :root {
   --fs-overlay-dark: rgba(0, 0, 0, 0.4);
-  --fs-card-bg: rgba(255, 255, 255, 0.06);
-  --fs-card-border: rgba(255, 255, 255, 0.1);
-  --fs-glow-color: rgba(59, 130, 246, 0.2);
+  --fs-card-bg: rgba(20, 30, 50, 0.7);    /* solid fallback color */
+  --fs-card-bg-fallback: rgba(20, 30, 50, 0.7);
+  --fs-card-border: rgba(255, 255, 255, 0.15);
+  --fs-glow-color: rgba(59, 130, 246, 0.25);
   --fs-transition: 0.25s cubic-bezier(0.2, 0, 0, 1);
 }
 
@@ -18,14 +18,15 @@
   background-size: cover;
   background-position: center 30%;
   background-repeat: no-repeat;
-  background-attachment: scroll;   /* ✅ scroll prevents iOS jank */
+  background-attachment: scroll;
   color: #fff;
   overflow: hidden;
-  /* ❌ isolation: isolate REMOVED — breaks iOS stacking */
+  /* No isolation */
 }
 
-/* Overlay — must be a real <div> in HTML (see note below) */
-.fs-overlay {
+/* Simple dark overlay using ::before (this works reliably) */
+.fs-section::before {
+  content: '';
   position: absolute;
   inset: 0;
   background: linear-gradient(
@@ -34,10 +35,10 @@
     rgba(0, 0, 0, 0.5) 100%
   );
   z-index: 1;
-  pointer-events: none;            /* clicks pass through to content */
+  pointer-events: none;
 }
 
-/* Animated glow */
+/* Glow effect */
 .fs-glow {
   position: absolute;
   inset: -50%;
@@ -49,8 +50,6 @@
   animation: glowMove 20s ease-in-out infinite;
   z-index: 0;
   pointer-events: none;
-  -webkit-transform: translateZ(0);
-  transform: translateZ(0);         /* hardware acceleration */
 }
 
 @keyframes glowMove {
@@ -63,7 +62,7 @@
   max-width: 1200px;
   margin: 0 auto;
   position: relative;
-  z-index: 2;                      /* above overlay and glow */
+  z-index: 2;
 }
 
 .fs-header {
@@ -78,15 +77,16 @@
   line-height: 1.2;
   text-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
   margin-bottom: 1rem;
+  color: #fff;
 }
 
 .fs-header p {
-  opacity: 0.9;
+  opacity: 0.95;
   max-width: 720px;
   margin: 0 auto;
   font-size: clamp(1rem, 2.5vw, 1.25rem);
   text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-  color: rgba(255, 255, 255, 0.95);
+  color: #fff;
 }
 
 .fs-grid {
@@ -96,9 +96,8 @@
 }
 
 .fs-card {
+  /* Use a solid background that works everywhere */
   background: var(--fs-card-bg);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
   border: 1px solid var(--fs-card-border);
   border-radius: 24px;
   padding: clamp(1.5rem, 4vw, 2.5rem);
@@ -109,15 +108,26 @@
   color: #fff;
   will-change: transform;
   -webkit-tap-highlight-color: transparent;
-  -webkit-transform: translateZ(0);
-  transform: translateZ(0);         /* GPU acceleration for Safari */
+  /* No backdrop-filter — fallback for iOS */
 }
+
+/* Add backdrop-filter only for browsers that support it reliably */
+@supports (backdrop-filter: blur(16px)) and (not (-webkit-backdrop-filter: blur(16px))) {
+  /* Modern non‑WebKit browsers get glass effect */
+  .fs-card {
+    background: rgba(255, 255, 255, 0.06);
+    backdrop-filter: blur(16px);
+  }
+}
+
+/* For WebKit browsers that might have issues, we skip backdrop-filter entirely
+   and keep the solid background. */
 
 .fs-card:hover {
   transform: translateY(-6px);
   box-shadow: 0 32px 64px -12px rgba(0, 0, 0, 0.6);
   border-color: rgba(59, 130, 246, 0.4);
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.12); /* slight lightening on hover */
 }
 
 .fs-card:active {
@@ -136,12 +146,13 @@
   font-size: clamp(1.25rem, 3vw, 1.5rem);
   font-weight: 600;
   margin-bottom: 0.75rem;
+  color: #fff;
 }
 
 .fs-card p {
   opacity: 0.9;
   line-height: 1.6;
-  color: rgba(255, 255, 255, 0.9);
+  color: rgba(255, 255, 255, 0.95);
 }
 
 .fs-card ul {
@@ -151,13 +162,13 @@
 }
 
 .fs-card li {
-  opacity: 0.85;
+  opacity: 0.9;
   margin-bottom: 0.5rem;
   padding-left: 1.5rem;
   position: relative;
   font-size: 0.95rem;
   line-height: 1.5;
-  color: rgba(255, 255, 255, 0.9);
+  color: rgba(255, 255, 255, 0.95);
 }
 
 .fs-card li::before {
@@ -206,16 +217,11 @@
 }
 
 /* =====================================
-   RESPONSIVE REFINEMENTS
+   RESPONSIVE
 ===================================== */
 @media (max-width: 768px) {
   .fs-section {
     background-position: center 20%;
-  }
-  
-  .fs-card {
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
   }
   
   .fs-card:hover {
@@ -228,10 +234,6 @@
 }
 
 @media (max-width: 480px) {
-  .fs-section {
-    background-attachment: scroll;
-  }
-  
   .fs-card li {
     font-size: 0.9rem;
   }
