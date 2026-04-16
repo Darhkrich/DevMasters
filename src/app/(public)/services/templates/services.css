@@ -607,3 +607,27 @@ input {
   opacity: 1 !important;
   visibility: visible !important;
 }
+
+
+/* =====================================
+   MOBILE IMAGE FIX — SHOW FULL IMAGE
+===================================== */
+@media (max-width: 767px) {
+  .sp3__wc-template-thumb {
+    aspect-ratio: auto;               /* Let the image dictate height */
+    background: #151515;              /* Matches card background */
+  }
+
+  .sp3__wc-template-thumb img {
+    position: relative;               /* Remove absolute positioning */
+    width: 100%;
+    height: auto;
+    object-fit: contain;              /* Show full image, no cropping */
+    display: block;
+  }
+
+  /* Remove absolute positioning container requirements */
+  .sp3__wc-template-thumb div {
+    display: block;
+  }
+}
