@@ -1,97 +1,101 @@
 /* =====================================
-   QUOTE FORM COMPONENT CSS (FIXED)
-   Extracted & optimized
+   QUOTE FORM STYLES – MOBILE FIRST
 ===================================== */
 
-/* ========== QUOTE FORM CARD ========== */
 .quote-form {
-  background: rgba(30, 41, 59, 0.95); /* solid fallback, no backdrop-filter */
-  border-radius: 1rem;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  padding: 1.5rem;
   width: 100%;
+  background: #1e293b;
+  border-radius: 20px;
+  padding: 24px 16px;
+  border: 1px solid #334155;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  box-sizing: border-box;
 }
 
-/* ========== TITLE & SUBTITLE ========== */
 .quote-form-title {
-  font-size: clamp(1.25rem, 4vw, 1.5rem);
+  font-size: 1.6rem;
   font-weight: 700;
   color: #ffffff;
-  margin-bottom: 0.5rem;
+  margin-bottom: 8px;
   line-height: 1.2;
 }
 
 .quote-form-subtitle {
-  font-size: 0.875rem;
-  color: #e5e7eb; /* improved contrast */
-  margin-bottom: 1.5rem;
+  font-size: 1rem;
+  color: #cbd5e1;
+  margin-bottom: 28px;
   line-height: 1.5;
 }
 
-/* ========== FORM SECTIONS ========== */
+/* Form sections */
 .form-section {
-  margin-bottom: 2rem;
+  margin-bottom: 32px;
 }
 
 .form-section-title {
-  font-size: clamp(1.125rem, 3vw, 1.25rem);
+  font-size: 1.3rem;
   font-weight: 600;
-  color: #ffffff;
-  margin-bottom: 1rem;
+  color: #f1f5f9;
+  margin-bottom: 20px;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  line-height: 1.2;
+  gap: 8px;
+  border-bottom: 1px solid #334155;
+  padding-bottom: 12px;
 }
 
 .form-section-title i {
   color: #3b82f6;
+  font-size: 1.2rem;
 }
 
-/* ========== FORM GRID ========== */
+/* Form grid */
 .form-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
 @media (min-width: 640px) {
   .form-grid {
+    display: grid;
     grid-template-columns: repeat(2, 1fr);
+    gap: 16px 20px;
   }
 }
 
-/* ========== FORM GROUP ========== */
+/* Form group */
 .form-group {
-  margin-bottom: 1rem;
+  width: 100%;
 }
 
 .form-label {
   display: block;
-  font-size: 0.875rem;
+  font-size: 0.9rem;
   font-weight: 500;
-  color: #e5e7eb; /* improved from #cbd5e1 */
-  margin-bottom: 0.5rem;
+  color: #e2e8f0;
+  margin-bottom: 6px;
 }
 
 .form-label.required::after {
-  content: ' *';
+  content: " *";
   color: #ef4444;
 }
 
-/* ========== FORM INPUTS ========== */
+/* Input fields */
 .form-input,
 .form-textarea,
 .form-select {
   width: 100%;
-  padding: 0.75rem 1rem;
-  background: rgba(15, 23, 42, 0.7);
-  border: 1px solid #374151;
-  border-radius: 0.75rem;
+  padding: 12px 16px;
+  background: #0f172a;
+  border: 1px solid #334155;
+  border-radius: 12px;
   color: #ffffff;
-  font-size: 0.875rem;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
-  min-height: 44px;
+  font-size: 1rem;
+  line-height: 1.5;
+  box-sizing: border-box;
+  transition: border-color 0.2s, box-shadow 0.2s;
 }
 
 .form-input:focus,
@@ -99,7 +103,7 @@
 .form-select:focus {
   outline: none;
   border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
 }
 
 .form-input.error,
@@ -109,46 +113,48 @@
 }
 
 .form-textarea {
-  resize: vertical;
   min-height: 120px;
+  resize: vertical;
 }
 
 .form-select {
   appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23b0b5bd'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2394a3b8'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
   background-repeat: no-repeat;
-  background-position: right 12px center;
+  background-position: right 16px center;
   background-size: 16px;
-  padding-right: 2.5rem;
-  cursor: pointer;
+  padding-right: 48px;
 }
 
-/* ========== FORM HINT & ERROR ========== */
+/* Hint and error messages */
 .form-hint {
-  font-size: 0.75rem;
-  color: #9ca3af; /* improved from #64748b */
-  margin-top: 0.25rem;
-  display: block;
+  font-size: 0.8rem;
+  color: #94a3b8;
+  margin-top: 6px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
 }
 
 .form-error {
-  font-size: 0.75rem;
+  font-size: 0.8rem;
   color: #ef4444;
-  margin-top: 0.25rem;
+  margin-top: 6px;
   display: flex;
   align-items: center;
-  gap: 0.25rem;
+  gap: 4px;
 }
 
-/* ========== RADIO GROUP ========== */
+/* Radio group */
 .radio-group {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
-@media (min-width: 640px) {
+@media (min-width: 480px) {
   .radio-group {
+    display: grid;
     grid-template-columns: repeat(2, 1fr);
   }
 }
@@ -161,19 +167,18 @@
 
 .radio-option {
   position: relative;
-  padding: 1rem;
-  background: rgba(15, 23, 42, 0.5);
-  border: 1px solid #374151;
-  border-radius: 0.75rem;
+  padding: 16px;
+  background: #0f172a;
+  border: 1px solid #334155;
+  border-radius: 12px;
   cursor: pointer;
-  transition: all 0.2s ease;
-  min-height: 44px;
+  transition: all 0.15s;
   display: flex;
   flex-direction: column;
 }
 
 .radio-option:hover {
-  background: rgba(15, 23, 42, 0.7);
+  background: #1e293b;
 }
 
 .radio-option.selected {
@@ -188,147 +193,148 @@
 }
 
 .radio-label {
-  font-weight: 500;
-  color: #e5e7eb;
+  font-weight: 600;
+  color: #f1f5f9;
+  font-size: 1rem;
 }
 
 .radio-description {
-  font-size: 0.75rem;
-  color: #9ca3af;
-  margin-top: 0.25rem;
+  font-size: 0.8rem;
+  color: #94a3b8;
+  margin-top: 4px;
 }
 
-/* ========== TERMS CHECKBOX ========== */
+/* Terms checkbox */
 .terms-checkbox {
-  background: rgba(15, 23, 42, 0.3);
-  border-radius: 0.75rem;
-  border: 1px solid #374151;
-  padding: 1rem;
-  margin: 1.5rem 0;
+  background: #0f172a;
+  border-radius: 12px;
+  border: 1px solid #334155;
+  padding: 16px;
+  margin: 24px 0;
 }
 
 .checkbox-label {
   display: flex;
   align-items: flex-start;
-  gap: 0.75rem;
+  gap: 12px;
   cursor: pointer;
 }
 
 .checkbox-input {
-  margin-top: 0.125rem;
+  margin-top: 2px;
   accent-color: #3b82f6;
-  cursor: pointer;
+  width: 20px;
+  height: 20px;
   flex-shrink: 0;
 }
 
 .checkbox-text {
-  font-size: 0.875rem;
-  color: #e5e7eb;
+  font-size: 0.95rem;
+  color: #e2e8f0;
   line-height: 1.4;
 }
 
 .checkbox-subtext {
-  font-size: 0.75rem;
-  color: #9ca3af;
-  margin-top: 0.25rem;
-  line-height: 1.4;
+  font-size: 0.8rem;
+  color: #94a3b8;
+  margin-top: 6px;
 }
 
-/* ========== SUBMIT SECTION ========== */
+/* Submit section */
 .submit-section {
-  position: sticky;
-  bottom: 0;
-  background: rgba(30, 41, 59, 0.95);
-  border-radius: 0.75rem;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  padding: 1rem;
-  margin: 0 -1rem -1rem;
+  background: #1e293b;
+  border-radius: 12px;
+  border: 1px solid #334155;
+  padding: 16px;
+  margin-top: 24px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .submit-info {
-  font-size: 0.75rem;
-  color: #b0b5bd;
-  margin-bottom: 0.75rem;
+  font-size: 0.8rem;
+  color: #cbd5e1;
+  margin-bottom: 12px;
   display: flex;
   align-items: center;
-  gap: 0.375rem;
+  gap: 6px;
 }
 
 .submit-button {
   width: 100%;
-  padding: 0.875rem 1.5rem;
+  padding: 14px 24px;
   background: linear-gradient(135deg, #3b82f6, #8b5cf6);
   color: white;
   border: none;
-  border-radius: 0.75rem;
-  font-size: 1rem;
+  border-radius: 12px;
+  font-size: 1.1rem;
   font-weight: 600;
   cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
-  min-height: 44px;
+  gap: 8px;
+  transition: transform 0.15s, box-shadow 0.15s;
+  box-sizing: border-box;
 }
 
 .submit-button:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3);
 }
 
 .submit-button:disabled {
-  opacity: 0.5;
+  opacity: 0.6;
   cursor: not-allowed;
 }
 
 .submit-error {
   background: rgba(239, 68, 68, 0.1);
   border: 1px solid rgba(239, 68, 68, 0.3);
-  border-radius: 0.5rem;
-  padding: 0.75rem;
-  margin-top: 0.75rem;
+  border-radius: 8px;
+  padding: 12px;
+  margin-top: 12px;
 }
 
 .submit-error-message {
   color: #ef4444;
-  font-size: 0.875rem;
+  font-size: 0.9rem;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 8px;
 }
 
-/* ========== UTILITY CLASSES ========== */
+/* Utility spacing */
 .space-y-8 > * + * {
-  margin-top: 2rem;
+  margin-top: 32px;
 }
 
 .space-y-4 > * + * {
-  margin-top: 1rem;
-}
-
-.mt-1 {
-  margin-top: 0.25rem;
-}
-
-.mr-1 {
-  margin-right: 0.25rem;
-}
-
-.ml-2 {
-  margin-left: 0.5rem;
+  margin-top: 16px;
 }
 
 .flex {
   display: flex;
 }
 
+.justify-between {
+  justify-content: space-between;
+}
+
 .items-center {
   align-items: center;
 }
 
-.justify-between {
-  justify-content: space-between;
+.mt-1 {
+  margin-top: 4px;
+}
+
+.mr-1 {
+  margin-right: 4px;
+}
+
+.ml-2 {
+  margin-left: 8px;
 }
 
 .sr-only {
@@ -343,143 +349,22 @@
   border: 0;
 }
 
-.group:hover .group-hover\:translate-x-1 {
-  transform: translateX(0.25rem);
-}
-
-/* ========== VISIBILITY FIX ========== */
-.quote-form,
-.form-input,
-.form-textarea,
-.form-select,
-.submit-section {
-  opacity: 1 !important;
-  visibility: visible !important;
-}
-
-/* =====================================
-   MOBILE LAYOUT FIX – FULL CONTENT VISIBLE
-===================================== */
-
-/* Ensure body and page allow full scroll */
-html, body {
-  overflow-x: hidden;
-  width: 100%;
-}
-
-.checkout-page {
-  min-height: 100vh;
-  overflow-x: hidden;
-  width: 100%;
-}
-
-/* Container takes full width with safe padding */
-.checkout-container {
-  max-width: 100%;
-  margin: 0 auto;
-  padding: 0 1rem;
-  width: 100%;
-  box-sizing: border-box;
-}
-
-/* Remove any fixed height or overflow restrictions */
-.checkout-grid {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-  width: 100%;
-}
-
-/* Ensure both sections expand fully */
-.cart-summary,
-.quote-form {
-  width: 100%;
-  max-width: 100%;
-  overflow: visible; /* allow content to be seen */
-  box-sizing: border-box;
-}
-
-/* Cart items scrollable only if needed, but no fixed max-height on mobile */
-@media (max-width: 1023px) {
-  .cart-items {
-    max-height: none;
-    overflow-y: visible;
+/* Responsive adjustments */
+@media (max-width: 480px) {
+  .quote-form {
+    padding: 20px 12px;
   }
-}
-
-/* Sticky sidebar should not clip content on mobile */
-.sticky-sidebar {
-  position: relative;
-  width: 100%;
-  height: auto;
-  overflow: visible;
-}
-
-/* Fix negative margins on submit section */
-.submit-section {
-  position: relative; /* not sticky on mobile to avoid issues */
-  bottom: auto;
-  background: rgba(30, 41, 59, 0.95);
-  border-radius: 0.75rem;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  padding: 1rem;
-  margin: 1.5rem 0 0 0; /* remove negative margins */
-  width: 100%;
-  box-sizing: border-box;
-}
-
-/* Radio group stack on small screens */
-.radio-group {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-/* Ensure form elements are fully visible */
-.form-input,
-.form-textarea,
-.form-select {
-  width: 100%;
-  box-sizing: border-box;
-}
-
-/* Service card full width */
-.service-card {
-  width: 100%;
-  box-sizing: border-box;
-  margin-left: 0;
-  margin-right: 0;
-}
-
-/* For desktop, restore two‑column layout */
-@media (min-width: 1024px) {
-  .checkout-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 2rem;
-    align-items: start;
+  
+  .quote-form-title {
+    font-size: 1.4rem;
   }
-
-  .sticky-sidebar {
-    position: sticky;
-    top: 100px;
-    height: fit-content;
-    max-height: calc(100vh - 120px);
-    overflow-y: auto;
+  
+  .form-section-title {
+    font-size: 1.2rem;
   }
-
-  .submit-section {
-    position: sticky;
-    bottom: 0;
+  
+  .submit-button {
+    font-size: 1rem;
+    padding: 12px 20px;
   }
-}
-
-/* Ensure all cards and forms are visible */
-.cart-summary,
-.quote-form,
-.stat-card,
-.service-card {
-  opacity: 1 !important;
-  visibility: visible !important;
-  transform: none !important;
 }
