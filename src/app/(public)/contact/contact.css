@@ -788,3 +788,12 @@ html {
   color: white;
   padding: 0.5rem;
 }
+
+/* =====================================
+   ✅ FIX: Prevent modal body lock from persisting
+   (Added for navigation fix – keeps all original styles)
+===================================== */
+body:has(.modal) {
+  overflow: hidden;
+  position: relative;
+}

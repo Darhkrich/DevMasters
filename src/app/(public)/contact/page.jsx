@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { createInquiry } from "@/lib/boemApi";
 import "./contact.css";
 
@@ -8,7 +8,7 @@ export default function ContactPage() {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
-    phone: "",      // <-- added phone field
+    phone: "",
     company: "",
     package: "",
     budget: "",
@@ -19,6 +19,20 @@ export default function ContactPage() {
   const [showModal, setShowModal] = useState(false);
   const [errors, setErrors] = useState({});
 
+  // ✅ CLEANUP: Remove lingering modal/body styles when leaving the page
+  useEffect(() => {
+    return () => {
+      document.body.style.overflow = '';
+      document.body.style.position = '';
+      document.body.style.width = '';
+      
+      const modal = document.querySelector('.modal');
+      if (modal) {
+        modal.remove();
+      }
+    };
+  }, []);
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -28,7 +42,6 @@ export default function ContactPage() {
     if (!formData.name) newErrors.name = "Name is required";
     if (!formData.email) newErrors.email = "Email is required";
     if (!formData.message) newErrors.message = "Message is required";
-    // Phone is optional; you can add validation if needed
     return newErrors;
   };
 
@@ -48,7 +61,7 @@ export default function ContactPage() {
       await createInquiry({
         name: formData.name,
         email: formData.email,
-        phone: formData.phone,               // <-- include phone
+        phone: formData.phone,
         company: formData.company,
         subject: formData.package ? `${formData.package} inquiry` : "General inquiry",
         service_category: formData.package || "General inquiry",
@@ -65,7 +78,7 @@ export default function ContactPage() {
       setFormData({
         name: "",
         email: "",
-        phone: "",           // reset phone
+        phone: "",
         company: "",
         package: "",
         budget: "",
@@ -78,6 +91,13 @@ export default function ContactPage() {
         submit: error.message || "We couldn't send your message right now.",
       });
     }
+  };
+
+  const closeModal = () => {
+    setShowModal(false);
+    document.body.style.overflow = '';
+    document.body.style.position = '';
+    document.body.style.width = '';
   };
 
   return (
@@ -163,7 +183,6 @@ export default function ContactPage() {
                   )}
                 </div>
 
-                {/* New phone field */}
                 <div className="form-group">
                   <label>Phone Number</label>
                   <input
@@ -275,7 +294,7 @@ export default function ContactPage() {
             <p>We’ll get back to you within 24 hours.</p>
             <button
               className="btn btn-primary"
-              onClick={() => setShowModal(false)}
+              onClick={closeModal}
             >
               Close
             </button>
