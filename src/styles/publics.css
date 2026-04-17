@@ -131,10 +131,10 @@
 
 
 /* =====================================
-   MOBILE MENU — FIXED ALIGNMENT & SIZING
+   MOBILE MENU — MOBILE ONLY (FIXED + COMPACT)
 ===================================== */
 
-/* Hide on desktop */
+/* Hide MobileMenu on desktop */
 @media (min-width: 1024px) {
   .mm-topbar,
   .mm-panel,
@@ -144,7 +144,7 @@
 }
 
 /* ===============================
-   TOP BAR — ALIGNED & COMPACT
+   TOP BAR — COMPACT
 ================================ */
 .mm-topbar {
   position: sticky;
@@ -155,8 +155,7 @@
   align-items: center;
   justify-content: space-between;
 
-  padding: 12px 18px;           /* balanced vertical padding */
-  min-height: 60px;             /* ensures consistent height for alignment */
+  padding: 10px 16px;           /* reduced from 14px 18px */
 
   background: linear-gradient(
     135deg,
@@ -168,11 +167,10 @@
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-/* Logo — vertically centered */
+/* Logo — slightly smaller */
 .mm-logo {
-  font-size: 1.35rem;
+  font-size: 1.25rem;           /* reduced from 1.4rem */
   font-weight: 700;
-  line-height: 1;               /* ensures tight vertical alignment */
 
   background: linear-gradient(135deg, #3b82f6, #22c55e);
   -webkit-background-clip: text;
@@ -180,11 +178,11 @@
 }
 
 /* ===============================
-   HAMBURGER — PROPORTIONAL & ALIGNED
+   HAMBURGER — COMPACT
 ================================ */
 .mm-toggle {
-  width: 15px;                  /* visually slim, still easy to tap */
-  height: 7px;                 /* balanced height */
+  width: 20px;                  /* reduced from 24px */
+  height: 16px;                 /* reduced from 20px */
 
   display: flex;
   flex-direction: column;
@@ -194,21 +192,19 @@
   border: none;
   cursor: pointer;
   padding: 0;
-  margin: 0;
 }
 
 .mm-toggle span {
-  height: 2px;
+  height: 2px;                  /* reduced from 2.5px */
   width: 100%;
-  background: #1a1a1a;          /* slightly softer black */
+  background: #000000;
   border-radius: 2px;
   transition: all 0.3s ease;
-  transform-origin: center;
 }
 
-/* Animate to X — values adjusted for 18px container */
+/* Animate to X — values adjusted for 16px container */
 .mm-toggle.active span:nth-child(1) {
-  transform: translateY(8px) rotate(45deg);   /* (18 - 2) / 2 = 8 */
+  transform: translateY(7px) rotate(45deg);   /* (16 - 2) / 2 = 7 */
 }
 
 .mm-toggle.active span:nth-child(2) {
@@ -216,7 +212,7 @@
 }
 
 .mm-toggle.active span:nth-child(3) {
-  transform: translateY(-8px) rotate(-45deg);
+  transform: translateY(-7px) rotate(-45deg);
 }
 
 /* ===============================
@@ -250,8 +246,8 @@
 
   width: 85%;
   max-width: 340px;
-  height: 100vh;
-  max-height: 100dvh;
+  height: 100vh;                /* full height instead of 75vh */
+  max-height: 100dvh;           /* dynamic viewport height support */
 
   background: linear-gradient(
     180deg,
@@ -267,7 +263,7 @@
   justify-content: space-between;
 
   padding: 32px 24px;
-  overflow-y: auto;
+  overflow-y: auto;             /* allows scrolling if content is too long */
 }
 
 .mm-panel.open {
@@ -275,13 +271,13 @@
 }
 
 /* ===============================
-   NAV LINKS
+   NAV LINKS — FIXED ALIGNMENT
 ================================ */
 .mm-nav {
   display: flex;
   flex-direction: column;
   gap: 22px;
-  margin-left: 0;
+  margin-left: 0;               /* removed the 50px push */
   padding: 0;
 }
 
@@ -306,6 +302,7 @@
   gap: 14px;
 }
 
+/* Buttons */
 .mm-btn {
   text-align: center;
   padding: 12px 16px;
@@ -316,6 +313,7 @@
   transition: all 0.25s ease;
 }
 
+/* Ghost */
 .mm-btn--ghost {
   color: #041f79;
   border: 1px solid rgba(10, 10, 10, 0.15);
@@ -325,6 +323,7 @@
   background: rgba(131, 131, 131, 0.08);
 }
 
+/* Primary */
 .mm-btn--primary {
   color: #ffffff;
   background: linear-gradient(135deg, #2563eb, #3b82f6);

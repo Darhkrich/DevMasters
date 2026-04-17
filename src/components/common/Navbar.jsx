@@ -1,36 +1,59 @@
 "use client";
-import SelectedServicesSummary from '@/components/common/SelectedServicesSummary';
+import { useState } from "react";
 import Link from "next/link";
-
+import '@/styles/Navbar.css';
 export default function Navbar() {
+  const [open, setOpen] = useState(false);
+
+  const navLinks = [
+    "Home",
+    "Services",
+    "Packages",
+    "How It Works",
+    "Contact",
+    "Client Portal",
+  ];
+
   return (
-    <header className="dc-navbar">
-      <div className="dc-navbar__container">
+    <header className="nav">
+      <div className="nav-container">
         {/* Logo */}
-        <div className="dc-navbar__logo">
-          <Link href="/">DevMasters</Link>
+        <div className="nav-logo">DevMasters</div>
+
+        {/* Desktop Nav */}
+        <nav className="nav-links">
+          {navLinks.map((link) => (
+            <Link key={link} href="#" className="nav-link">
+              {link}
+            </Link>
+          ))}
+        </nav>
+
+        {/* CTA */}
+        <div className="nav-cta">
+          <button className="btn-primary">Get Started</button>
         </div>
 
-        {/* Links */}
-        <ul className="dc-navbar__links">
-          <li><Link href="/">Home</Link></li>
-          <li><Link href="/services">Services</Link></li>
-          <li><Link href="/packages">Packages</Link></li>
-          <li><Link href="/how-it-work">How It Works</Link></li>
-          <li><Link href="/contact">Contact</Link></li>
-          <li> <Link href={'/Checkout'}><SelectedServicesSummary /> </Link></li>
-        </ul>
+        {/* Hamburger */}
+        <button
+          className={`hamburger ${open ? "active" : ""}`}
+          onClick={() => setOpen(!open)}
+          aria-label="Menu"
+        >
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
 
-        {/* Actions */}
-        <div className="dc-navbar__actions">
-          <Link href="/dashboard" className="dc-btn dc-btn--ghost">
-            Client Portal
+      {/* Mobile Menu */}
+      <div className={`mobile-menu ${open ? "show" : ""}`}>
+        {navLinks.map((link) => (
+          <Link key={link} href="#" className="mobile-link">
+            {link}
           </Link>
-
-          <Link href="/register" className="dc-btn dc-btn--primary">
-            Get Started
-          </Link>
-        </div>
+        ))}
+        <button className="btn-primary mobile-btn">Get Started</button>
       </div>
     </header>
   );
