@@ -7,7 +7,7 @@ import { useEffect, useMemo, useState } from "react";
 import AddToQuoteButton from "@/components/common/AddToQuoteButton";
 import { fetchTemplate, fetchTemplates } from "@/lib/boemApi";
 import { templatesData as fallbackTemplates } from "@/data/templates";
-import "./service.css";
+import "./service.css"; // new isolated CSS file
 
 function normalizeFallbackTemplate(template) {
   return {
@@ -19,7 +19,7 @@ function normalizeFallbackTemplate(template) {
     badge: template.badge || (template.type === "custom" ? "Customizable" : "Ready-Made"),
     badgeClass:
       template.badgeClass ||
-      (template.type === "custom" ? "wc-template-tag--custom" : "wc-template-tag--ready"),
+      (template.type === "custom" ? "tpd-template-tag--custom" : "tpd-template-tag--ready"),
   };
 }
 
@@ -42,9 +42,7 @@ export default function TemplateDetailPage() {
           fetchTemplates(),
         ]);
 
-        if (!isMounted) {
-          return;
-        }
+        if (!isMounted) return;
 
         setTemplate(templateResult);
         setRelatedTemplates(
@@ -61,9 +59,7 @@ export default function TemplateDetailPage() {
         );
         setDataError("");
       } catch (error) {
-        if (!isMounted) {
-          return;
-        }
+        if (!isMounted) return;
 
         const fallbackTemplate = fallbackTemplates.find((item) => item.id === id);
         setTemplate(fallbackTemplate ? normalizeFallbackTemplate(fallbackTemplate) : null);
@@ -75,24 +71,20 @@ export default function TemplateDetailPage() {
         );
         setDataError("Live template details could not be loaded, so DevMasters is showing local content.");
       } finally {
-        if (isMounted) {
-          setLoading(false);
-        }
+        if (isMounted) setLoading(false);
       }
     };
 
     loadTemplate();
-    return () => {
-      isMounted = false;
-    };
+    return () => { isMounted = false; };
   }, [id]);
 
   const related = useMemo(() => relatedTemplates.slice(0, 3), [relatedTemplates]);
 
   if (loading) {
     return (
-      <div className="wc-loading">
-        <div className="wc-loading-spinner"></div>
+      <div className="tpd-loading">
+        <div className="tpd-loading-spinner"></div>
         <p>Loading Website details...</p>
       </div>
     );
@@ -100,7 +92,7 @@ export default function TemplateDetailPage() {
 
   if (!template) {
     return (
-      <div className="wc-template-not-found">
+      <div className="tpd-not-found">
         <div style={{ textAlign: "center", padding: "50px 20px" }}>
           <h2>Website Not Found</h2>
           <Link href="/services/templates">Back to Website Service</Link>
@@ -110,48 +102,46 @@ export default function TemplateDetailPage() {
   }
 
   return (
-    <main className="wc-template-detail-page">
-      <nav className="wc-template-breadcrumb">
-        <Link href="/services/templates" className="wc-breadcrumb-link">
+    <div className="tpd-wrapper">
+      <nav className="tpd-breadcrumb">
+        <Link href="/services/templates" className="tpd-breadcrumb-link">
           <i className="fas fa-arrow-left"></i> Back to Website Service
         </Link>
-        <div className="wc-breadcrumb-path">
+        <div className="tpd-breadcrumb-path">
           <Link href="/services">Services</Link> /
           <Link href="/services/templates">Websites</Link> /
           <span>{template.shortName}</span>
         </div>
       </nav>
 
-      <section className="wc-template-detail-header">
-        <div className="wc-template-detail-header-left">
-          <div className="wc-template-badge-container">
-            <span className={`wc-template-tag ${template.badgeClass}`}>{template.badge}</span>
+      <section className="tpd-header">
+        <div className="tpd-header-left">
+          <div className="tpd-badge-container">
+            <span className={`tpd-template-tag ${template.badgeClass}`}>{template.badge}</span>
             {(template.category || []).map((category, index) => (
-              <span key={index} className="wc-category-chip">
-                {category}
-              </span>
+              <span key={index} className="tpd-category-chip">{category}</span>
             ))}
           </div>
-          <h1>{template.name}</h1>
-          <p className="wc-template-detail-description">{template.description}</p>
-          {dataError && <p className="wc-template-detail-description">{dataError}</p>}
+          <h1 className="tpd-title">{template.name}</h1>
+          <p className="tpd-description">{template.description}</p>
+          {dataError && <p className="tpd-description">{dataError}</p>}
 
-          <div className="wc-template-detail-meta">
-            <div className="wc-template-price-detail">
-              <span className="wc-price-main">{template.priceLabel}</span>
-              <span className="wc-price-note">{template.priceNote}</span>
+          <div className="tpd-meta">
+            <div className="tpd-price-detail">
+              <span className="tpd-price-main">{template.priceLabel}</span>
+              <span className="tpd-price-note">{template.priceNote}</span>
             </div>
 
-            <div className="wc-template-stats">
-              <div className="wc-stat">
+            <div className="tpd-stats">
+              <div className="tpd-stat">
                 <i className="fas fa-layer-group"></i>
                 <span>{template.pages || "5-10"} Pages</span>
               </div>
-              <div className="wc-stat">
+              <div className="tpd-stat">
                 <i className="fas fa-mobile-alt"></i>
                 <span>Fully Responsive</span>
               </div>
-              <div className="wc-stat">
+              <div className="tpd-stat">
                 <i className="fas fa-bolt"></i>
                 <span>Optimized Performance</span>
               </div>
@@ -159,23 +149,23 @@ export default function TemplateDetailPage() {
           </div>
         </div>
 
-        <div className="wc-template-detail-header-right">
-          <div className="wc-template-cta-card">
+        <div className="tpd-header-right">
+          <div className="tpd-cta-card">
             <h3>Get This Website</h3>
             <p>Includes setup, basic customization, and 1 month support</p>
 
-            <div className="wc-template-cta-actions">
+            <div className="tpd-cta-actions">
               {template.previewUrl && template.previewUrl !== "#" ? (
                 <a
                   href={template.previewUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="wc-btn-ghost wc-btn-preview-large"
+                  className="tpd-btn-ghost tpd-btn-preview-large"
                 >
                   <i className="fas fa-eye"></i> Live Preview
                 </a>
               ) : (
-                <button className="wc-btn-ghost wc-btn-preview-large" disabled>
+                <button className="tpd-btn-ghost tpd-btn-preview-large" disabled>
                   <i className="fas fa-eye"></i> Preview Coming Soon
                 </button>
               )}
@@ -183,11 +173,11 @@ export default function TemplateDetailPage() {
               <AddToQuoteButton
                 item={template}
                 source="templates"
-                className="wc-btn-ghost wc-btn-customize"
+                className="tpd-btn-ghost tpd-btn-customize"
               />
             </div>
 
-            <div className="wc-template-cta-note">
+            <div className="tpd-cta-note">
               <i className="fas fa-info-circle"></i>
               <small>Need custom modifications? We can tailor this template to your exact needs.</small>
             </div>
@@ -195,27 +185,27 @@ export default function TemplateDetailPage() {
         </div>
       </section>
 
-      <section className="wc-template-gallery">
-        <h2>Website Preview</h2>
-        <div className="wc-template-gallery-main">
-          <div className="wc-template-main-image">
+      <section className="tpd-gallery">
+        <h2 className="tpd-section-title">Website Preview</h2>
+        <div className="tpd-gallery-main">
+          <div className="tpd-main-image">
             <img src={template.image} alt={`${template.shortName} full preview`} loading="lazy" />
-            <div className="wc-image-overlay">
+            <div className="tpd-image-overlay">
               <span>Template preview</span>
             </div>
           </div>
         </div>
       </section>
 
-      <section className="wc-template-features">
-        <h2>Website Features</h2>
-        <div className="wc-template-features-grid">
-          <div className="wc-feature-card">
-            <div className="wc-feature-icon">
+      <section className="tpd-section">
+        <h2 className="tpd-section-title">Website Features</h2>
+        <div className="tpd-features-grid">
+          <div className="tpd-feature-card">
+            <div className="tpd-feature-icon">
               <i className="fas fa-paint-brush"></i>
             </div>
             <h3>Design Features</h3>
-            <ul className="wc-feature-list">
+            <ul className="tpd-feature-list">
               <li><i className="fas fa-check"></i> Modern, clean design</li>
               <li><i className="fas fa-check"></i> Mobile-first responsive layout</li>
               <li><i className="fas fa-check"></i> Cross-browser compatibility</li>
@@ -224,12 +214,12 @@ export default function TemplateDetailPage() {
             </ul>
           </div>
 
-          <div className="wc-feature-card">
-            <div className="wc-feature-icon">
+          <div className="tpd-feature-card">
+            <div className="tpd-feature-icon">
               <i className="fas fa-cogs"></i>
             </div>
             <h3>Technical Features</h3>
-            <ul className="wc-feature-list">
+            <ul className="tpd-feature-list">
               <li><i className="fas fa-check"></i> Built for production launch</li>
               <li><i className="fas fa-check"></i> Clean component structure</li>
               <li><i className="fas fa-check"></i> Performance-aware assets</li>
@@ -238,12 +228,12 @@ export default function TemplateDetailPage() {
             </ul>
           </div>
 
-          <div className="wc-feature-card">
-            <div className="wc-feature-icon">
+          <div className="tpd-feature-card">
+            <div className="tpd-feature-icon">
               <i className="fas fa-tools"></i>
             </div>
-            <h3>What&apos;s Included</h3>
-            <ul className="wc-feature-list">
+            <h3>What's Included</h3>
+            <ul className="tpd-feature-list">
               <li><i className="fas fa-check"></i> Setup assistance</li>
               <li><i className="fas fa-check"></i> Basic customization</li>
               <li><i className="fas fa-check"></i> Launch guidance</li>
@@ -255,14 +245,14 @@ export default function TemplateDetailPage() {
       </section>
 
       {related.length > 0 && (
-        <section className="wc-template-features">
-          <h2>Related Templates</h2>
-          <div className="wc-template-features-grid">
+        <section className="tpd-section">
+          <h2 className="tpd-section-title">Related Templates</h2>
+          <div className="tpd-features-grid">
             {related.map((item) => (
-              <article key={item.id} className="wc-feature-card">
+              <article key={item.id} className="tpd-feature-card">
                 <h3>{item.name}</h3>
                 <p>{item.description}</p>
-                <Link href={`/services/templates/${item.id}`} className="wc-btn-ghost wc-btn-talk">
+                <Link href={`/services/templates/${item.id}`} className="tpd-btn-ghost tpd-btn-talk">
                   View Details
                 </Link>
               </article>
@@ -271,20 +261,20 @@ export default function TemplateDetailPage() {
         </section>
       )}
 
-      <section className="wc-template-final-cta">
-        <div className="wc-cta-card">
+      <section className="tpd-final-cta">
+        <div className="tpd-cta-card-full">
           <h2>Ready to launch with this template?</h2>
           <p>Get your website up and running quickly with our professional setup service.</p>
-          <div className="wc-cta-buttons">
-            <button className="wc-btn-primary wc-btn-buy-now" onClick={() => router.push("/Checkout")}>
+          <div className="tpd-cta-buttons">
+            <button className="tpd-btn-primary tpd-btn-buy-now" onClick={() => router.push("/Checkout")}>
               <i className="fas fa-rocket"></i> Continue to Quote
             </button>
-            <Link href="/contact" className="wc-btn-ghost wc-btn-talk">
+            <Link href="/contact" className="tpd-btn-ghost tpd-btn-talk">
               <i className="fas fa-comments"></i> Talk to Our Team
             </Link>
           </div>
         </div>
       </section>
-    </main>
+    </div>
   );
 }

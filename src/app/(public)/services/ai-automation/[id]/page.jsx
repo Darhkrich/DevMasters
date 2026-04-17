@@ -6,14 +6,13 @@ import { useEffect, useState } from "react";
 import AddToQuoteButton from "@/components/common/AddToQuoteButton";
 import { fetchAIAutomation, fetchAIBundle } from "@/lib/boemApi";
 import { aiAutomations, aiBundles } from "@/data/aiAutomations";
-import "./styles.css";
+import "./styles.css"; // new isolated CSS file
 
 function getFallbackItem(id) {
   const automation = aiAutomations.find((item) => item.id === id);
   if (automation) {
     return { ...automation, type: "automation" };
   }
-
   const bundle = aiBundles.find((item) => item.id === id);
   return bundle ? { ...bundle, type: "bundle" } : null;
 }
@@ -40,9 +39,7 @@ export default function AIAutomationDetailPage() {
           itemType = "bundle";
         }
 
-        if (!isMounted) {
-          return;
-        }
+        if (!isMounted) return;
 
         const normalizedItem = { ...result, type: itemType };
         setItem(normalizedItem);
@@ -53,9 +50,7 @@ export default function AIAutomationDetailPage() {
         );
         setDataError("");
       } catch (error) {
-        if (!isMounted) {
-          return;
-        }
+        if (!isMounted) return;
 
         const fallbackItem = getFallbackItem(params.id);
         setItem(fallbackItem);
@@ -66,22 +61,18 @@ export default function AIAutomationDetailPage() {
         );
         setDataError("Live AI details could not be loaded, so DevMasters is showing local content.");
       } finally {
-        if (isMounted) {
-          setLoading(false);
-        }
+        if (isMounted) setLoading(false);
       }
     };
 
     loadItem();
-    return () => {
-      isMounted = false;
-    };
+    return () => { isMounted = false; };
   }, [params.id]);
 
   if (loading) {
     return (
-      <div className="wc-ai-loading">
-        <div className="wc-ai-loading-spinner"></div>
+      <div className="aid-loading">
+        <div className="aid-loading-spinner"></div>
         <p>Loading automation details...</p>
       </div>
     );
@@ -89,7 +80,7 @@ export default function AIAutomationDetailPage() {
 
   if (!item) {
     return (
-      <div className="wc-ai-not-found">
+      <div className="aid-not-found">
         <div style={{ textAlign: "center", padding: "50px 20px" }}>
           <i className="fas fa-robot" style={{ fontSize: "3rem", color: "#ff6b6b", marginBottom: "20px" }}></i>
           <h2>Automation Not Found</h2>
@@ -118,58 +109,58 @@ export default function AIAutomationDetailPage() {
   }
 
   return (
-    <main className="wc-ai-detail-page">
-      <nav className="wc-ai-breadcrumb">
-        <Link href="/services/ai-automation" className="wc-ai-breadcrumb-link">
+    <div className="aid-wrapper">
+      <nav className="aid-breadcrumb">
+        <Link href="/services/ai-automation" className="aid-breadcrumb-link">
           <i className="fas fa-arrow-left"></i> Back to AI Automations
         </Link>
-        <div className="wc-ai-breadcrumb-path">
+        <div className="aid-breadcrumb-path">
           <Link href="/services">Services</Link> /
           <Link href="/services/ai-automation">AI Automation</Link> /
           <span>{item.title}</span>
         </div>
       </nav>
 
-      <section className="wc-ai-detail-header">
-        <div className="wc-ai-detail-header-left">
-          <div className="wc-ai-badge-container">
-            <span className={`wc-ai-type-badge ${item.type === "bundle" ? "wc-ai-bundle-badge" : "wc-ai-automation-badge"}`}>
+      <section className="aid-header">
+        <div className="aid-header-left">
+          <div className="aid-badge-container">
+            <span className={`aid-type-badge ${item.type === "bundle" ? "aid-bundle-badge" : "aid-automation-badge"}`}>
               {item.type === "bundle" ? "Bundle" : "Automation"}
             </span>
             {item.sector && (
-              <span className={`wc-sector-badge wc-sector-${item.sector}`}>
+              <span className={`aid-sector-badge aid-sector-${item.sector}`}>
                 {item.sector.replace("-", " ")}
               </span>
             )}
-            {item.tag && <span className="wc-ai-tag-badge">{item.tag}</span>}
+            {item.tag && <span className="aid-tag-badge">{item.tag}</span>}
           </div>
 
-          <h1>{item.title}</h1>
-          <p className="wc-ai-detail-description">{item.description}</p>
-          {dataError && <p className="wc-ai-detail-description">{dataError}</p>}
+          <h1 className="aid-title">{item.title}</h1>
+          <p className="aid-description">{item.description}</p>
+          {dataError && <p className="aid-description">{dataError}</p>}
 
-          <div className="wc-ai-detail-meta">
-            <div className="wc-ai-price-section">
-              <div className="wc-ai-price">
-                <span className="wc-price-main">{item.price}</span>
-                <span className="wc-price-note">{item.priceNote}</span>
+          <div className="aid-meta">
+            <div className="aid-price-section">
+              <div className="aid-price">
+                <span className="aid-price-main">{item.price}</span>
+                <span className="aid-price-note">{item.priceNote}</span>
               </div>
-              <div className="wc-ai-delivery">
+              <div className="aid-delivery">
                 <i className="fas fa-clock"></i>
                 <span>{item.deliveryTime} setup</span>
               </div>
             </div>
 
-            <div className="wc-ai-stats">
-              <div className="wc-ai-stat">
+            <div className="aid-stats">
+              <div className="aid-stat">
                 <i className="fas fa-check-circle"></i>
                 <span>{item.features?.length || item.items?.length || 0} Features</span>
               </div>
-              <div className="wc-ai-stat">
+              <div className="aid-stat">
                 <i className="fas fa-plug"></i>
                 <span>{item.integration?.length || "Multiple"} Integrations</span>
               </div>
-              <div className="wc-ai-stat">
+              <div className="aid-stat">
                 <i className="fas fa-rocket"></i>
                 <span>Ready to Deploy</span>
               </div>
@@ -177,23 +168,23 @@ export default function AIAutomationDetailPage() {
           </div>
         </div>
 
-        <div className="wc-ai-detail-header-right">
-          <div className="wc-ai-cta-card">
+        <div className="aid-header-right">
+          <div className="aid-cta-card">
             <h3>Get This {item.type === "bundle" ? "Bundle" : "Automation"}</h3>
             <p>Includes setup, configuration, and 3 months support</p>
 
-            <div className="wc-ai-cta-actions">
+            <div className="aid-cta-actions">
               <AddToQuoteButton
                 item={item}
                 source="aiAutomations"
-                className="wc-btn-ghost wc-ai-consult-btn"
+                className="aid-btn-ghost aid-consult-btn"
               />
-              <Link href="/contact" className="wc-btn-ghost wc-ai-consult-btn">
+              <Link href="/contact" className="aid-btn-ghost aid-consult-btn">
                 <i className="fas fa-calendar"></i> Schedule Consultation
               </Link>
             </div>
 
-            <div className="wc-ai-cta-note">
+            <div className="aid-cta-note">
               <i className="fas fa-info-circle"></i>
               <small>Includes 3 months of updates and priority support</small>
             </div>
@@ -201,17 +192,17 @@ export default function AIAutomationDetailPage() {
         </div>
       </section>
 
-      <section className="wc-ai-features">
-        <h2>What&apos;s Included</h2>
-        <div className="wc-ai-features-grid">
+      <section className="aid-section">
+        <h2 className="aid-section-title">What's Included</h2>
+        <div className="aid-features-grid">
           {(item.type === "automation" ? item.features : item.items)?.map((feature, index) => (
-            <div key={index} className="wc-ai-feature-item">
-              <div className="wc-ai-feature-icon">
+            <div key={index} className="aid-feature-item">
+              <div className="aid-feature-icon">
                 <i className="fas fa-check"></i>
               </div>
               <h4>{feature}</h4>
               {item.type === "automation" && item.useCases?.[index] && (
-                <p className="wc-ai-feature-desc">{item.useCases[index]}</p>
+                <p className="aid-feature-desc">{item.useCases[index]}</p>
               )}
             </div>
           ))}
@@ -219,12 +210,12 @@ export default function AIAutomationDetailPage() {
       </section>
 
       {item.benefits && (
-        <section className="wc-ai-benefits">
-          <h2>Key Benefits</h2>
-          <div className="wc-ai-benefits-grid">
+        <section className="aid-section">
+          <h2 className="aid-section-title">Key Benefits</h2>
+          <div className="aid-benefits-grid">
             {item.benefits.map((benefit, index) => (
-              <div key={index} className="wc-ai-benefit-card">
-                <div className="wc-ai-benefit-icon">
+              <div key={index} className="aid-benefit-card">
+                <div className="aid-benefit-icon">
                   <i className="fas fa-chart-line"></i>
                 </div>
                 <h4>{benefit}</h4>
@@ -235,12 +226,12 @@ export default function AIAutomationDetailPage() {
       )}
 
       {item.integration && (
-        <section className="wc-ai-integration">
-          <h2>Integration & Compatibility</h2>
-          <div className="wc-ai-integration-grid">
+        <section className="aid-section">
+          <h2 className="aid-section-title">Integration & Compatibility</h2>
+          <div className="aid-integration-grid">
             {item.integration.map((integration, index) => (
-              <div key={index} className="wc-ai-integration-item">
-                <div className="wc-ai-integration-icon">
+              <div key={index} className="aid-integration-item">
+                <div className="aid-integration-icon">
                   <i className="fas fa-plug"></i>
                 </div>
                 <span>{integration}</span>
@@ -251,11 +242,11 @@ export default function AIAutomationDetailPage() {
       )}
 
       {item.idealFor && (
-        <section className="wc-ai-ideal-for">
-          <h2>Ideal For</h2>
-          <div className="wc-ai-ideal-for-grid">
+        <section className="aid-section">
+          <h2 className="aid-section-title">Ideal For</h2>
+          <div className="aid-ideal-grid">
             {item.idealFor.map((ideal, index) => (
-              <div key={index} className="wc-ai-ideal-item">
+              <div key={index} className="aid-ideal-item">
                 <i className="fas fa-check"></i>
                 <span>{ideal}</span>
               </div>
@@ -265,25 +256,25 @@ export default function AIAutomationDetailPage() {
       )}
 
       {relatedItems.length > 0 && (
-        <section className="wc-ai-related">
-          <h2>Related {item.type === "bundle" ? "Bundles" : "Automations"}</h2>
-          <div className="wc-ai-related-grid">
+        <section className="aid-section">
+          <h2 className="aid-section-title">Related {item.type === "bundle" ? "Bundles" : "Automations"}</h2>
+          <div className="aid-related-grid">
             {relatedItems.map((related) => (
-              <div key={related.id} className="wc-ai-related-card">
-                <div className="wc-ai-related-header">
+              <div key={related.id} className="aid-related-card">
+                <div className="aid-related-header">
                   <i className={related.icon || "fas fa-robot"}></i>
                   {related.sector && (
-                    <span className={`wc-sector-badge wc-sector-${related.sector}`}>
+                    <span className={`aid-sector-badge aid-sector-${related.sector}`}>
                       {related.sector.replace("-", " ")}
                     </span>
                   )}
                 </div>
-                <div className="wc-ai-related-body">
+                <div className="aid-related-body">
                   <h4>{related.title}</h4>
                   <p>{related.description.substring(0, 100)}...</p>
-                  <div className="wc-ai-related-footer">
-                    <span className="wc-ai-related-price">{related.price || "Custom Quote"}</span>
-                    <Link href={`/services/ai-automation/${related.id}`} className="wc-btn-ghost wc-ai-related-btn">
+                  <div className="aid-related-footer">
+                    <span className="aid-related-price">{related.price || "Custom Quote"}</span>
+                    <Link href={`/services/ai-automation/${related.id}`} className="aid-btn-ghost aid-related-btn">
                       View Details
                     </Link>
                   </div>
@@ -294,39 +285,39 @@ export default function AIAutomationDetailPage() {
         </section>
       )}
 
-      <section className="wc-ai-faq">
-        <h2>Frequently Asked Questions</h2>
-        <div className="wc-ai-faq-grid">
-          <div className="wc-ai-faq-item">
+      <section className="aid-section">
+        <h2 className="aid-section-title">Frequently Asked Questions</h2>
+        <div className="aid-faq-grid">
+          <div className="aid-faq-item">
             <h3>How long does setup take?</h3>
             <p>Most automations are set up within {item.deliveryTime}. Complex customizations may take additional time.</p>
           </div>
-          <div className="wc-ai-faq-item">
+          <div className="aid-faq-item">
             <h3>Is training included?</h3>
             <p>Yes. We provide training for your team on how to use and manage the automation.</p>
           </div>
-          <div className="wc-ai-faq-item">
+          <div className="aid-faq-item">
             <h3>Can I customize this further?</h3>
             <p>Absolutely. We offer customization services to tailor the automation to your specific workflow.</p>
           </div>
-          <div className="wc-ai-faq-item">
+          <div className="aid-faq-item">
             <h3>What support is included?</h3>
             <p>All purchases include 3 months of priority support and regular updates.</p>
           </div>
         </div>
       </section>
 
-      <section className="wc-ai-final-cta">
-        <div className="wc-ai-final-cta-card">
+      <section className="aid-final-cta">
+        <div className="aid-final-cta-card">
           <h2>Ready to automate your workflows?</h2>
           <p>Start saving time and increasing efficiency with AI automation.</p>
-          <div className="wc-ai-final-cta-buttons">
-            <Link href="/contact" className="wc-btn-ghost wc-ai-final-talk">
+          <div className="aid-final-cta-buttons">
+            <Link href="/contact" className="aid-btn-ghost aid-final-talk">
               <i className="fas fa-comments"></i> Talk to Our AI Experts
             </Link>
           </div>
         </div>
       </section>
-    </main>
+    </div>
   );
 }
