@@ -183,8 +183,8 @@
    HAMBURGER — PROPORTIONAL & ALIGNED
 ================================ */
 .mm-toggle {
-  width: 22px;                  /* visually slim, still easy to tap */
-  height: 18px;                 /* balanced height */
+  width: 15px;                  /* visually slim, still easy to tap */
+  height: 7px;                 /* balanced height */
 
   display: flex;
   flex-direction: column;
