@@ -19,17 +19,14 @@ export default function ContactPage() {
   const [showModal, setShowModal] = useState(false);
   const [errors, setErrors] = useState({});
 
-  // ✅ CLEANUP: Remove lingering modal/body styles when leaving the page
+  // Cleanup any lingering body styles when leaving the page
   useEffect(() => {
     return () => {
-      document.body.style.overflow = '';
-      document.body.style.position = '';
-      document.body.style.width = '';
-      
-      const modal = document.querySelector('.modal');
-      if (modal) {
-        modal.remove();
-      }
+      document.body.style.overflow = "";
+      document.body.style.position = "";
+      document.body.style.width = "";
+      document.body.style.minHeight = "";
+      document.body.style.background = "";
     };
   }, []);
 
@@ -68,9 +65,7 @@ export default function ContactPage() {
         budget: formData.budget || "To be discussed",
         message: formData.message,
         project_details: formData.message,
-        metadata: {
-          source: "contact-page",
-        },
+        metadata: { source: "contact-page" },
       });
 
       setLoading(false);
@@ -87,21 +82,19 @@ export default function ContactPage() {
     } catch (error) {
       console.error(error);
       setLoading(false);
-      setErrors({
-        submit: error.message || "We couldn't send your message right now.",
-      });
+      setErrors({ submit: error.message || "We couldn't send your message right now." });
     }
   };
 
   const closeModal = () => {
     setShowModal(false);
-    document.body.style.overflow = '';
-    document.body.style.position = '';
-    document.body.style.width = '';
+    document.body.style.overflow = "";
+    document.body.style.position = "";
+    document.body.style.width = "";
   };
 
   return (
-    <>
+    <div className="contact-page-wrapper">
       {/* HERO */}
       <section className="contact-hero">
         <div className="containers">
@@ -301,6 +294,6 @@ export default function ContactPage() {
           </div>
         </div>
       )}
-    </>
+    </div>
   );
-}
+} 
