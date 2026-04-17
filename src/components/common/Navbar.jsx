@@ -1,59 +1,105 @@
+
+
 "use client";
 import { useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import '@/styles/Navbar.css';
-export default function Navbar() {
-  const [open, setOpen] = useState(false);
+import SelectedServicesSummary from '@/components/common/SelectedServicesSummary';
 
-  const navLinks = [
-    "Home",
-    "Services",
-    "Packages",
-    "How It Works",
-    "Contact",
-    "Client Portal",
+
+export default function DevMastersNavbar() {
+  const [open, setOpen] = useState(false);
+  const pathname = usePathname();
+
+  const links = [
+    { name: "Home", href: "/" },
+    { name: "Services", href: "/services" },
+    { name: "Packages", href: "/packages" },
+    { name: "How It Works", href: "/how-it-work" },
+    { name: "Contact", href: "/contact" },
   ];
 
-  return (
-    <header className="nav">
-      <div className="nav-container">
-        {/* Logo */}
-        <div className="nav-logo">DevMasters</div>
+  const isActive = (href) => pathname === href;
 
-        {/* Desktop Nav */}
-        <nav className="nav-links">
-          {navLinks.map((link) => (
-            <Link key={link} href="#" className="nav-link">
-              {link}
+  return (
+    <header className="dm-nav">
+      <div className="dm-nav__inner">
+        
+        {/* Logo */}
+        <div className="dm-nav__logo">
+          <Link href="/">DevMasters</Link>
+        </div>
+
+        {/* Desktop Links */}
+        <nav className="dm-nav__links">
+          {links.map((link) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              className={`dm-nav__link ${
+                isActive(link.href) ? "active" : ""
+              }`}
+            >
+              {link.name}
             </Link>
           ))}
+                    <li> <Link href={'/Checkout'}><SelectedServicesSummary /> </Link></li>
         </nav>
 
-        {/* CTA */}
-        <div className="nav-cta">
-          <button className="btn-primary">Get Started</button>
+        {/* Actions */}
+        <div className="dm-nav__actions">
+
+
+          <Link href="/dashboard" className="dm-btn dm-btn--ghost">
+            Client Portal
+          </Link>
+
+          <Link href="/register" className="dm-btn dm-btn--primary">
+            Get Started
+          </Link>
         </div>
 
         {/* Hamburger */}
+                  <li> <Link href={'/Checkout'}><SelectedServicesSummary /> </Link></li>
         <button
-          className={`hamburger ${open ? "active" : ""}`}
+          className={`dm-nav__hamburger ${open ? "active" : ""}`}
           onClick={() => setOpen(!open)}
-          aria-label="Menu"
         >
           <span></span>
           <span></span>
           <span></span>
         </button>
+
       </div>
 
       {/* Mobile Menu */}
-      <div className={`mobile-menu ${open ? "show" : ""}`}>
-        {navLinks.map((link) => (
-          <Link key={link} href="#" className="mobile-link">
-            {link}
-          </Link>
-        ))}
-        <button className="btn-primary mobile-btn">Get Started</button>
+      <div className={`dm-nav__mobile ${open ? "show" : ""}`}>
+        
+        <div className="dm-nav__mobile-content">
+          {links.map((link) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              className={`dm-nav__mobile-link ${
+                isActive(link.href) ? "active" : ""
+              }`}
+              onClick={() => setOpen(false)}
+            >
+              {link.name}
+            </Link>
+          ))}
+
+          <div className="dm-nav__mobile-actions">
+            <Link href="/dashboard" className="dm-btn dm-btn--ghost">
+              Client Portal
+            </Link>
+
+            <Link href="/register" className="dm-btn dm-btn--primary">
+              Get Started
+            </Link>
+          </div>
+        </div>
       </div>
     </header>
   );
