@@ -162,3 +162,24 @@
     right: -5px;
   }
 }
+
+/* ===== FORCE IMMEDIATE VISIBILITY (Add to homepage & mockup CSS) ===== */
+.hm-mockup-wrapper,
+.hm-mockup-stack,
+.hm-mockup,
+.hm-mockup-img,
+.hero,
+.hero__visual {
+  opacity: 1 !important;
+  visibility: visible !important;
+  transform: none !important;
+  animation: none !important;
+  transition: none !important;
+}
+
+/* Ensure images load with proper sizing immediately */
+.hm-mockup-img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+}
