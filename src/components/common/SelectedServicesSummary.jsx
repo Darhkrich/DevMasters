@@ -54,7 +54,6 @@ export default function SelectedServicesSummary() {
         <div className="wc-summary-header">
           <div className="wc-summary-title">
             <i className="fas fa-shopping-cart"></i>
-            Request
           </div>
         </div>
       </div>

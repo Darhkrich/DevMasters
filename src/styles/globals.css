@@ -10,6 +10,7 @@
   opacity: 1 !important;
   transform: none !important;
   visibility: visible !important;
+  transition: none !important; /* added to prevent any delayed animations */
 }
 
 /* =========================
@@ -27,6 +28,8 @@ html {
   font-size: 14px; /* mobile base */
   -webkit-text-size-adjust: 100%;
   scroll-behavior: smooth;
+  overflow-x: hidden; /* prevent horizontal scroll globally */
+  width: 100%;
 }
 
 body {
@@ -38,6 +41,9 @@ body {
   color: var(--text-main);
   line-height: 1.5;
   transition: background 0.3s ease, color 0.2s ease;
+  overflow-x: hidden; /* reinforce */
+  width: 100%;
+  position: relative; /* helps with stacking contexts */
 }
 
 a {
@@ -48,6 +54,8 @@ a {
 button {
   font-family: inherit;
   cursor: pointer;
+  background: none;
+  border: none;
 }
 
 input,
@@ -65,7 +73,7 @@ a:focus-visible,
 input:focus-visible,
 textarea:focus-visible,
 select:focus-visible {
-  outline: 2px solid var(--primary);
+  outline: 2px solid var(--primary, #3b82f6);
   outline-offset: 2px;
 }
 
@@ -154,6 +162,8 @@ select:focus-visible {
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 1rem;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 /* Padding */
@@ -282,7 +292,7 @@ select:focus-visible {
   border-bottom: 1px solid var(--glass-border);
 }
 
-/* Backdrop */
+/* Backdrop – kept with fallbacks */
 .backdrop-blur-sm {
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
