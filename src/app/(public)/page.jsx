@@ -5,6 +5,7 @@ import Link from "next/link"
 import FeatureShowcase from "@/components/sections/FeatureShowcase";
 import ServiceCard from "@/components/sections/ServiceCard";
 import AIAutomationPage from "@/components/sections/AiShowCase";
+import HeroMockup from "@/components/sections/HeroMockup";
 export default function HomePage() {
   return (
     <>
@@ -90,37 +91,7 @@ export default function HomePage() {
 
           {/* HERO VISUAL */}
           <div className="hero__visual">
-  <div className="mockup-stack">
-    <Image
-      src="/desktopnew.png"
-      alt="Desktop Preview"
-      className="mockup mockup--desktop"
-      width={1200}
-      height={820}
-      priority
-    />
-    <div className="mockup mockup--tablet" >
-      <div>
-    <Image
-      src="/download.jpg"
-      alt="Tablet Preview"
-     className="one"
-     width={720}
-     height={900}
-    />
-    </div></div>
-    <div className="mockup mockup--mobile">
-      <div >
-    <Image
-      src="/m1.jpg"
-      alt="Mobile Preview"
-      className="come"
-      width={480}
-      height={960}
-    />
-    </div>
-</div>
-  </div>
+<HeroMockup />
 </div>
         </div>
       </section>
