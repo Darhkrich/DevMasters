@@ -1,13 +1,19 @@
-/* ===== NAVBAR ===== */
+/* ================= NAVBAR BASE ================= */
 .dm-nav {
   position: sticky;
   top: 0;
   width: 100%;
-  background: #0f172a;
-  border-bottom: 1px solid rgba(255,255,255,0.06);
   z-index: 1000;
+
+  /* 🔥 Elevated dark surface */
+  background: rgba(15, 23, 42, 0.75);
+  backdrop-filter: blur(14px);
+
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.25);
 }
 
+/* ================= INNER ================= */
 .dm-nav__inner {
   max-width: 1200px;
   margin: 0 auto;
@@ -17,7 +23,7 @@
   justify-content: space-between;
 }
 
-/* ===== LOGO ===== */
+/* ================= LOGO ================= */
 .dm-nav__logo a {
   font-size: 22px;
   font-weight: 700;
@@ -27,7 +33,7 @@
   -webkit-text-fill-color: transparent;
 }
 
-/* ===== LINKS ===== */
+/* ================= DESKTOP LINKS ================= */
 .dm-nav__links {
   display: flex;
   gap: 32px;
@@ -38,18 +44,20 @@
   text-decoration: none;
   font-size: 17px;
   position: relative;
-  transition: 0.3s;
+  transition: 0.3s ease;
 }
 
 .dm-nav__link:hover {
-  color: #fff;
+  color: #ffffff;
 }
 
+/* ACTIVE LINK */
 .dm-nav__link.active {
-  color: #fff;
+  color: #ffffff;
   font-weight: 600;
 }
 
+/* underline animation */
 .dm-nav__link::after {
   content: "";
   position: absolute;
@@ -66,28 +74,29 @@
   width: 100%;
 }
 
-/* ===== RIGHT SIDE ===== */
+/* ================= RIGHT SIDE ================= */
 .dm-nav__right {
   display: flex;
   align-items: center;
   gap: 12px;
 }
 
-/* ===== CART / QUOTE ===== */
+/* ================= CART / QUOTE ================= */
 .dm-cart {
   position: relative;
   padding: 10px;
   border-radius: 10px;
   background: rgba(255,255,255,0.05);
-  color: #fff;
+  color: #ffffff;
   text-decoration: none;
   transition: 0.3s;
 }
 
 .dm-cart:hover {
-  background: rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.12);
 }
 
+/* Badge */
 .dm-cart__badge {
   position: absolute;
   top: 4px;
@@ -95,17 +104,19 @@
   background: #ef4444;
   color: #fff;
   font-size: 11px;
+  font-weight: 600;
   padding: 2px 6px;
   border-radius: 999px;
 }
 
-/* ===== BUTTONS ===== */
+/* ================= BUTTONS ================= */
 .dm-btn {
   padding: 10px 18px;
   border-radius: 10px;
   font-size: 15px;
   font-weight: 600;
   text-decoration: none;
+  transition: 0.3s;
 }
 
 .dm-btn--ghost {
@@ -113,12 +124,17 @@
   color: #e2e8f0;
 }
 
-.dm-btn--primary {
-  background: linear-gradient(90deg, #4facfe, #6a5af9);
-  color: #fff;
+.dm-btn--ghost:hover {
+  background: rgba(255,255,255,0.05);
 }
 
-/* ===== HAMBURGER ===== */
+.dm-btn--primary {
+  background: linear-gradient(90deg, #4facfe, #6a5af9);
+  color: #ffffff;
+  box-shadow: 0 6px 20px rgba(79,172,254,0.3);
+}
+
+/* ================= HAMBURGER ================= */
 .dm-nav__hamburger {
   display: none;
   flex-direction: column;
@@ -132,10 +148,11 @@
 .dm-nav__hamburger span {
   width: 24px;
   height: 2px;
-  background: #fff;
+  background: #ffffff;
   transition: 0.3s;
 }
 
+/* Animation */
 .dm-nav__hamburger.active span:nth-child(1) {
   transform: rotate(45deg) translateY(7px);
 }
@@ -146,17 +163,21 @@
   transform: rotate(-45deg) translateY(-7px);
 }
 
-/* ===== MOBILE MENU ===== */
+/* ================= MOBILE MENU ================= */
 .dm-nav__mobile {
   position: absolute;
   top: 100%;
   left: 0;
   width: 100%;
-  background: #0f172a;
+
+  background: rgba(15, 23, 42, 0.95);
+  backdrop-filter: blur(14px);
+
   transform: translateY(-120%);
   opacity: 0;
   transition: 0.4s ease;
   pointer-events: none;
+
   padding: 40px 20px;
 }
 
@@ -166,6 +187,7 @@
   pointer-events: all;
 }
 
+/* Center everything */
 .dm-nav__mobile-content {
   display: flex;
   flex-direction: column;
@@ -173,6 +195,7 @@
   gap: 22px;
 }
 
+/* Mobile links */
 .dm-nav__mobile-link {
   font-size: 20px;
   color: #e2e8f0;
@@ -180,15 +203,15 @@
 }
 
 .dm-nav__mobile-link.active {
-  color: #fff;
+  color: #ffffff;
   font-weight: 600;
 }
 
 /* Mobile cart */
 .dm-cart--mobile {
   display: flex;
-  gap: 8px;
   align-items: center;
+  gap: 8px;
   font-size: 18px;
 }
 
@@ -199,7 +222,7 @@
   gap: 14px;
 }
 
-/* ===== RESPONSIVE ===== */
+/* ================= RESPONSIVE ================= */
 @media (max-width: 900px) {
   .dm-nav__links,
   .dm-nav__actions {
@@ -208,5 +231,17 @@
 
   .dm-nav__hamburger {
     display: flex;
+  }
+
+  /* 🔥 FIXED NAVBAR ON MOBILE */
+  .dm-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+  }
+
+  /* Prevent content overlap */
+  body {
+    padding-top: 70px;
   }
 }
