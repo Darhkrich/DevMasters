@@ -7,6 +7,7 @@ const STORAGE_KEYS = {
   refresh: "DevMasters_refresh_token",
   user: "Devmasters_user",
   sessionType: "DevMasters_session_type",
+  csrf: "DevMasters_csrf_token",
 };
 
 const SESSION_TYPES = {
@@ -69,6 +70,11 @@ function readSessionValue(key) {
   );
 }
 
+function writeSharedValue(key, value) {
+  writeStorage(key, value, SESSION_TYPES.session);
+  writeStorage(key, value, SESSION_TYPES.persistent);
+}
+
 function shouldUseSessionStorage(session = {}) {
   return Boolean(session.user?.is_staff);
 }
@@ -90,7 +96,12 @@ function readCookie(name) {
 }
 
 function getCsrfToken() {
-  return readCookie("csrftoken");
+  return readSessionValue(STORAGE_KEYS.csrf) || readCookie("csrftoken");
+}
+
+function storeCsrfToken(token) {
+  if (!token) return;
+  writeSharedValue(STORAGE_KEYS.csrf, token);
 }
 
 function isUnsafeMethod(method = "GET") {
@@ -217,6 +228,7 @@ async function refreshAccessToken() {
     headers,
     credentials: "include",
   });
+  storeCsrfToken(response.headers.get("X-CSRFToken"));
 
   const payload = await parseResponse(response);
   if (!response.ok) {
@@ -253,6 +265,7 @@ export async function apiRequest(
     credentials: includeCredentials ? "include" : "omit",
     ...options,
   });
+  storeCsrfToken(response.headers.get("X-CSRFToken"));
 
   if (response.status === 401 && auth && retryOnUnauthorized) {
     const refreshPayload = await refreshAccessToken();
