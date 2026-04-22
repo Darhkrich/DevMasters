@@ -144,6 +144,10 @@ function getBackendOrigin() {
   }
 }
 
+export function getApiBaseUrl() {
+  return DEFAULT_API_BASE_URL;
+}
+
 export function buildMediaUrl(value) {
   if (!value) return "";
   if (/^https?:\/\//i.test(value)) return value;
@@ -420,6 +424,23 @@ export async function register(account) {
   return apiRequest("/auth/register/", {
     method: "POST",
     body: account,
+  });
+}
+
+export async function verifyEmail(uid, token) {
+  return apiRequest(
+    `/auth/verify-email/${toQueryString({ uid, token })}`,
+    {
+      retryOnUnauthorized: false,
+    },
+  );
+}
+
+export async function resendVerificationEmail(email) {
+  return apiRequest("/auth/resend-verification/", {
+    method: "POST",
+    body: { email },
+    retryOnUnauthorized: false,
   });
 }
 

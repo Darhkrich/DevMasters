@@ -3,8 +3,7 @@
 import { Suspense, useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-
-const API_BASE = process.env.NEXT_PUBLIC_BOEM_API_BASE_URL || 'http://localhost:8000/api/v1';
+import { verifyEmail } from '@/lib/boemApi';
 
 function VerifyEmailContent() {
   const searchParams = useSearchParams();
@@ -19,23 +18,17 @@ function VerifyEmailContent() {
       return;
     }
 
-    const url = `${API_BASE}/auth/verify-email/?uid=${encodeURIComponent(uid)}&token=${encodeURIComponent(token)}`;
-
-    fetch(url)
-      .then(async (response) => {
-        if (response.ok) {
-          setStatus('success');
-          setTimeout(() => router.push('/login?verified=true'), 3000);
-          return;
-        }
-
-        const data = await response.json();
-        setStatus('error');
-        setErrorMsg(data.error || 'Verification failed.');
+    verifyEmail(uid, token)
+      .then((response) => {
+        setStatus('success');
+        const redirectQuery = /already verified/i.test(response?.message || '')
+          ? 'already'
+          : 'true';
+        setTimeout(() => router.push(`/login?verified=${redirectQuery}`), 3000);
       })
-      .catch(() => {
+      .catch((error) => {
         setStatus('error');
-        setErrorMsg('Network error. Please try again.');
+        setErrorMsg(error.message || 'Verification failed.');
       });
   }, [router, token, uid]);
 
@@ -60,6 +53,8 @@ function VerifyEmailContent() {
           <>
             <h1>Verification failed</h1>
             <p>{errorMsg}</p>
+            <Link href="/resend-verification">Request another verification email</Link>
+            <br />
             <Link href="/login">Back to login</Link>
           </>
         )}

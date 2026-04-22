@@ -1,13 +1,16 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense, useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { resendVerificationEmail } from "@/lib/boemApi";
 
-const API_BASE = process.env.NEXT_PUBLIC_BOEM_API_BASE_URL || "http://localhost:8000/api/v1";
-
-export default function ResendVerificationPage() {
-  const [email, setEmail] = useState("");
+function ResendVerificationContent() {
+  const searchParams = useSearchParams();
+  const [email, setEmail] = useState(searchParams.get("email") || "");
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
+  const isRegistered = searchParams.get("registered") === "true";
+  const wasSent = searchParams.get("sent") !== "false";
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -15,21 +18,8 @@ export default function ResendVerificationPage() {
     setMessage("");
 
     try {
-      const res = await fetch(`${API_BASE}/auth/resend-verification/`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email }),
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        throw new Error(data?.error || "Failed to resend verification email");
-      }
-
-      setMessage("Verification email sent. Check your inbox.");
+      const data = await resendVerificationEmail(email);
+      setMessage(data.message || "Verification email sent. Check your inbox.");
     } catch (err) {
       setMessage(err.message);
     } finally {
@@ -40,6 +30,14 @@ export default function ResendVerificationPage() {
   return (
     <div style={{ maxWidth: "400px", margin: "80px auto", textAlign: "center" }}>
       <h2>Resend Verification Email</h2>
+
+      {isRegistered && (
+        <p style={{ marginBottom: "15px" }}>
+          {wasSent
+            ? "Your account was created. Check your inbox for the verification link."
+            : "Your account was created, but we could not send the verification email right away. You can try again here."}
+        </p>
+      )}
 
       <form onSubmit={handleSubmit}>
         <input
@@ -58,5 +56,13 @@ export default function ResendVerificationPage() {
 
       {message && <p style={{ marginTop: "15px" }}>{message}</p>}
     </div>
+  );
+}
+
+export default function ResendVerificationPage() {
+  return (
+    <Suspense fallback={<div style={{ maxWidth: "400px", margin: "80px auto", textAlign: "center" }}>Loading...</div>}>
+      <ResendVerificationContent />
+    </Suspense>
   );
 }
