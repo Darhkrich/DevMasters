@@ -71,6 +71,17 @@ function readSessionValue(key) {
   );
 }
 
+function alternateSessionType(type) {
+  return type === SESSION_TYPES.session
+    ? SESSION_TYPES.persistent
+    : SESSION_TYPES.session;
+}
+
+function writeScopedValue(key, value, type = SESSION_TYPES.persistent) {
+  writeStorage(key, null, alternateSessionType(type));
+  writeStorage(key, value, type);
+}
+
 function writeSharedValue(key, value) {
   writeStorage(key, value, SESSION_TYPES.session);
   writeStorage(key, value, SESSION_TYPES.persistent);
@@ -186,11 +197,11 @@ export function getStoredUser() {
 }
 
 export function getAccessToken() {
-  return null;
+  return readSessionValue(STORAGE_KEYS.access);
 }
 
 export function getRefreshToken() {
-  return null;
+  return readSessionValue(STORAGE_KEYS.refresh);
 }
 
 export function saveSession(session = {}) {
@@ -205,8 +216,10 @@ export function saveSession(session = {}) {
   clearStorageBucket(SESSION_TYPES.session);
   clearStorageBucket(SESSION_TYPES.persistent);
 
-  if (existingUser) writeStorage(STORAGE_KEYS.user, JSON.stringify(existingUser), storageType);
-  writeStorage(STORAGE_KEYS.sessionType, storageType, storageType);
+  if (existingUser) writeScopedValue(STORAGE_KEYS.user, JSON.stringify(existingUser), storageType);
+  if (session.access) writeScopedValue(STORAGE_KEYS.access, session.access, storageType);
+  if (session.refresh) writeScopedValue(STORAGE_KEYS.refresh, session.refresh, storageType);
+  writeScopedValue(STORAGE_KEYS.sessionType, storageType, storageType);
 
   buildCookie("boem_session", "1", { maxAge });
   buildCookie("boem_role", existingUser?.is_staff ? "admin" : "user", { maxAge });
@@ -224,6 +237,11 @@ export function clearSession() {
 async function refreshAccessToken() {
   const headers = {};
   const csrfToken = getCsrfToken();
+  const refreshToken = getRefreshToken();
+
+  if (refreshToken) {
+    headers["Content-Type"] = "application/json";
+  }
   if (csrfToken) {
     headers["X-CSRFToken"] = csrfToken;
   }
@@ -232,6 +250,7 @@ async function refreshAccessToken() {
     method: "POST",
     headers,
     credentials: "include",
+    body: refreshToken ? JSON.stringify({ refresh: refreshToken }) : undefined,
   });
   storeCsrfToken(response.headers.get("X-CSRFToken"));
 
@@ -239,6 +258,14 @@ async function refreshAccessToken() {
   if (!response.ok) {
     clearSession();
     return null;
+  }
+
+  const storageType = getStoredSessionType();
+  if (payload.access) {
+    writeScopedValue(STORAGE_KEYS.access, payload.access, storageType);
+  }
+  if (payload.refresh) {
+    writeScopedValue(STORAGE_KEYS.refresh, payload.refresh, storageType);
   }
 
   return payload;
@@ -254,6 +281,13 @@ export async function apiRequest(
 
   if (!isFormData && body !== undefined && !requestHeaders.has("Content-Type")) {
     requestHeaders.set("Content-Type", "application/json");
+  }
+
+  if (auth && !requestHeaders.has("Authorization")) {
+    const accessToken = getAccessToken();
+    if (accessToken) {
+      requestHeaders.set("Authorization", `Bearer ${accessToken}`);
+    }
   }
 
   if (isUnsafeMethod(method)) {
@@ -1091,7 +1125,11 @@ export async function deletePriorityAdmin(id) {
 
 async function persistAuthenticatedUser(payload) {
   if (payload.user) {
-    saveSession({ user: payload.user });
+    saveSession({
+      user: payload.user,
+      access: payload.access,
+      refresh: payload.refresh,
+    });
     return payload;
   }
 
@@ -1147,6 +1185,9 @@ export async function logout() {
   try {
     await apiRequest("/auth/logout/", {
       method: "POST",
+      body: {
+        refresh: getRefreshToken(),
+      },
       auth: true,
       retryOnUnauthorized: false,
     });
