@@ -1,6 +1,7 @@
 // boemApi.js
-const DEFAULT_API_BASE_URL =
-  process.env.NEXT_PUBLIC_BOEM_API_BASE_URL || "https://backenddevmasters-production.up.railway.app/api/v1";
+const DEFAULT_API_BASE_URL = (
+  process.env.NEXT_PUBLIC_BOEM_API_BASE_URL || "https://backenddevmasters-production.up.railway.app/api/v1"
+).replace(/\/+$/, "");
 
 const STORAGE_KEYS = {
   access: "DevMasters_access_token",
