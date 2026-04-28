@@ -139,12 +139,17 @@ export default function RegisterPage() {
       if (response.message) {
         setSuccess(response.message);
         setTimeout(() => {
-          const params = new URLSearchParams({
-            email: formData.email,
-            registered: 'true',
-            sent: response.verification_email_sent === false ? 'false' : 'true',
-          });
-          router.push(`/resend-verification?${params.toString()}`);
+          if (response.email_verification_required) {
+            const params = new URLSearchParams({
+              email: formData.email,
+              registered: 'true',
+              sent: response.verification_email_sent === false ? 'false' : 'true',
+            });
+            router.push(`/resend-verification?${params.toString()}`);
+            return;
+          }
+
+          router.push('/login?registered=true');
         }, 2000);
       } else {
         setErrors({ general: 'Registration failed. Please try again.' });

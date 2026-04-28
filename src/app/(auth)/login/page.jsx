@@ -21,8 +21,11 @@ function LoginContent() {
   const [twoFactorCode, setTwoFactorCode] = useState('');
 
   useEffect(() => {
+    const registered = searchParams.get('registered');
     const verified = searchParams.get('verified');
-    if (verified === 'true') {
+    if (registered === 'true') {
+      setSuccess('Account created successfully! You can now log in.');
+    } else if (verified === 'true') {
       setSuccess('Email verified successfully! You can now log in.');
     } else if (verified === 'already') {
       setSuccess('Your email was already verified. Please log in.');
