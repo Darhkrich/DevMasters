@@ -19,7 +19,6 @@ const SESSION_TYPES = {
 function isBrowser() {
   return typeof window !== "undefined";
 }
-
 function getStorage(type) {
   if (!isBrowser()) return null;
   return type === SESSION_TYPES.session ? window.sessionStorage : window.localStorage;
