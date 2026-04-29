@@ -41,7 +41,14 @@ body {
 .mobile-logo {
   font-size: 1.2rem;
   font-weight: 600;
-  margin-right: 15px;
+ 
+}
+
+.mobile-logo2 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-left: 75px;
+ 
 }
 
 /* Desktop sidebar - hidden on mobile/tablet by default */
@@ -229,7 +236,7 @@ body {
 .mobile-logo {
   font-size: 1.2rem;
   font-weight: 600;
-  margin-right: 15px;
+ 
 }
 
 /* Desktop sidebar - hidden on mobile/tablet */

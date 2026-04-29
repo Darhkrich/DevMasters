@@ -45,9 +45,9 @@ export default function MobileMenu() {
         <div className="mobile-logo">Dashboard</div>
 
    {/* Mobile Top Bar */}
-      <div className="mobile-logo">
+      <div className="mobile-logo2">
         <Link href="/">
-          MainSite
+          BackToHome
         </Link>
         </div>
       </header>
