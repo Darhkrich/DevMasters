@@ -44,6 +44,12 @@ export default function MobileMenu() {
         </button>
         <div className="mobile-logo">Dashboard</div>
 
+   {/* Mobile Top Bar */}
+      <div>
+        <Link href="/">
+          MainSite
+        </Link>
+        </div>
       </header>
 
       {/* Drawer */}
