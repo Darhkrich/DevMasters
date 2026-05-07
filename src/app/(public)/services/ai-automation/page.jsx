@@ -41,7 +41,9 @@ export default function AIAutomationPage() {
 
         setAutomations(fallbackAutomations);
         setBundles(fallbackBundles);
-        setDataError("Live AI service data could not be loaded, so DevMasters is showing local content.");
+        setDataError(
+          "Some live updates are temporarily unavailable, but you can still explore our AI solutions."
+        );
       } finally {
         if (isMounted) {
           setLoading(false);
@@ -236,7 +238,7 @@ export default function AIAutomationPage() {
           </div>
         )}
 
-        {loading && <p style={{ textAlign: "center" }}>Loading live AI services...</p>}
+        {loading && <p style={{ textAlign: "center" }}>Preparing AI solutions...</p>}
       </section>
 
       <section className="sp2__wc-service-section sp2__wc-ai-bundles-section">

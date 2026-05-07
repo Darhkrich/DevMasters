@@ -16,6 +16,14 @@ const SESSION_TYPES = {
   session: "session",
 };
 
+const shouldLogClientErrors = process.env.NODE_ENV !== "production";
+
+function logClientError(...args) {
+  if (shouldLogClientErrors && typeof console !== "undefined") {
+    console.error(...args);
+  }
+}
+
 function isBrowser() {
   return typeof window !== "undefined";
 }
@@ -30,7 +38,7 @@ function readStorage(key, type = SESSION_TYPES.persistent) {
   try {
     return storage.getItem(key);
   } catch (error) {
-    console.error(`Unable to read ${key} from storage`, error);
+    logClientError(`Unable to read ${key} from storage`, error);
     return null;
   }
 }
@@ -45,7 +53,7 @@ function writeStorage(key, value, type = SESSION_TYPES.persistent) {
     }
     storage.setItem(key, value);
   } catch (error) {
-    console.error(`Unable to write ${key} to storage`, error);
+    logClientError(`Unable to write ${key} to storage`, error);
   }
 }
 
@@ -190,7 +198,7 @@ export function getStoredUser() {
   try {
     return JSON.parse(raw);
   } catch (error) {
-    console.error("Unable to parse stored user", error);
+    logClientError("Unable to parse stored user", error);
     return null;
   }
 }
@@ -1143,7 +1151,7 @@ async function persistAuthenticatedUser(payload) {
       payload.user = user;
     }
   } catch (err) {
-    console.error("Failed to fetch current user after authentication", err);
+    logClientError("Failed to fetch current user after authentication", err);
   }
 
   return payload;
@@ -1191,7 +1199,7 @@ export async function logout() {
       retryOnUnauthorized: false,
     });
   } catch (error) {
-    console.error("Logout request failed", error);
+    logClientError("Logout request failed", error);
   } finally {
     clearSession();
   }

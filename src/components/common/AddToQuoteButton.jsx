@@ -4,6 +4,7 @@
 import { useState } from "react";
 import { useCart } from "../../context/CartContext";
 import { transformToCartItem } from "../../utils/dataTransform";
+import { logAppError } from "@/lib/logging";
 
 export default function AddToQuoteButton({
   item,
@@ -40,7 +41,7 @@ export default function AddToQuoteButton({
       // Reset after 2 seconds
       setTimeout(() => setIsAdded(false), 2000);
     } catch (error) {
-      console.error('Error adding item to cart:', error);
+      logAppError('Error adding item to cart:', error);
       // Show error message
       const event = new CustomEvent('cartError', { 
         detail: { 

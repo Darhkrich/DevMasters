@@ -3,6 +3,7 @@
 import { useEffect, useState, useRef } from 'react';
 import Link from 'next/link';
 import { fetchNotifications, markNotificationRead, markAllNotificationsRead } from '@/lib/boemApi';
+import { logAppError } from '@/lib/logging';
 import './NotificationsBell.css';
 
 function formatTimeAgo(date) {
@@ -33,7 +34,7 @@ export default function NotificationBell() {
       const unread = list.filter(n => !n.is_read).length;
       setUnreadCount(unread);
     } catch (err) {
-      console.error('Failed to load notifications', err);
+      logAppError('Failed to load notifications', err);
     } finally {
       setLoading(false);
     }
@@ -69,7 +70,7 @@ export default function NotificationBell() {
       );
       setUnreadCount(prev => prev - 1);
     } catch (err) {
-      console.error(err);
+      logAppError('Failed to mark notification as read', err);
     }
   };
 
@@ -79,7 +80,7 @@ export default function NotificationBell() {
       setNotifications(prev => prev.map(n => ({ ...n, is_read: true })));
       setUnreadCount(0);
     } catch (err) {
-      console.error(err);
+      logAppError('Failed to mark all notifications as read', err);
     }
   };
 
@@ -100,7 +101,7 @@ export default function NotificationBell() {
             )}
           </div>
           <div className="nb-dropdown-list">
-            {loading && <div className="nb-loading">Loading...</div>}
+            {loading && <div className="nb-loading">Preparing notifications...</div>}
             {!loading && notifications.length === 0 && (
               <div className="nb-empty">No notifications</div>
             )}

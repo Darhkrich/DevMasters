@@ -75,7 +75,20 @@ export default function DashboardGuard({ children, requireAdmin = false }) {
   }, [pathname, requireAdmin, router]);
 
   if (checking) {
-    return <div style={{ padding: '2rem' }}>Checking your session...</div>;
+    return (
+      <div
+        style={{
+          minHeight: '40vh',
+          display: 'grid',
+          placeItems: 'center',
+          padding: '2rem',
+          textAlign: 'center',
+          color: '#475569',
+        }}
+      >
+        Preparing your dashboard...
+      </div>
+    );
   }
 
   return children;

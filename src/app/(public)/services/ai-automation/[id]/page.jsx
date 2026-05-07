@@ -59,7 +59,9 @@ export default function AIAutomationDetailPage() {
             ? aiAutomations.filter((entry) => entry.id !== params.id && entry.sector === fallbackItem.sector).slice(0, 3)
             : aiBundles.filter((entry) => entry.id !== params.id).slice(0, 3),
         );
-        setDataError("Live AI details could not be loaded, so DevMasters is showing local content.");
+        setDataError(
+          "Some live updates are temporarily unavailable, but this AI solution is still available to review."
+        );
       } finally {
         if (isMounted) setLoading(false);
       }
@@ -73,7 +75,7 @@ export default function AIAutomationDetailPage() {
     return (
       <div className="aid-loading">
         <div className="aid-loading-spinner"></div>
-        <p>Loading automation details...</p>
+        <p>Preparing solution details...</p>
       </div>
     );
   }

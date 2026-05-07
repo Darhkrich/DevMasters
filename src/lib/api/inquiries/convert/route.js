@@ -1,6 +1,7 @@
 // /api/inquiries/convert/route.js
 
 import { NextResponse } from 'next/server';
+import { logAppError } from '@/lib/logging';
 
 export async function POST(req) {
   const ADMIN_SECRET = process.env.ADMIN_SECRET;
@@ -68,6 +69,6 @@ const handleDelete = async (id) => {
 
     setTemplates(prev => prev.filter(t => t.id !== id));
   } catch (err) {
-    console.error(err);
+    logAppError('Template delete failed', err);
   }
 };

@@ -336,7 +336,7 @@ export default function DashboardPage() {
             <div className="ad-stat-info">
               <h3>{stats.totalOrders}</h3>
               <p>Total Orders</p>
-              <span className="ad-stat-trend positive">Live from backend</span>
+              <span className="ad-stat-trend positive">Updated in real time</span>
             </div>
           </div>
 

@@ -41,7 +41,9 @@ export default function TemplatesPage() {
         }
 
         setTemplates(fallbackTemplates);
-        setDataError("Live template data could not be loaded, so Devmasters is showing the local catalog.");
+        setDataError(
+          "Some live updates are temporarily unavailable, but you can still browse our website catalog."
+        );
       } finally {
         if (isMounted) {
           setLoading(false);
@@ -290,7 +292,7 @@ export default function TemplatesPage() {
           </div>
         )}
 
-        {loading && <div className="sp3__wc-templates-loadmore">Loading live templates...</div>}
+        {loading && <div className="sp3__wc-templates-loadmore">Preparing website options...</div>}
       </section>
     </main>
   );

@@ -9,6 +9,7 @@ import {
   getStoredUser,
   replyToThread,
 } from '@/lib/boemApi';
+import { logAppError } from '@/lib/logging';
 import './message.css';
 
 function formatDateTime(value) {
@@ -149,7 +150,7 @@ export default function MessagesPage() {
           )
         );
       } catch (err) {
-        console.error('Refresh error', err);
+        logAppError('Thread refresh failed', err);
       } finally {
         setThreadLoading(false);
       }

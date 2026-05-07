@@ -85,9 +85,7 @@ const SettingsDashboard = () => {
     setIsLoading(true);
     // Simulate API call
     await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    console.log('Saving settings:', settings);
-    
+
     setIsLoading(false);
     alert('Settings saved successfully!');
   };

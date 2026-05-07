@@ -7,6 +7,7 @@ import BuilderSection from "./BuilderSection";
 import AddToQuoteButton from "@/components/common/AddToQuoteButton";
 import { fetchPricingData } from "@/lib/boemApi";
 import { pricingData as fallbackPricingData } from "@/data/pricing";
+import { logAppError } from "@/lib/logging";
 
 const emptyPricingState = {
   websites: {
@@ -58,10 +59,12 @@ export default function PricingPage() {
         setDataError("");
       } catch (error) {
         if (!isMounted) return;
-        console.error("Failed to load pricing from API", error);
+        logAppError("Failed to load pricing from API", error);
         // Fallback to local mockup data
         setPricingData(fallbackPricingData);
-        setDataError("Live pricing could not be loaded, so local pricing data is being shown.");
+        setDataError(
+          "A few live updates are temporarily unavailable, so you're viewing our standard pricing guide."
+        );
       } finally {
         if (isMounted) setLoading(false);
       }
@@ -337,7 +340,7 @@ export default function PricingPage() {
 
       {loading && (
         <div className="sp5__wc-toggle-hint" style={{ textAlign: "center", marginTop: "1rem" }}>
-          Loading live pricing packages...
+          Preparing pricing options...
         </div>
       )}
 

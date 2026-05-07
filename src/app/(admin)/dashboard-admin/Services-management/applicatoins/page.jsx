@@ -56,7 +56,7 @@ export default function ApplicationsManagementPage() {
         <header className="admin-dashboard-header">
           <div className="admin-header-left">
             <h1>Application Services</h1>
-            <p className="admin-welcome-text">Track the live application and web services catalogue.</p>
+            <p className="admin-welcome-text">Review web and mobile service offerings in one place.</p>
           </div>
         </header>
 

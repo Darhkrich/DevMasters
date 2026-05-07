@@ -74,7 +74,7 @@ export default function ClientsManagementPage() {
         <header className="ac-header">
           <div className="ac-header-left">
             <h1>Clients Management</h1>
-            <p className="ac-welcome-text">Manage all client profiles from the backend</p>
+            <p className="ac-welcome-text">Manage every client profile from one secure workspace.</p>
           </div>
           <div className="ac-header-right">
             <div className="ac-search-bar">
@@ -241,7 +241,7 @@ export default function ClientsManagementPage() {
             </table>
           </div>
 
-          {loading && <div className="ac-pagination">Loading live clients...</div>}
+          {loading && <div className="ac-pagination">Preparing client records...</div>}
         </div>
       </main>
     </div>

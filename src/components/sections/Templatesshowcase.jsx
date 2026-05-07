@@ -4,6 +4,7 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { fetchTemplates } from "@/lib/boemApi";
+import { logAppError } from "@/lib/logging";
 import "./templates-showcase.css";
 
 const INITIAL_VISIBLE_COUNT = 3; // Show only 3 templates on the homepage
@@ -20,7 +21,7 @@ const Templatesshowcase = () => {
         // data is already mapped to the expected frontend structure
         setTemplates(data.slice(0, INITIAL_VISIBLE_COUNT));
       } catch (err) {
-        console.error("Failed to load templates", err);
+        logAppError("Failed to load templates", err);
         setError("Could not load templates. Please try again later.");
       } finally {
         setLoading(false);
@@ -34,7 +35,7 @@ const Templatesshowcase = () => {
       <main className="sp3__wc-services-page sp3__wc-templates-page">
         <section className="sp3__wc-service-section sp3__wc-templates-section">
           <div className="sp3__wc-templates-grid">
-            <p>Loading templates...</p>
+            <p>Preparing featured websites...</p>
           </div>
         </section>
       </main>

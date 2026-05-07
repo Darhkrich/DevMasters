@@ -62,7 +62,7 @@ export default function AIAutomationManagementPage() {
         <header className="admin-dashboard-header">
           <div className="admin-header-left">
             <h1>AI Automation</h1>
-            <p className="admin-welcome-text">View the live AI automation and bundle catalogue .</p>
+            <p className="admin-welcome-text">Review AI automation services and bundle options.</p>
           </div>
         </header>
 

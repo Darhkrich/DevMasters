@@ -2,6 +2,7 @@
 'use client';
 
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import { logAppError } from '@/lib/logging';
 
 const CartContext = createContext();
 
@@ -18,7 +19,7 @@ function readStoredJson(key, fallback) {
   try {
     return JSON.parse(rawValue);
   } catch (error) {
-    console.error(`Error loading ${key}:`, error);
+    logAppError(`Error loading ${key}:`, error);
     window.localStorage.removeItem(key);
     return fallback;
   }
@@ -42,7 +43,7 @@ export const CartProvider = ({ children }) => {
     try {
       localStorage.setItem('serviceQuoteCart', JSON.stringify(cart));
     } catch (e) {
-      console.error('Error saving cart:', e);
+      logAppError('Error saving cart:', e);
     }
   }, [cart]);
 
@@ -50,7 +51,7 @@ export const CartProvider = ({ children }) => {
     try {
       localStorage.setItem('quoteFormData', JSON.stringify(formData));
     } catch (e) {
-      console.error('Error saving form:', e);
+      logAppError('Error saving form:', e);
     }
   }, [formData]);
 

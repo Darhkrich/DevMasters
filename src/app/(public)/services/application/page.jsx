@@ -111,7 +111,9 @@ export default function AppsPage() {
           getServicesByType(activeFilter).filter((service) => service.category === "service")
         );
         setBlueprints(getServicesByCategory("blueprint"));
-        setDataError("Live app services could not be loaded, so DevMasters is showing local service data.");
+        setDataError(
+          "Some live updates are temporarily unavailable, but our app service catalog is still ready to browse."
+        );
       } finally {
         if (isMounted) setLoading(false);
       }
@@ -173,7 +175,7 @@ export default function AppsPage() {
             <ServiceCard key={service.id} service={service} />
           ))}
         </div>
-        {loading && <p style={{ textAlign: "center" }}>Loading live app services...</p>}
+        {loading && <p style={{ textAlign: "center" }}>Preparing app services...</p>}
       </section>
 
       {blueprints.length > 0 && (
@@ -181,7 +183,7 @@ export default function AppsPage() {
           <header className="sp4__wc-service-section-header">
             <div>
               <h2>Application Blueprints</h2>
-              <p>These reusable blueprints are backed by the DevMasters backend and can be quoted directly.</p>
+              <p>Reusable product blueprints that make scoping and quoting faster.</p>
             </div>
           </header>
           <div className="sp4__wc-apps-cards">

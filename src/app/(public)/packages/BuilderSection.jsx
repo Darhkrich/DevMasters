@@ -52,7 +52,9 @@ export default function BuilderSection({ onDashboardNavigate }) {
         }
 
         setBuilderOptions(fallbackBuilderOptions);
-        setDataError("Live builder options could not be loaded, so local pricing logic is being used.");
+        setDataError(
+          "We're showing our standard package builder right now while live updates catch up."
+        );
       } finally {
         if (isMounted) {
           setLoading(false);
@@ -235,7 +237,7 @@ export default function BuilderSection({ onDashboardNavigate }) {
           </p>
           {dataError && <p className="builder-hint">{dataError}</p>}
         </div>
-        <div className="builder-badge">Live estimate calculator</div>
+        <div className="builder-badge">Instant estimate calculator</div>
       </header>
 
       <div className="builder-card">
@@ -419,7 +421,7 @@ export default function BuilderSection({ onDashboardNavigate }) {
             </button>
           )}
 
-          {loading && <p className="builder-hint">Loading live builder options...</p>}
+          {loading && <p className="builder-hint">Preparing package options...</p>}
         </div>
       </div>
     </section>

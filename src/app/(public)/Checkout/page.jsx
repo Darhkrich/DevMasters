@@ -7,6 +7,7 @@ import CartSummary from '@/components/checkout/CartSummary';
 import QuoteForm from '@/components/checkout/QuoteForm';
 import CheckoutHeader from '@/components/checkout/CheckoutHeader';
 import { createOrder } from '@/lib/boemApi';
+import { logAppError } from '@/lib/logging';
 import './checkout.css';
 
 export default function CheckoutPage() {
@@ -70,7 +71,7 @@ export default function CheckoutPage() {
       clearCart();
       window.location.href = `/Checkout/success?order=${data.reference}`;
     } catch (err) {
-      console.error('Order creation failed:', err);
+      logAppError('Order creation failed:', err);
       if (err.payload && err.payload.errors) {
         alert(`Error: ${JSON.stringify(err.payload.errors)}`);
       } else {

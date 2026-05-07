@@ -69,7 +69,9 @@ export default function TemplateDetailPage() {
             .map(normalizeFallbackTemplate)
             .slice(0, 3),
         );
-        setDataError("Live template details could not be loaded, so DevMasters is showing local content.");
+        setDataError(
+          "Some live updates are temporarily unavailable, but this website option is still ready to explore."
+        );
       } finally {
         if (isMounted) setLoading(false);
       }
@@ -85,7 +87,7 @@ export default function TemplateDetailPage() {
     return (
       <div className="tpd-loading">
         <div className="tpd-loading-spinner"></div>
-        <p>Loading Website details...</p>
+        <p>Preparing website details...</p>
       </div>
     );
   }

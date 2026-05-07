@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { createInquiry } from "@/lib/boemApi";
+import { logAppError } from "@/lib/logging";
 import "./contact.css"; // new CSS file
 
 export default function ContactPage() {
@@ -69,7 +70,7 @@ export default function ContactPage() {
         message: "",
       });
     } catch (error) {
-      console.error(error);
+      logAppError("Contact form submission failed", error);
       setLoading(false);
       setErrors({ submit: error.message || "We couldn't send your message right now." });
     }

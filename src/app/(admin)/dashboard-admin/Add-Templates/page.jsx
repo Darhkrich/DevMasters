@@ -3,6 +3,7 @@
 import './add-templates.css';
 import { useState, useRef } from 'react';
 import { createTemplate } from '@/lib/boemApi';
+import { logAppError } from '@/lib/logging';
 
 const AddNewTemplate = () => {
   const [formData, setFormData] = useState({
@@ -148,7 +149,7 @@ const AddNewTemplate = () => {
       alert('Template created successfully!');
       window.location.href = '/dashboard-admin';
     } catch (err) {
-      console.error(err);
+      logAppError('Template creation failed', err);
       alert(err.message || 'Error creating template');
     } finally {
       setIsUploading(false);
