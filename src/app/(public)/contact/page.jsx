@@ -97,7 +97,7 @@ export default function ContactPage() {
             <div className="cnt-card">
               <h3 className="cnt-card-title">Email Us</h3>
               <p className="cnt-card-text">We usually reply within 24 hours</p>
-              <a href="mailto:hello@sitecraft.com" className="cnt-link">hello@sitecraft.com</a>
+              <a href="mailto:hello@sitecraft.com" className="cnt-link">devmasters011@gmail.com</a>
             </div>
             <div className="cnt-card">
               <h3 className="cnt-card-title">Live Chat</h3>
@@ -109,7 +109,7 @@ export default function ContactPage() {
             <div className="cnt-card">
               <h3 className="cnt-card-title">Call Us</h3>
               <p className="cnt-card-text">Speak directly with our experts</p>
-              <a href="tel:+15551234567" className="cnt-link">+1 (555) 123-4567</a>
+              <a href="tel:+15551234567" className="cnt-link"> (+233) 503274574</a>
             </div>
           </div>
         </div>
@@ -154,8 +154,8 @@ export default function ContactPage() {
                 <div className="cnt-form-group">
                   <label className="cnt-label">Project Budget</label>
                   <select className="cnt-select" name="budget" value={formData.budget} onChange={handleChange}>
-                    <option value="">Select budget</option>
-                    <option value="500-1000">$500 – $1,000</option>
+                    <option value="">Select budget (Will be converted into your local currency) </option>
+                    <option value="500-1000">$100 – $1,000</option>
                     <option value="1000-2500">$1,000 – $2,500</option>
                     <option value="2500-5000">$2,500 – $5,000</option>
                     <option value="5000+">$5,000+</option>
@@ -178,20 +178,20 @@ export default function ContactPage() {
               <h2 className="cnt-info-title">Get in Touch</h2>
               <div className="cnt-info-item">
                 <div>
-                  <h4 className="cnt-info-item-title">Our Office</h4>
-                  <p className="cnt-info-item-text">123 Web Design Street<br />San Francisco, CA</p>
+                  <h4 className="cnt-info-item-title">Cape Coast -(Ghana)</h4>
+                  <p className="cnt-info-item-text">Pedu</p>
                 </div>
               </div>
               <div className="cnt-info-item">
                 <div>
                   <h4 className="cnt-info-item-title">Phone</h4>
-                  <p className="cnt-info-item-text">+1 (555) 123-4567</p>
+                  <p className="cnt-info-item-text">(+233) 503274574</p>
                 </div>
               </div>
               <div className="cnt-info-item">
                 <div>
                   <h4 className="cnt-info-item-title">Email</h4>
-                  <p className="cnt-info-item-text">hello@sitecraft.com</p>
+                  <p className="cnt-info-item-text">devmaster011@gmail.com</p>
                 </div>
               </div>
             </div>
