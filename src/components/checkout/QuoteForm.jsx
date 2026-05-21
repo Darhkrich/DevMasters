@@ -61,9 +61,9 @@ export default function QuoteForm({ onSubmit, isSubmitting, autoFillData }) {
   };
 
   const budgetOptions = [
+    '$100 - $1,000',
     '$1,000 - $5,000',
-    '$5,000 - $10,000',
-    '$10,000 - $20,000',
+    '$6,000 - $20,000',
     '$20,000 - $50,000',
     '$50,000+',
     'To be discussed'
@@ -175,7 +175,7 @@ export default function QuoteForm({ onSubmit, isSubmitting, autoFillData }) {
                 onChange={handleChange}
                 className={`chk-form-select ${errors.budgetRange ? 'chk-form-input-error' : ''}`}
               >
-                <option value="">Select budget range</option>
+                <option value="">Select budget range(price will be converted into your local currency)</option>
                 {budgetOptions.map(option => (
                   <option key={option} value={option}>{option}</option>
                 ))}
