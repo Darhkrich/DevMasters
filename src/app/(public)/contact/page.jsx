@@ -109,7 +109,7 @@ export default function ContactPage() {
             <div className="cnt-card">
               <h3 className="cnt-card-title">Call Us</h3>
               <p className="cnt-card-text">Speak directly with our experts</p>
-              <a href="tel:+15551234567" className="cnt-link"> (+233) 503274574</a>
+              <a href="tel:+233503274574" className="cnt-link"> (+233) 503274574</a>
             </div>
           </div>
         </div>

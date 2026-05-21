@@ -61,6 +61,7 @@ body {
 
 .cnt-wrapper {
   min-height: 100vh;
+  margin-top: 70px;
   background: var(--cnt-bg);
   color: var(--cnt-text);
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
