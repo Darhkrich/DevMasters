@@ -135,7 +135,7 @@ export default function ContactPage() {
                 </div>
                 <div className="cnt-form-group">
                   <label className="cnt-label">Phone Number</label>
-                  <input className="cnt-input" name="phone" type="tel" value={formData.phone} onChange={handleChange} placeholder="+1 (555) 123-4567" />
+                  <input className="cnt-input" name="phone" type="tel" value={formData.phone} onChange={handleChange} placeholder=" (+233) 503274574" />
                 </div>
                 <div className="cnt-form-group">
                   <label className="cnt-label">Company Name</label>
